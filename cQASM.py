@@ -1,6 +1,6 @@
-class Qfunc(object):
+class Qfunction(object):
 
-    def __init__(self, name='', qubits=0, subroutines=[], *args, **kwargs):
+    def __init__(self, name='', qubits=0, subroutines=[]):
         self.checksubroutines(subroutines)
         self.name = name
         self.qubits = qubits
@@ -58,21 +58,23 @@ class Qsubroutine(object):
                 if not isinstance(gate, Qgate):
                     raise TypeError("Input must be of type Qgate")
             return True
-        elif isinstance(gate, Qgate):
+        elif isinstance(gates, Qgate):
             return True
         else:
             raise TypeError("Input must be of type Qgate")
 
 class Qgate(object):
 
-    def __init__(self, name='', options=[]):
+    def __init__(self, name='', *options):
         self.checkgate(name, options)
         self.name = name
         self.options = options
 
     def __str__(self):
         string = "  "
-        string += self.name + " "
+        string += self.name
+        if len(self.options) > 0 and self.name is not "#":
+            string += " "
         for i in range(len(self.options)):
             if i is not 0:
                 string += ","
@@ -82,8 +84,6 @@ class Qgate(object):
     def checkgate(self, name, options):
         if not isinstance(name, str):
             raise TypeError("gate name must be string")
-        if not isinstance(options, list):
-            raise TypeError("Gate options must be list")
         if name in self.gatelst:
             if len(options) is len(self.gatelst[name]):
                 for i in range(len(options)):
@@ -96,31 +96,49 @@ class Qgate(object):
             raise KeyError("Unknown gate type: {}".format(name))
 
     gatelst = {
-        "map":     ["q","q"],
-        "measure": [],
-        "display": [],
-        "#":       ["str"],
-        "":        [],
-        "h":       ["q"],
-        "x":       ["q"],
-        "y":       ["q"],
-        "z":       ["q"],
-        "rx":      ["q",0.0],
-        "ry":      ["q",0.0],
-        "rz":      ["q",0.0],
-        "ph":      ["q"],
-        "s":       ["q"],
-        "t":       ["q"],
-        "tdag":    ["q"],
-        "cnot":    ["q","q"],
-        "cx":      ["q","q"],
-        "toffoli": ["q","q","q"],
-        "swap":    ["q","q"],
-        "cphase":  ["q","q"],
-        "cz":      ["q","q"],
-        "cr":      ["q","q"],
-        "prepz":   ["q"]
+        "map":     ("q","q"),
+        "measure": (),
+        "display": (),
+        "#":       ("str"),
+        "":        (),
+        "h":       ("q"),
+        "x":       ("q"),
+        "y":       ("q"),
+        "z":       ("q"),
+        "rx":      ("q",0.0),
+        "ry":      ("q",0.0),
+        "rz":      ("q",0.0),
+        "ph":      ("q"),
+        "s":       ("q"),
+        "t":       ("q"),
+        "tdag":    ("q"),
+        "cnot":    ("q","q"),
+        "cx":      ("q","q"),
+        "toffoli": ("q","q","q"),
+        "swap":    ("q","q"),
+        "cphase":  ("q","q"),
+        "cz":      ("q","q"),
+        "cr":      ("q","q"),
+        "prepz":   ("q")
     }
+
+def buildnames(n, qubitnames, defaultname="q"):
+    if isinstance(qubitnames, list):
+        if len(qubitnames) == n:
+            qn = qubitnames
+        else:
+            raise ValueError("Incorrect number of qubit names")
+    elif isinstance(qubitnames, str):
+        qn = []
+        for i in range(n):
+            qn += [qubitnames + str(i)]
+    else:
+        qn = []
+        string = defaultname
+        for i in range(n):
+            qn += [string + str(i)]
+
+    return qn
 
 if __name__ == "__main__":
     testgatecom = Qgate('#', ['blah'])
@@ -129,5 +147,5 @@ if __name__ == "__main__":
     testgatemeas = Qgate('measure', [])
     testsub = Qsubroutine('test', [testgateh,testgateh,testgateh])
     testsub2 = Qsubroutine('test', [testgatecom,testgateh,testgateh,testgateh,testgatenothing,testgatecom,testgateh,testgateh,testgateh,testgatenothing,testgatecom,testgatemeas])
-    testfunc = Qfunc('test', 5, [testsub,testsub2])
+    testfunc = Qfunction('test', 5, [testsub,testsub2])
     print(testfunc)
