@@ -9,9 +9,12 @@ class Qfunction(object):
         else:
             self.subroutines = [subroutines]
 
-    def __add__(self, subroutines):
-        self.checksubroutines(subroutines)
-        self.subroutines += subroutines
+    def __add__(self, other):
+        if isinstance(other, Qsubroutine):
+            self.checksubroutines(other)
+            self.subroutines += other
+        elif isinstance(other, Qfunction):
+            self.subroutines += other.subroutines
 
     def __str__(self):
         string = "#function: {}\n\nqubits {}".format(self.name, self.qubits)
