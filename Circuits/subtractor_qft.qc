@@ -23,16 +23,16 @@ qubits 20
   map q17,a7
   map q18,a8
   map q19,a9
-  x a1
-  x a3
-  x a5
-  x a7
-  x a9
-  x b0
-  x b2
-  x b4
-  x b6
-  x b8
+  x a0
+  x a2
+  x a4
+  x a6
+  x a8
+  x b1
+  x b3
+  x b5
+  x b7
+  x b9
   display
 
 .qft

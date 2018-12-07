@@ -1,8 +1,19 @@
-from cQASM import *
-from QFT import *
-from Adder import *
+# from cQASM import *
+# from QFT import *
+import AdderQFT
+import AdderCuccaro
 import os
 import subprocess
+
+
+def runQX(filename, qubitnum):
+    qx_out = subprocess.run(['qx_simulator_0.1_windows_beta.exe', 'Circuits/'+filename+'.qc'], stdout=subprocess.PIPE)
+    qx_out_str = qx_out.stdout.decode('utf-8')
+    res = ""
+    for i in range(-51, -51 - 4 * qubitnum, -4):
+        res += qx_out_str[i]
+    return res
+
 
 if __name__ == "__main__":
     path = "Circuits/"
@@ -16,29 +27,46 @@ if __name__ == "__main__":
     # outputstr = result.stdout.decode('utf-8')
     # print(outputstr)
 
-    inp_a = "10111"
-    inp_b = "10101"
-    f = open(path + "adder.qc", "w")
-    f.write(str(ADDcircuit(inp_a=inp_a, inp_b=inp_b)))
+    inp_a = "1010101010"
+    inp_b = "0101010101"
+
+    na = len(inp_a)
+    nb = len(inp_b)
+    n = na + nb
+
+    f = open(path + "adder_qft.qc", "w")
+    f.write(str(AdderQFT.ADDcircuit(inp_a=inp_a, inp_b=inp_b)))
     f.close()
-    f = open(path + "subtractor.qc", "w")
-    f.write(str(SUBcircuit(inp_a=inp_a, inp_b=inp_b)))
+    f = open(path + "subtractor_qft.qc", "w")
+    f.write(str(AdderQFT.SUBcircuit(inp_a=inp_a, inp_b=inp_b)))
+    f.close()
+    f = open(path + "adder_cuccaro.qc", "w")
+    f.write(str(AdderCuccaro.ADDcircuit(inp_a=inp_a, inp_b=inp_b)))
+    f.close()
+    f = open(path + "subtractor_cuccaro.qc", "w")
+    f.write(str(AdderCuccaro.SUBcircuit(inp_a=inp_a, inp_b=inp_b)))
     f.close()
 
-    addresult = subprocess.run(['qx_simulator_0.1_windows_beta.exe', 'Circuits/adder.qc'], stdout=subprocess.PIPE)
-    addoutputstr = addresult.stdout.decode('utf-8')
-    #print(addoutputstr)
-    addres = ""
-    for i in range(-51, -51 - 4 * len(inp_a + inp_b), -4):
-        addres += addoutputstr[i]
-    outp_a_plus_b = addres[len(inp_b):]
+    res_add_qft = runQX('adder_qft', n)
+    outp_a_plus_b_qft = res_add_qft[nb:]
 
-    subresult = subprocess.run(['qx_simulator_0.1_windows_beta.exe', 'Circuits/subtractor.qc'], stdout=subprocess.PIPE)
-    suboutputstr = subresult.stdout.decode('utf-8')
-    #print(suboutputstr)
-    subres = ""
-    for i in range(-51, -51 - 4 * len(inp_a + inp_b), -4):
-        subres += suboutputstr[i]
-    outp_a_minus_b = subres[len(inp_b):]
+    res_sub_qft = runQX('subtractor_qft', n)
+    outp_a_minus_b_qft = res_sub_qft[nb:]
 
-    print("\ninput a    = {}\ninput b    = {}\n\noutput a+b = {}\noutput a-b = {}".format(inp_a, inp_b, outp_a_plus_b, outp_a_minus_b))
+    print("\n\nQFT:\n\ninput a    = {} = {}\ninput b    = {} = {}\n\noutput a+b = {} = {}\noutput a-b = {} = {}".format(
+        inp_a, int(inp_a, 2),
+        inp_b, int(inp_b, 2),
+        outp_a_plus_b_qft, int(outp_a_plus_b_qft, 2),
+        outp_a_minus_b_qft, int(outp_a_minus_b_qft, 2)))
+
+    res_add_cuc = runQX('adder_cuccaro', n+2)
+    outp_a_plus_b_cuc = res_add_cuc[-1::-2]
+
+    res_sub_cuc = runQX('subtractor_cuccaro', n+2)
+    outp_a_minus_b_cuc = res_sub_cuc[-1::-2]
+
+    print("\n\nCuccaro:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\n\noutput a+b = {} = {}\noutput a-b = {} = {}".format(
+        inp_a, int(inp_a, 2),
+        inp_b, int(inp_b, 2),
+        outp_a_plus_b_cuc, int(outp_a_plus_b_cuc, 2),
+        outp_a_minus_b_cuc, int(outp_a_minus_b_cuc, 2)))
