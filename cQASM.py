@@ -34,6 +34,7 @@ class Qfunction(object):
         else:
             raise TypeError("Input must be of type Qsubroutine")
 
+
 class Qsubroutine(object):
 
     def __init__(self, name='', gates=[], *args, **kwargs):
@@ -65,6 +66,7 @@ class Qsubroutine(object):
             return True
         else:
             raise TypeError("Input must be of type Qgate")
+
 
 class Qgate(object):
 
@@ -125,23 +127,28 @@ class Qgate(object):
         "prepz":   ("q")
     }
 
+
 def buildnames(n, qubitnames, defaultname="q"):
     if isinstance(qubitnames, list):
         if len(qubitnames) == n:
             qn = qubitnames
         else:
             raise ValueError("Incorrect number of qubit names")
-    elif isinstance(qubitnames, str):
-        qn = []
-        for i in range(n):
-            qn += [qubitnames + str(i)]
     else:
-        qn = []
-        string = defaultname
-        for i in range(n):
-            qn += [string + str(i)]
+        if isinstance(qubitnames, str):
+            string = qubitnames
+        else:
+            string = defaultname
+
+        if n == 1:
+            qn = [string]
+        else:
+            qn = []
+            for i in range(n):
+                qn += [string + str(i)]
 
     return qn
+
 
 if __name__ == "__main__":
     testgatecom = Qgate('#', ['blah'])

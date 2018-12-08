@@ -1,18 +1,21 @@
-#function: QFT Quantum Subtractor
+#function: Controlled QFT Quantum Adder
 
-qubits 10
+qubits 12
 
 .init
-  map q0,b0
-  map q1,b1
-  map q2,b2
-  map q3,b3
-  map q4,b4
-  map q5,a0
-  map q6,a1
-  map q7,a2
-  map q8,a3
-  map q9,a4
+  map q0,c
+  map q1,b0
+  map q2,b1
+  map q3,b2
+  map q4,b3
+  map q5,b4
+  map q6,d
+  map q7,a0
+  map q8,a1
+  map q9,a2
+  map q10,a3
+  map q11,a4
+  x c
   x a0
   x a2
   x a4
@@ -37,70 +40,40 @@ qubits 10
   cr a4,a3
   h a4
 
-.sub
-  cz b0,a0
-  cz b1,a1
-  swap b1,a1
+.cadd
+  toffoli c,b0,d
+  cz d,a0
+  toffoli c,b0,d
+  toffoli c,b1,d
+  cz d,a1
+  swap d,a1
   cr a1,a0
-  cz a1,a0
-  swap b1,a1
-  cz b2,a2
-  swap b2,a2
+  swap d,a1
+  toffoli c,b1,d
+  toffoli c,b2,d
+  cz d,a2
+  swap d,a2
   cr a2,a1
-  cz a2,a1
   cr a2,a0
-  swap a2,a1
-  cr a1,a0
-  swap a2,a1
-  cz a2,a0
-  swap b2,a2
-  cz b3,a3
-  swap b3,a3
+  swap d,a2
+  toffoli c,b2,d
+  toffoli c,b3,d
+  cz d,a3
+  swap d,a3
   cr a3,a2
-  cz a3,a2
   cr a3,a1
-  swap a3,a2
-  cr a2,a1
-  swap a3,a2
-  cz a3,a1
   cr a3,a0
-  swap a3,a2
-  cr a2,a0
-  swap a3,a2
-  swap a3,a1
-  cr a1,a0
-  swap a3,a1
-  cz a3,a0
-  swap b3,a3
-  cz b4,a4
-  swap b4,a4
+  swap d,a3
+  toffoli c,b3,d
+  toffoli c,b4,d
+  cz d,a4
+  swap d,a4
   cr a4,a3
-  cz a4,a3
   cr a4,a2
-  swap a4,a3
-  cr a3,a2
-  swap a4,a3
-  cz a4,a2
   cr a4,a1
-  swap a4,a3
-  cr a3,a1
-  swap a4,a3
-  swap a4,a2
-  cr a2,a1
-  swap a4,a2
-  cz a4,a1
   cr a4,a0
-  swap a4,a3
-  cr a3,a0
-  swap a4,a3
-  swap a4,a2
-  cr a2,a0
-  swap a4,a2
-  swap a4,a1
-  cr a1,a0
-  swap a4,a1
-  cz a4,a0
-  swap b4,a4
+  swap d,a4
+  toffoli c,b4,d
 
 .iqft
   h a4

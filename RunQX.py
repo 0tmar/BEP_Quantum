@@ -2,6 +2,7 @@
 # from QFT import *
 import AdderQFT
 import AdderCuccaro
+import MultiplierQFT
 import os
 import subprocess
 
@@ -29,17 +30,22 @@ if __name__ == "__main__":
     # outputstr = result.stdout.decode('utf-8')
     # print(outputstr)
 
-    inp_a = "111000"
-    inp_b = "000111"
-    inp_ctrl = "0"
+    inp_a = "10101"
+    inp_b = "01010"
+    inp_ctrl = "1"
 
     run_add_qft = True
+    run_add_qft_ctrl = True
     run_add_cuc = True
     run_add_cuc_ctrl = True
+    run_mul_qft = True
 
     na = len(inp_a)
     nb = len(inp_b)
-    n = na + nb
+    nctrl = len(inp_ctrl)
+
+    n = max(na, nb)
+    n_tot = na + nb
 
     if run_add_qft:
         f = open(path + "adder_qft.qc", "w")
@@ -49,17 +55,38 @@ if __name__ == "__main__":
         f.write(str(AdderQFT.SUBcircuit(inp_a=inp_a, inp_b=inp_b)))
         f.close()
 
-        res_add_qft = runQX('adder_qft', n)
+        res_add_qft = runQX('adder_qft', n_tot)
         outp_a_plus_b_qft = res_add_qft[nb::]
 
-        res_sub_qft = runQX('subtractor_qft', n)
+        res_sub_qft = runQX('subtractor_qft', n_tot)
         outp_a_minus_b_qft = res_sub_qft[nb::]
 
-        print("\n\nQFT:\n\ninput a    = {} = {}\ninput b    = {} = {}\n\noutput a+b = {} = {}\noutput a-b = {} = {}".format(
-            inp_a, int(inp_a, 2),
-            inp_b, int(inp_b, 2),
+        print("\n\nAdder QFT:\n\ninput a    = {} = {}\ninput b    = {} = {}\n\noutput a+b = {} = {}\noutput a-b = {} = {}".format(
+            (n-na)*" " + inp_a, int(inp_a, 2),
+            (n-nb)*" " + inp_b, int(inp_b, 2),
             outp_a_plus_b_qft, int(outp_a_plus_b_qft, 2),
             outp_a_minus_b_qft, int(outp_a_minus_b_qft, 2)))
+
+    if run_add_qft_ctrl:
+        f = open(path + "adder_qft_ctrl.qc", "w")
+        f.write(str(AdderQFT.cADDcircuit(inp_a=inp_a, inp_b=inp_b, inp_c=inp_ctrl)))
+        f.close()
+        f = open(path + "subtractor_qft_ctrl.qc", "w")
+        f.write(str(AdderQFT.cSUBcircuit(inp_a=inp_a, inp_b=inp_b, inp_c=inp_ctrl)))
+        f.close()
+
+        res_add_qft_ctrl = runQX('adder_qft_ctrl', n_tot + 2)
+        outp_a_plus_b_qft_ctrl = res_add_qft_ctrl[nb+2::]
+
+        res_sub_qft_ctrl = runQX('subtractor_qft_ctrl', n_tot + 2)
+        outp_a_minus_b_qft_ctrl = res_sub_qft_ctrl[nb+2::]
+
+        print("\n\nAdder QFT Controlled:\n\ninput a    = {} = {}\ninput b    = {} = {}\ninput ctrl = {}\n\noutput a+b = {} = {}\noutput a-b = {} = {}".format(
+            (n-na)*" " + inp_a, int(inp_a, 2),
+            (n-nb)*" " + inp_b, int(inp_b, 2),
+            (n-1)*" " + inp_ctrl,
+            outp_a_plus_b_qft_ctrl, int(outp_a_plus_b_qft_ctrl, 2),
+            outp_a_minus_b_qft_ctrl, int(outp_a_minus_b_qft_ctrl, 2)))
 
     if run_add_cuc:
         f = open(path + "adder_cuccaro.qc", "w")
@@ -69,15 +96,15 @@ if __name__ == "__main__":
         f.write(str(AdderCuccaro.SUBcircuit(inp_a=inp_a, inp_b=inp_b)))
         f.close()
 
-        res_add_cuc = runQX('adder_cuccaro', n+2)
+        res_add_cuc = runQX('adder_cuccaro', n_tot + 2)
         outp_a_plus_b_cuc = res_add_cuc[-1::-2]
 
-        res_sub_cuc = runQX('subtractor_cuccaro', n+2)
+        res_sub_cuc = runQX('subtractor_cuccaro', n_tot + 2)
         outp_a_minus_b_cuc = res_sub_cuc[-1::-2]
 
-        print("\n\nCuccaro:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\n\noutput a+b = {} = {}\noutput a-b = {} = {}".format(
-            inp_a, int(inp_a, 2),
-            inp_b, int(inp_b, 2),
+        print("\n\nAdder Cuccaro:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\n\noutput a+b = {} = {}\noutput a-b = {} = {}".format(
+            (n-na)*" " + inp_a, int(inp_a, 2),
+            (n-nb)*" " + inp_b, int(inp_b, 2),
             outp_a_plus_b_cuc, int(outp_a_plus_b_cuc, 2),
             outp_a_minus_b_cuc, int(outp_a_minus_b_cuc, 2)))
 
@@ -86,11 +113,24 @@ if __name__ == "__main__":
         f.write(str(AdderCuccaro.cADDcircuit(inp_a=inp_a, inp_b=inp_b, inp_ctrl=inp_ctrl)))
         f.close()
 
-        res_add_cuc_ctrl = runQX('adder_cuccaro_ctrl', n+3)
+        res_add_cuc_ctrl = runQX('adder_cuccaro_ctrl', n_tot + 3)
         outp_a_plus_b_cuc_ctrl = res_add_cuc_ctrl[-1:0:-2]
 
-        print("\n\nCuccaro Controlled:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\ninput ctrl = {}{}\n\noutput a+b = {} = {}".format(
-            inp_a, int(inp_a, 2),
-            inp_b, int(inp_b, 2),
-            na*" ", inp_ctrl,
+        print("\n\nAdder Cuccaro Controlled:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\ninput ctrl = {}\n\noutput a+b = {} = {}".format(
+            (n-na)*" " + inp_a, int(inp_a, 2),
+            (n-nb)*" " + inp_b, int(inp_b, 2),
+            n*" " + inp_ctrl,
             outp_a_plus_b_cuc_ctrl, int(outp_a_plus_b_cuc_ctrl, 2)))
+
+    if run_mul_qft:
+        f = open(path + "multiplier_qft.qc", "w")
+        f.write(str(MultiplierQFT.MULcircuit(inp_a=inp_a, inp_b=inp_b)))
+        f.close()
+
+        res_add_qft = runQX('multiplier_qft', 2*n_tot + 1)
+        outp_a_times_b_qft = res_add_qft[na+nb:-1:]
+
+        print("\n\nMultiplier QFT:\n\ninput a    = {} = {}\ninput b    = {} = {}\n\noutput a*b = {} = {}".format(
+            nb*" " + inp_a, int(inp_a, 2),
+            na*" " + inp_b, int(inp_b, 2),
+            outp_a_times_b_qft, int(outp_a_times_b_qft, 2)))

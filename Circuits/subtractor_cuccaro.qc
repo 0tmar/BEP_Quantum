@@ -1,6 +1,6 @@
 #function: Cuccaro Quantum Subtractor
 
-qubits 14
+qubits 12
 
 .init
   map q0,c
@@ -14,15 +14,12 @@ qubits 14
   map q8,a3
   map q9,b4
   map q10,a4
-  map q11,b5
-  map q12,a5
-  map q13,z
-  x a3
+  map q11,z
+  x a0
+  x a2
   x a4
-  x a5
-  x b0
   x b1
-  x b2
+  x b3
   display
 
 .complement
@@ -31,7 +28,6 @@ qubits 14
   x a2
   x a3
   x a4
-  x a5
 
 .add
   cx a0,b0
@@ -49,13 +45,7 @@ qubits 14
   cx a4,b4
   cx a4,a3
   toffoli a3,b4,a4
-  cx a5,b5
-  cx a5,a4
-  toffoli a4,b5,a5
-  cx a5,z
-  toffoli a4,b5,a5
-  cx a5,a4
-  cx a4,b5
+  cx a4,z
   toffoli a3,b4,a4
   cx a4,a3
   cx a3,b4
@@ -78,13 +68,11 @@ qubits 14
   x a2
   x a3
   x a4
-  x a5
   x b0
   x b1
   x b2
   x b3
   x b4
-  x b5
 
 .result
   measure

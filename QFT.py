@@ -1,5 +1,6 @@
 from cQASM import *
 
+
 class REVERSE(Qsubroutine):
 
     def __init__(self, n=1, qubitnames=None):
@@ -13,6 +14,7 @@ class REVERSE(Qsubroutine):
             gates += [Qgate('swap', qn[i], qn[n-1-i])]
 
         super().__init__(name="reverse", gates=gates)
+
 
 class QFT(Qsubroutine):
 
@@ -29,6 +31,7 @@ class QFT(Qsubroutine):
                 gates += [Qgate('cr', qn[j], qn[i])]
 
         super().__init__(name="qft", gates=gates)
+
 
 class iQFT(Qsubroutine):
 
@@ -52,6 +55,7 @@ class iQFT(Qsubroutine):
             gates += [Qgate('h', qn[i])]
 
         super().__init__(name="iqft", gates=gates)
+
 
 class QFTcircuit(Qfunction):
 
@@ -80,6 +84,7 @@ class QFTcircuit(Qfunction):
         subroutines = [initsubroutine, qftsubroutine, reversesubroutine, resultsubroutine]
         super().__init__(name=name, qubits=qubits, subroutines=subroutines)
 
+
 class QFT_iQFTcircuit(Qfunction):
 
     def __init__(self, inp="0"):
@@ -107,9 +112,10 @@ class QFT_iQFTcircuit(Qfunction):
         subroutines = [initsubroutine, qftsubroutine, iqftsubroutine, resultsubroutine]
         super().__init__(name=name, qubits=qubits, subroutines=subroutines)
 
+
 if __name__ == "__main__":
     qft = QFT(n=10)
-    #print(qft)
+    # print(qft)
 
     qft_circ = QFT_iQFTcircuit(inp="11001")
     print(qft_circ)
