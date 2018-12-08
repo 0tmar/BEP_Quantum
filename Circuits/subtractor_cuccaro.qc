@@ -1,6 +1,6 @@
-#function: Quantum Subtractor
+#function: Cuccaro Quantum Subtractor
 
-qubits 22
+qubits 14
 
 .init
   map q0,c
@@ -16,25 +16,13 @@ qubits 22
   map q10,a4
   map q11,b5
   map q12,a5
-  map q13,b6
-  map q14,a6
-  map q15,b7
-  map q16,a7
-  map q17,b8
-  map q18,a8
-  map q19,b9
-  map q20,a9
-  map q21,z
-  x a1
+  map q13,z
   x a3
+  x a4
   x a5
-  x a7
-  x a9
   x b0
+  x b1
   x b2
-  x b4
-  x b6
-  x b8
   display
 
 .complement
@@ -44,10 +32,6 @@ qubits 22
   x a3
   x a4
   x a5
-  x a6
-  x a7
-  x a8
-  x a9
 
 .add
   cx a0,b0
@@ -68,31 +52,7 @@ qubits 22
   cx a5,b5
   cx a5,a4
   toffoli a4,b5,a5
-  cx a6,b6
-  cx a6,a5
-  toffoli a5,b6,a6
-  cx a7,b7
-  cx a7,a6
-  toffoli a6,b7,a7
-  cx a8,b8
-  cx a8,a7
-  toffoli a7,b8,a8
-  cx a9,b9
-  cx a9,a8
-  toffoli a8,b9,a9
-  cx a9,z
-  toffoli a8,b9,a9
-  cx a9,a8
-  cx a8,b9
-  toffoli a7,b8,a8
-  cx a8,a7
-  cx a7,b8
-  toffoli a6,b7,a7
-  cx a7,a6
-  cx a6,b7
-  toffoli a5,b6,a6
-  cx a6,a5
-  cx a5,b6
+  cx a5,z
   toffoli a4,b5,a5
   cx a5,a4
   cx a4,b5
@@ -119,20 +79,12 @@ qubits 22
   x a3
   x a4
   x a5
-  x a6
-  x a7
-  x a8
-  x a9
   x b0
   x b1
   x b2
   x b3
   x b4
   x b5
-  x b6
-  x b7
-  x b8
-  x b9
 
 .result
   measure

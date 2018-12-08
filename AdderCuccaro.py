@@ -63,10 +63,62 @@ class ADD(Qsubroutine):
         super().__init__(name="add", gates=gates)
 
 
+class cADD(Qsubroutine):
+
+    def __init__(self, n=1, qubitnamesa=None, qubitnamesb=None, qubitnamec=None, qubitnamez=None, qubitnamectrl=None):
+
+        def cMAJ(qna, qnb, qnc, qnctrl):
+            gates = []
+            gates += [Qgate("toffoli", qnctrl, qna, qnb)]
+            gates += [Qgate("cx", qna, qnc)]
+            gates += [Qgate("toffoli", qnc, qnb, qna)]
+            return gates
+
+        def cUMA(qna, qnb, qnc, qnctrl):
+            gates = []
+            gates += [Qgate("toffoli", qnc, qnb, qna)]
+            gates += [Qgate("cx", qna, qnc)]
+            gates += [Qgate("toffoli", qnctrl, qnc, qnb)]
+            return gates
+
+        qna = buildnames(n, qubitnamesa, "a")
+        qnb = buildnames(n, qubitnamesb, "b")
+        if qubitnamez == None:
+            qnc = "c"
+        else:
+            qnc = qubitnamec
+        if qubitnamez == None:
+            qnz = "z"
+        else:
+            qnz = qubitnamez
+        if qubitnamectrl == None:
+            qnctrl = "ctrl"
+        else:
+            qnctrl = qubitnamectrl
+
+        self.qubitnamesa = qna
+        self.qubitnamesb = qnb
+        self.qubitnamec = qnc
+        self.qubitnamez = qnz
+        self.qubitnamectrl = qnctrl
+
+        gates = []
+
+        gates += cMAJ(qna[0], qnb[0], qnc, qnctrl)
+        for i in range(1, n):
+            gates += cMAJ(qna[i], qnb[i], qna[i-1], qnctrl)
+        gates += [Qgate("toffoli", qnctrl, qna[-1], qnz)]
+        for i in range(n-1, 0, -1):
+            gates += cUMA(qna[i], qnb[i], qna[i-1], qnctrl)
+        gates += cUMA(qna[0], qnb[0], qnc, qnctrl)
+
+        super().__init__(name="cadd", gates=gates)
+
+
 class ADDcircuit(Qfunction):
 
     def __init__(self, inp_a="0", inp_b="0"):
-        name = "Quantum Adder"
+        name = "Cuccaro Quantum Adder"
         na = len(inp_a)
         nb = len(inp_b)
         n = max(na, nb)
@@ -110,7 +162,7 @@ class ADDcircuit(Qfunction):
 class SUBcircuit(Qfunction):
 
     def __init__(self, inp_a="0", inp_b="0"):
-        name = "Quantum Subtractor"
+        name = "Cuccaro Quantum Subtractor"
         na = len(inp_a)
         nb = len(inp_b)
         n = max(na, nb)
@@ -151,6 +203,54 @@ class SUBcircuit(Qfunction):
         resultsubroutine = Qsubroutine(name="result", gates=resultgates)
 
         subroutines = [initsubroutine, initcomplementsubroutine, addsubroutine, endcomplementsubroutine, resultsubroutine]
+        super().__init__(name=name, qubits=qubits, subroutines=subroutines)
+
+
+class cADDcircuit(Qfunction):
+
+    def __init__(self, inp_a="0", inp_b="0", inp_ctrl="0"):
+        name = "Controlled Cuccaro Quantum Adder"
+        na = len(inp_a)
+        nb = len(inp_b)
+        n = max(na, nb)
+        inp_a = (n-na)*"0" + inp_a
+        inp_b = (n-nb)*"0" + inp_b
+        qubits = 2*n + 3
+        addsubroutine = cADD(n=n)
+        qna = addsubroutine.qubitnamesa
+        qnb = addsubroutine.qubitnamesb
+        qnc = addsubroutine.qubitnamec
+        qnz = addsubroutine.qubitnamez
+        qnctrl = addsubroutine.qubitnamectrl
+
+        if not isinstance(inp_a, str):
+            raise TypeError("input must be of type string")
+        if not isinstance(inp_b, str):
+            raise TypeError("input must be of type string")
+
+        initgates = []
+        initgates += [Qgate("map", "q0", qnctrl)]
+        initgates += [Qgate("map", "q1", qnc)]
+        for i in range(n):
+            initgates += [Qgate("map", "q"+str(2*i+2), qnb[i])]
+            initgates += [Qgate("map", "q"+str(2*i+3), qna[i])]
+        initgates += [Qgate("map", "q" + str(2*n + 2), qnz)]
+        if inp_ctrl == "1":
+            initgates += [Qgate("x", qnctrl)]
+        for i in range(n):
+            if inp_a[-i-1] == "1":
+                initgates += [Qgate("x", qna[i])]
+        for i in range(n):
+            if inp_b[-i-1] == "1":
+                initgates += [Qgate("x", qnb[i])]
+        initgates += [Qgate("display")]
+
+        initsubroutine = Qsubroutine(name="init", gates=initgates)
+
+        resultgates = [Qgate("measure"), Qgate("display")]
+        resultsubroutine = Qsubroutine(name="result", gates=resultgates)
+
+        subroutines = [initsubroutine, addsubroutine, resultsubroutine]
         super().__init__(name=name, qubits=qubits, subroutines=subroutines)
 
 

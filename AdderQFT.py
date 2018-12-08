@@ -21,7 +21,7 @@ class ADD(Qsubroutine):
             gates += [Qgate('cz', qnb[i], qna[j])]
             if j is not 0:
                 gates += [Qgate('swap', qnb[i], qna[j])]
-                for k in range(j, 0, -1):
+                for k in range(j-1, -1, -1):
                     gates += [Qgate('cr', qna[j], qna[k])]
                 gates += [Qgate('swap', qnb[i], qna[j])]
             # if i is not nb - 1:

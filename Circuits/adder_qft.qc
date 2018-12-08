@@ -1,6 +1,6 @@
 #function: Quantum Adder
 
-qubits 20
+qubits 12
 
 .init
   map q0,b0
@@ -9,30 +9,18 @@ qubits 20
   map q3,b3
   map q4,b4
   map q5,b5
-  map q6,b6
-  map q7,b7
-  map q8,b8
-  map q9,b9
-  map q10,a0
-  map q11,a1
-  map q12,a2
-  map q13,a3
-  map q14,a4
-  map q15,a5
-  map q16,a6
-  map q17,a7
-  map q18,a8
-  map q19,a9
+  map q6,a0
+  map q7,a1
+  map q8,a2
+  map q9,a3
+  map q10,a4
+  map q11,a5
   x a0
+  x a1
   x a2
-  x a4
-  x a6
-  x a8
-  x b1
   x b3
+  x b4
   x b5
-  x b7
-  x b9
   display
 
 .qft
@@ -42,278 +30,60 @@ qubits 20
   cr a3,a0
   cr a4,a0
   cr a5,a0
-  cr a6,a0
-  cr a7,a0
-  cr a8,a0
-  cr a9,a0
   h a1
   cr a2,a1
   cr a3,a1
   cr a4,a1
   cr a5,a1
-  cr a6,a1
-  cr a7,a1
-  cr a8,a1
-  cr a9,a1
   h a2
   cr a3,a2
   cr a4,a2
   cr a5,a2
-  cr a6,a2
-  cr a7,a2
-  cr a8,a2
-  cr a9,a2
   h a3
   cr a4,a3
   cr a5,a3
-  cr a6,a3
-  cr a7,a3
-  cr a8,a3
-  cr a9,a3
   h a4
   cr a5,a4
-  cr a6,a4
-  cr a7,a4
-  cr a8,a4
-  cr a9,a4
   h a5
-  cr a6,a5
-  cr a7,a5
-  cr a8,a5
-  cr a9,a5
-  h a6
-  cr a7,a6
-  cr a8,a6
-  cr a9,a6
-  h a7
-  cr a8,a7
-  cr a9,a7
-  h a8
-  cr a9,a8
-  h a9
 
 .add
   cz b0,a0
   cz b1,a1
   swap b1,a1
-  cr a1,a1
+  cr a1,a0
   swap b1,a1
   cz b2,a2
   swap b2,a2
-  cr a2,a2
   cr a2,a1
+  cr a2,a0
   swap b2,a2
   cz b3,a3
   swap b3,a3
-  cr a3,a3
   cr a3,a2
   cr a3,a1
+  cr a3,a0
   swap b3,a3
   cz b4,a4
   swap b4,a4
-  cr a4,a4
   cr a4,a3
   cr a4,a2
   cr a4,a1
+  cr a4,a0
   swap b4,a4
   cz b5,a5
   swap b5,a5
-  cr a5,a5
   cr a5,a4
   cr a5,a3
   cr a5,a2
   cr a5,a1
+  cr a5,a0
   swap b5,a5
-  cz b6,a6
-  swap b6,a6
-  cr a6,a6
-  cr a6,a5
-  cr a6,a4
-  cr a6,a3
-  cr a6,a2
-  cr a6,a1
-  swap b6,a6
-  cz b7,a7
-  swap b7,a7
-  cr a7,a7
-  cr a7,a6
-  cr a7,a5
-  cr a7,a4
-  cr a7,a3
-  cr a7,a2
-  cr a7,a1
-  swap b7,a7
-  cz b8,a8
-  swap b8,a8
-  cr a8,a8
-  cr a8,a7
-  cr a8,a6
-  cr a8,a5
-  cr a8,a4
-  cr a8,a3
-  cr a8,a2
-  cr a8,a1
-  swap b8,a8
-  cz b9,a9
-  swap b9,a9
-  cr a9,a9
-  cr a9,a8
-  cr a9,a7
-  cr a9,a6
-  cr a9,a5
-  cr a9,a4
-  cr a9,a3
-  cr a9,a2
-  cr a9,a1
-  swap b9,a9
 
 .iqft
-  h a9
-  cr a9,a8
-  cz a9,a8
-  h a8
-  cr a9,a7
-  swap a9,a8
-  cr a8,a7
-  swap a9,a8
-  cz a9,a7
-  cr a8,a7
-  cz a8,a7
-  h a7
-  cr a9,a6
-  swap a9,a8
-  cr a8,a6
-  swap a9,a8
-  swap a9,a7
-  cr a7,a6
-  swap a9,a7
-  cz a9,a6
-  cr a8,a6
-  swap a8,a7
-  cr a7,a6
-  swap a8,a7
-  cz a8,a6
-  cr a7,a6
-  cz a7,a6
-  h a6
-  cr a9,a5
-  swap a9,a8
-  cr a8,a5
-  swap a9,a8
-  swap a9,a7
-  cr a7,a5
-  swap a9,a7
-  swap a9,a6
-  cr a6,a5
-  swap a9,a6
-  cz a9,a5
-  cr a8,a5
-  swap a8,a7
-  cr a7,a5
-  swap a8,a7
-  swap a8,a6
-  cr a6,a5
-  swap a8,a6
-  cz a8,a5
-  cr a7,a5
-  swap a7,a6
-  cr a6,a5
-  swap a7,a6
-  cz a7,a5
-  cr a6,a5
-  cz a6,a5
   h a5
-  cr a9,a4
-  swap a9,a8
-  cr a8,a4
-  swap a9,a8
-  swap a9,a7
-  cr a7,a4
-  swap a9,a7
-  swap a9,a6
-  cr a6,a4
-  swap a9,a6
-  swap a9,a5
-  cr a5,a4
-  swap a9,a5
-  cz a9,a4
-  cr a8,a4
-  swap a8,a7
-  cr a7,a4
-  swap a8,a7
-  swap a8,a6
-  cr a6,a4
-  swap a8,a6
-  swap a8,a5
-  cr a5,a4
-  swap a8,a5
-  cz a8,a4
-  cr a7,a4
-  swap a7,a6
-  cr a6,a4
-  swap a7,a6
-  swap a7,a5
-  cr a5,a4
-  swap a7,a5
-  cz a7,a4
-  cr a6,a4
-  swap a6,a5
-  cr a5,a4
-  swap a6,a5
-  cz a6,a4
   cr a5,a4
   cz a5,a4
   h a4
-  cr a9,a3
-  swap a9,a8
-  cr a8,a3
-  swap a9,a8
-  swap a9,a7
-  cr a7,a3
-  swap a9,a7
-  swap a9,a6
-  cr a6,a3
-  swap a9,a6
-  swap a9,a5
-  cr a5,a3
-  swap a9,a5
-  swap a9,a4
-  cr a4,a3
-  swap a9,a4
-  cz a9,a3
-  cr a8,a3
-  swap a8,a7
-  cr a7,a3
-  swap a8,a7
-  swap a8,a6
-  cr a6,a3
-  swap a8,a6
-  swap a8,a5
-  cr a5,a3
-  swap a8,a5
-  swap a8,a4
-  cr a4,a3
-  swap a8,a4
-  cz a8,a3
-  cr a7,a3
-  swap a7,a6
-  cr a6,a3
-  swap a7,a6
-  swap a7,a5
-  cr a5,a3
-  swap a7,a5
-  swap a7,a4
-  cr a4,a3
-  swap a7,a4
-  cz a7,a3
-  cr a6,a3
-  swap a6,a5
-  cr a5,a3
-  swap a6,a5
-  swap a6,a4
-  cr a4,a3
-  swap a6,a4
-  cz a6,a3
   cr a5,a3
   swap a5,a4
   cr a4,a3
@@ -322,68 +92,6 @@ qubits 20
   cr a4,a3
   cz a4,a3
   h a3
-  cr a9,a2
-  swap a9,a8
-  cr a8,a2
-  swap a9,a8
-  swap a9,a7
-  cr a7,a2
-  swap a9,a7
-  swap a9,a6
-  cr a6,a2
-  swap a9,a6
-  swap a9,a5
-  cr a5,a2
-  swap a9,a5
-  swap a9,a4
-  cr a4,a2
-  swap a9,a4
-  swap a9,a3
-  cr a3,a2
-  swap a9,a3
-  cz a9,a2
-  cr a8,a2
-  swap a8,a7
-  cr a7,a2
-  swap a8,a7
-  swap a8,a6
-  cr a6,a2
-  swap a8,a6
-  swap a8,a5
-  cr a5,a2
-  swap a8,a5
-  swap a8,a4
-  cr a4,a2
-  swap a8,a4
-  swap a8,a3
-  cr a3,a2
-  swap a8,a3
-  cz a8,a2
-  cr a7,a2
-  swap a7,a6
-  cr a6,a2
-  swap a7,a6
-  swap a7,a5
-  cr a5,a2
-  swap a7,a5
-  swap a7,a4
-  cr a4,a2
-  swap a7,a4
-  swap a7,a3
-  cr a3,a2
-  swap a7,a3
-  cz a7,a2
-  cr a6,a2
-  swap a6,a5
-  cr a5,a2
-  swap a6,a5
-  swap a6,a4
-  cr a4,a2
-  swap a6,a4
-  swap a6,a3
-  cr a3,a2
-  swap a6,a3
-  cz a6,a2
   cr a5,a2
   swap a5,a4
   cr a4,a2
@@ -400,80 +108,6 @@ qubits 20
   cr a3,a2
   cz a3,a2
   h a2
-  cr a9,a1
-  swap a9,a8
-  cr a8,a1
-  swap a9,a8
-  swap a9,a7
-  cr a7,a1
-  swap a9,a7
-  swap a9,a6
-  cr a6,a1
-  swap a9,a6
-  swap a9,a5
-  cr a5,a1
-  swap a9,a5
-  swap a9,a4
-  cr a4,a1
-  swap a9,a4
-  swap a9,a3
-  cr a3,a1
-  swap a9,a3
-  swap a9,a2
-  cr a2,a1
-  swap a9,a2
-  cz a9,a1
-  cr a8,a1
-  swap a8,a7
-  cr a7,a1
-  swap a8,a7
-  swap a8,a6
-  cr a6,a1
-  swap a8,a6
-  swap a8,a5
-  cr a5,a1
-  swap a8,a5
-  swap a8,a4
-  cr a4,a1
-  swap a8,a4
-  swap a8,a3
-  cr a3,a1
-  swap a8,a3
-  swap a8,a2
-  cr a2,a1
-  swap a8,a2
-  cz a8,a1
-  cr a7,a1
-  swap a7,a6
-  cr a6,a1
-  swap a7,a6
-  swap a7,a5
-  cr a5,a1
-  swap a7,a5
-  swap a7,a4
-  cr a4,a1
-  swap a7,a4
-  swap a7,a3
-  cr a3,a1
-  swap a7,a3
-  swap a7,a2
-  cr a2,a1
-  swap a7,a2
-  cz a7,a1
-  cr a6,a1
-  swap a6,a5
-  cr a5,a1
-  swap a6,a5
-  swap a6,a4
-  cr a4,a1
-  swap a6,a4
-  swap a6,a3
-  cr a3,a1
-  swap a6,a3
-  swap a6,a2
-  cr a2,a1
-  swap a6,a2
-  cz a6,a1
   cr a5,a1
   swap a5,a4
   cr a4,a1
@@ -501,92 +135,6 @@ qubits 20
   cr a2,a1
   cz a2,a1
   h a1
-  cr a9,a0
-  swap a9,a8
-  cr a8,a0
-  swap a9,a8
-  swap a9,a7
-  cr a7,a0
-  swap a9,a7
-  swap a9,a6
-  cr a6,a0
-  swap a9,a6
-  swap a9,a5
-  cr a5,a0
-  swap a9,a5
-  swap a9,a4
-  cr a4,a0
-  swap a9,a4
-  swap a9,a3
-  cr a3,a0
-  swap a9,a3
-  swap a9,a2
-  cr a2,a0
-  swap a9,a2
-  swap a9,a1
-  cr a1,a0
-  swap a9,a1
-  cz a9,a0
-  cr a8,a0
-  swap a8,a7
-  cr a7,a0
-  swap a8,a7
-  swap a8,a6
-  cr a6,a0
-  swap a8,a6
-  swap a8,a5
-  cr a5,a0
-  swap a8,a5
-  swap a8,a4
-  cr a4,a0
-  swap a8,a4
-  swap a8,a3
-  cr a3,a0
-  swap a8,a3
-  swap a8,a2
-  cr a2,a0
-  swap a8,a2
-  swap a8,a1
-  cr a1,a0
-  swap a8,a1
-  cz a8,a0
-  cr a7,a0
-  swap a7,a6
-  cr a6,a0
-  swap a7,a6
-  swap a7,a5
-  cr a5,a0
-  swap a7,a5
-  swap a7,a4
-  cr a4,a0
-  swap a7,a4
-  swap a7,a3
-  cr a3,a0
-  swap a7,a3
-  swap a7,a2
-  cr a2,a0
-  swap a7,a2
-  swap a7,a1
-  cr a1,a0
-  swap a7,a1
-  cz a7,a0
-  cr a6,a0
-  swap a6,a5
-  cr a5,a0
-  swap a6,a5
-  swap a6,a4
-  cr a4,a0
-  swap a6,a4
-  swap a6,a3
-  cr a3,a0
-  swap a6,a3
-  swap a6,a2
-  cr a2,a0
-  swap a6,a2
-  swap a6,a1
-  cr a1,a0
-  swap a6,a1
-  cz a6,a0
   cr a5,a0
   swap a5,a4
   cr a4,a0
