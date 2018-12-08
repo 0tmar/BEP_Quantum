@@ -34,11 +34,11 @@ if __name__ == "__main__":
     inp_b = "01010"
     inp_ctrl = "1"
 
-    run_add_qft = True
-    run_add_qft_ctrl = True
-    run_add_cuc = True
+    run_add_qft = False
+    run_add_qft_ctrl = False
+    run_add_cuc = False
     run_add_cuc_ctrl = True
-    run_mul_qft = True
+    run_mul_qft = False
 
     na = len(inp_a)
     nb = len(inp_b)
@@ -112,15 +112,21 @@ if __name__ == "__main__":
         f = open(path + "adder_cuccaro_ctrl.qc", "w")
         f.write(str(AdderCuccaro.cADDcircuit(inp_a=inp_a, inp_b=inp_b, inp_ctrl=inp_ctrl)))
         f.close()
+        f = open(path + "subtractor_cuccaro_ctrl.qc", "w")
+        f.write(str(AdderCuccaro.cSUBcircuit(inp_a=inp_a, inp_b=inp_b, inp_ctrl=inp_ctrl)))
+        f.close()
 
         res_add_cuc_ctrl = runQX('adder_cuccaro_ctrl', n_tot + 3)
         outp_a_plus_b_cuc_ctrl = res_add_cuc_ctrl[-1:0:-2]
+        res_sub_cuc_ctrl = runQX('subtractor_cuccaro_ctrl', n_tot + 3)
+        outp_a_minus_b_cuc_ctrl = res_sub_cuc_ctrl[-1:0:-2]
 
-        print("\n\nAdder Cuccaro Controlled:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\ninput ctrl = {}\n\noutput a+b = {} = {}".format(
+        print("\n\nAdder Cuccaro Controlled:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\ninput ctrl = {}\n\noutput a+b = {} = {}\noutput a+b = {} = {}".format(
             (n-na)*" " + inp_a, int(inp_a, 2),
             (n-nb)*" " + inp_b, int(inp_b, 2),
             n*" " + inp_ctrl,
-            outp_a_plus_b_cuc_ctrl, int(outp_a_plus_b_cuc_ctrl, 2)))
+            outp_a_plus_b_cuc_ctrl, int(outp_a_plus_b_cuc_ctrl, 2),
+            outp_a_minus_b_cuc_ctrl, int(outp_a_minus_b_cuc_ctrl, 2)))
 
     if run_mul_qft:
         f = open(path + "multiplier_qft.qc", "w")
