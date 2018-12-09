@@ -1,19 +1,21 @@
 # from cQASM import *
-# from QFT import *
+import QFT
 import AdderQFT
 import AdderCuccaro
 import MultiplierQFT
+import Cao2012_Experiment
 import os
 import subprocess
 
 
-def runQX(filename, qubitnum):
+def runQX(filename, qubitnum, show_output=False):
     qx_out = subprocess.run(['qx_simulator_0.1_windows_beta.exe', 'Circuits/'+filename+'.qc'], stdout=subprocess.PIPE)
     qx_out_str = qx_out.stdout.decode('utf-8')
     res = ""
     for i in range(-51, -51 - 4 * qubitnum, -4):
         res += qx_out_str[i]
-    # print(qx_out_str)
+    if show_output:
+        print(qx_out_str)
     # print(res)
     return res
 
@@ -23,22 +25,17 @@ if __name__ == "__main__":
     if not os.path.exists(path):
         os.makedirs(path)
 
-    # f = open(path + "qftiqft.qc", "w")
-    # f.write(str(QFT_iQFTcircuit(inp="10101010")))
-    # f.close()
-    # result = subprocess.run(['qx_simulator_0.1_windows_beta.exe', 'Circuits/qftiqft.qc'], stdout=subprocess.PIPE)
-    # outputstr = result.stdout.decode('utf-8')
-    # print(outputstr)
-
     inp_a = "10101"
     inp_b = "01010"
     inp_ctrl = "1"
 
+    run_qft_test = False
     run_add_qft = False
     run_add_qft_ctrl = False
     run_add_cuc = False
-    run_add_cuc_ctrl = True
+    run_add_cuc_ctrl = False
     run_mul_qft = False
+    run_Cao2012 = True
 
     na = len(inp_a)
     nb = len(inp_b)
@@ -46,6 +43,19 @@ if __name__ == "__main__":
 
     n = max(na, nb)
     n_tot = na + nb
+
+    if run_qft_test:
+        f = open(path + "qftiqft.qc", "w")
+        f.write(str(QFT.QFT_iQFTcircuit(inp=inp_a)))
+        f.close()
+
+        res_qft_test = runQX('qftiqft', na)
+        outp_qft_test = res_qft_test
+
+        print("\n\nQFT-iQFT test:\n\ninput a    = {}\n\noutput a   = {}".format(
+            (n-na)*" " + inp_a,
+            (n-na)*" " + outp_qft_test))
+
 
     if run_add_qft:
         f = open(path + "adder_qft.qc", "w")
@@ -140,3 +150,21 @@ if __name__ == "__main__":
             nb*" " + inp_a, int(inp_a, 2),
             na*" " + inp_b, int(inp_b, 2),
             outp_a_times_b_qft, int(outp_a_times_b_qft, 2)))
+
+    if run_Cao2012:
+        r = 5
+
+        f = open(path + "Cao2012.qc", "w")
+        f.write(str(Cao2012_Experiment.Cao2012Experiment(r=r)))
+        f.close()
+
+        res_cao2012 = runQX('Cao2012', 7, show_output=True)
+        outp_bool_cao2012 = res_cao2012[0]
+        outp_vec0_cao2012 = res_cao2012[5]
+        outp_vec1_cao2012 = res_cao2012[5]
+
+        print("\n\nCao2012 Experiment:\n\ninput r    = {}\n\noutput phi = {}\noutput v0  = {}\noutput v1  = {}".format(
+            r,
+            outp_bool_cao2012,
+            outp_vec0_cao2012,
+            outp_vec1_cao2012))

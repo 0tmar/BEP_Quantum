@@ -1,12 +1,11 @@
 #function: Back and forth Quantum Fourier Transform
 
-qubits 8
+qubits 5
 
 .init
   x q0
   x q2
   x q4
-  x q6
   display
 
 .qft
@@ -15,127 +14,22 @@ qubits 8
   cr q2,q0
   cr q3,q0
   cr q4,q0
-  cr q5,q0
-  cr q6,q0
-  cr q7,q0
   h q1
   cr q2,q1
   cr q3,q1
   cr q4,q1
-  cr q5,q1
-  cr q6,q1
-  cr q7,q1
   h q2
   cr q3,q2
   cr q4,q2
-  cr q5,q2
-  cr q6,q2
-  cr q7,q2
   h q3
   cr q4,q3
-  cr q5,q3
-  cr q6,q3
-  cr q7,q3
   h q4
-  cr q5,q4
-  cr q6,q4
-  cr q7,q4
-  h q5
-  cr q6,q5
-  cr q7,q5
-  h q6
-  cr q7,q6
-  h q7
 
 .iqft
-  h q7
-  cr q7,q6
-  cz q7,q6
-  h q6
-  cr q7,q5
-  swap q7,q6
-  cr q6,q5
-  swap q7,q6
-  cz q7,q5
-  cr q6,q5
-  cz q6,q5
-  h q5
-  cr q7,q4
-  swap q7,q6
-  cr q6,q4
-  swap q7,q6
-  swap q7,q5
-  cr q5,q4
-  swap q7,q5
-  cz q7,q4
-  cr q6,q4
-  swap q6,q5
-  cr q5,q4
-  swap q6,q5
-  cz q6,q4
-  cr q5,q4
-  cz q5,q4
   h q4
-  cr q7,q3
-  swap q7,q6
-  cr q6,q3
-  swap q7,q6
-  swap q7,q5
-  cr q5,q3
-  swap q7,q5
-  swap q7,q4
-  cr q4,q3
-  swap q7,q4
-  cz q7,q3
-  cr q6,q3
-  swap q6,q5
-  cr q5,q3
-  swap q6,q5
-  swap q6,q4
-  cr q4,q3
-  swap q6,q4
-  cz q6,q3
-  cr q5,q3
-  swap q5,q4
-  cr q4,q3
-  swap q5,q4
-  cz q5,q3
   cr q4,q3
   cz q4,q3
   h q3
-  cr q7,q2
-  swap q7,q6
-  cr q6,q2
-  swap q7,q6
-  swap q7,q5
-  cr q5,q2
-  swap q7,q5
-  swap q7,q4
-  cr q4,q2
-  swap q7,q4
-  swap q7,q3
-  cr q3,q2
-  swap q7,q3
-  cz q7,q2
-  cr q6,q2
-  swap q6,q5
-  cr q5,q2
-  swap q6,q5
-  swap q6,q4
-  cr q4,q2
-  swap q6,q4
-  swap q6,q3
-  cr q3,q2
-  swap q6,q3
-  cz q6,q2
-  cr q5,q2
-  swap q5,q4
-  cr q4,q2
-  swap q5,q4
-  swap q5,q3
-  cr q3,q2
-  swap q5,q3
-  cz q5,q2
   cr q4,q2
   swap q4,q3
   cr q3,q2
@@ -144,48 +38,6 @@ qubits 8
   cr q3,q2
   cz q3,q2
   h q2
-  cr q7,q1
-  swap q7,q6
-  cr q6,q1
-  swap q7,q6
-  swap q7,q5
-  cr q5,q1
-  swap q7,q5
-  swap q7,q4
-  cr q4,q1
-  swap q7,q4
-  swap q7,q3
-  cr q3,q1
-  swap q7,q3
-  swap q7,q2
-  cr q2,q1
-  swap q7,q2
-  cz q7,q1
-  cr q6,q1
-  swap q6,q5
-  cr q5,q1
-  swap q6,q5
-  swap q6,q4
-  cr q4,q1
-  swap q6,q4
-  swap q6,q3
-  cr q3,q1
-  swap q6,q3
-  swap q6,q2
-  cr q2,q1
-  swap q6,q2
-  cz q6,q1
-  cr q5,q1
-  swap q5,q4
-  cr q4,q1
-  swap q5,q4
-  swap q5,q3
-  cr q3,q1
-  swap q5,q3
-  swap q5,q2
-  cr q2,q1
-  swap q5,q2
-  cz q5,q1
   cr q4,q1
   swap q4,q3
   cr q3,q1
@@ -202,57 +54,6 @@ qubits 8
   cr q2,q1
   cz q2,q1
   h q1
-  cr q7,q0
-  swap q7,q6
-  cr q6,q0
-  swap q7,q6
-  swap q7,q5
-  cr q5,q0
-  swap q7,q5
-  swap q7,q4
-  cr q4,q0
-  swap q7,q4
-  swap q7,q3
-  cr q3,q0
-  swap q7,q3
-  swap q7,q2
-  cr q2,q0
-  swap q7,q2
-  swap q7,q1
-  cr q1,q0
-  swap q7,q1
-  cz q7,q0
-  cr q6,q0
-  swap q6,q5
-  cr q5,q0
-  swap q6,q5
-  swap q6,q4
-  cr q4,q0
-  swap q6,q4
-  swap q6,q3
-  cr q3,q0
-  swap q6,q3
-  swap q6,q2
-  cr q2,q0
-  swap q6,q2
-  swap q6,q1
-  cr q1,q0
-  swap q6,q1
-  cz q6,q0
-  cr q5,q0
-  swap q5,q4
-  cr q4,q0
-  swap q5,q4
-  swap q5,q3
-  cr q3,q0
-  swap q5,q3
-  swap q5,q2
-  cr q2,q0
-  swap q5,q2
-  swap q5,q1
-  cr q1,q0
-  swap q5,q1
-  cz q5,q0
   cr q4,q0
   swap q4,q3
   cr q3,q0

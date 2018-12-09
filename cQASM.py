@@ -27,12 +27,12 @@ class Qfunction(object):
         if type(subroutines) is type([]):
             for subroutine in subroutines:
                 if not isinstance(subroutine, Qsubroutine):
-                    raise TypeError("Input must be of type Qsubroutine")
+                    raise TypeError("\n\nInput must be of type Qsubroutine")
             return True
         elif isinstance(subroutines, Qsubroutine):
             return True
         else:
-            raise TypeError("Input must be of type Qsubroutine")
+            raise TypeError("\n\nInput must be of type Qsubroutine")
 
 
 class Qsubroutine(object):
@@ -60,12 +60,14 @@ class Qsubroutine(object):
         if isinstance(gates, list):
             for gate in gates:
                 if not isinstance(gate, Qgate):
-                    raise TypeError("Input must be of type Qgate")
+                    raise TypeError("\n\nInput must be of type 'Qgate', while type '{}' was received".format(
+                        gate.__class__.__name__))
             return True
         elif isinstance(gates, Qgate):
             return True
         else:
-            raise TypeError("Input must be of type Qgate")
+            raise TypeError("\n\nInput must be either of type 'Qgate' or 'list', while type '{}' was received".format(
+                gates.__class__.__name__))
 
 
 class Qgate(object):
@@ -83,28 +85,28 @@ class Qgate(object):
         for i in range(len(self.options)):
             if i is not 0:
                 string += ","
-            string += self.options[i]
+            string += str(self.options[i])
         return string
 
     def checkgate(self, name, options):
         if not isinstance(name, str):
-            raise TypeError("gate name must be string")
-        if name in self.gatelst:
+            raise TypeError("\n\ngate name must be string")
+        elif name in self.gatelst:
             if len(options) is len(self.gatelst[name]):
                 for i in range(len(options)):
-                    if type(options[i]) is not type(self.gatelst[name][i]):
-                        raise TypeError("Expected other data type in gate input")
+                    if isinstance(type(options[i]), type(self.gatelst[name][i])):
+                        raise TypeError("\n\nExpected other data type in gate input")
                 return True
             else:
-                raise NameError("Gate input size does not match")
+                raise NameError("\n\nGate input size does not match: {} vs {}".format(len(options), len(self.gatelst[name])))
         else:
-            raise KeyError("Unknown gate type: {}".format(name))
+            raise KeyError("\n\nUnknown gate type: {}".format(name))
 
     gatelst = {
         "map":     ("q","q"),
         "measure": (),
         "display": (),
-        "#":       ("str"),
+        "#":       ("s"),
         "":        (),
         "h":       ("q"),
         "x":       ("q"),
@@ -133,7 +135,7 @@ def buildnames(n, qubitnames, defaultname="q"):
         if len(qubitnames) == n:
             qn = qubitnames
         else:
-            raise ValueError("Incorrect number of qubit names")
+            raise ValueError("\n\nIncorrect number of qubit names")
     else:
         if isinstance(qubitnames, str):
             string = qubitnames
