@@ -1,5 +1,5 @@
 from cQASM import *
-from QFT import QFT, iQFT
+from QFT import QFT, iQFT, REVERSE
 from math import pi
 
 
@@ -14,116 +14,202 @@ class Cao2012Experiment(Qfunction):
             qnb = qubitnameb
             qnc = qubitnamec
 
-            gates = []
-
             # ccZ(a,b,c)
-            gates += [Qgate()]
-            gates += [Qgate('#', ' ccZ(a,b,c)')]
-            gates += [Qgate('tdag', qnb)]
-            gates += [Qgate('cx', qnb, qnc)]
-            gates += [Qgate('t', qnc)]
-            gates += [Qgate('cx', qnb, qnc)]
-            gates += [Qgate('cx', qna, qnb)]
-            gates += [Qgate('t', qnb)]
-            gates += [Qgate('cx', qnb, qnc)]
-            gates += [Qgate('tdag', qnc)]
-            gates += [Qgate('cx', qnb, qnc)]
-            gates += [Qgate('cx', qna, qnb)]
-            gates += [Qgate('tdag', qna)]
-            gates += [Qgate('tdag', qnc)]
-            gates += [Qgate('cx', qna, qnc)]
-            gates += [Qgate('t', qnc)]
-            gates += [Qgate('cx', qna, qnc)]
+            ccz_a_b_c_gates = []
+            ccz_a_b_c_gates += [Qgate()]
+            ccz_a_b_c_gates += [Qgate('#', ' ccZ(a,b,c)')]
+            ccz_a_b_c_gates += [Qgate('tdag', qnb)]
+            ccz_a_b_c_gates += [Qgate('cx', qnb, qnc)]
+            ccz_a_b_c_gates += [Qgate('t', qnc)]
+            ccz_a_b_c_gates += [Qgate('cx', qnb, qnc)]
+            ccz_a_b_c_gates += [Qgate('cx', qna, qnb)]
+            ccz_a_b_c_gates += [Qgate('t', qnb)]
+            ccz_a_b_c_gates += [Qgate('cx', qnb, qnc)]
+            ccz_a_b_c_gates += [Qgate('tdag', qnc)]
+            ccz_a_b_c_gates += [Qgate('cx', qnb, qnc)]
+            ccz_a_b_c_gates += [Qgate('cx', qna, qnb)]
+            ccz_a_b_c_gates += [Qgate('tdag', qna)]
+            ccz_a_b_c_gates += [Qgate('tdag', qnc)]
+            ccz_a_b_c_gates += [Qgate('cx', qna, qnc)]
+            ccz_a_b_c_gates += [Qgate('t', qnc)]
+            ccz_a_b_c_gates += [Qgate('cx', qna, qnc)]
 
-            # cRx(a,c,0.2)
-            gates += [Qgate()]
-            gates += [Qgate('#', ' cRx(a,c,0.2)')]
-            gates += [Qgate('rx', qnc, 0.2/4)]
-            gates += [Qgate('cz', qna, qnc)]
-            gates += [Qgate('rx', qnc, -0.2/2)]
-            gates += [Qgate('cz', qna, qnc)]
-            gates += [Qgate('rx', qnc, 0.2/4)]
+            # cRx(a,c,sign*0.2)
+            crx_a_c_020_gates = []
+            crx_a_c_020_gates += [Qgate()]
+            crx_a_c_020_gates += [Qgate('#', ' cRx(a,c,{})'.format(sign*0.2))]
+            crx_a_c_020_gates += [Qgate('rx', qnc, sign*0.2/4)]
+            crx_a_c_020_gates += [Qgate('cz', qna, qnc)]
+            crx_a_c_020_gates += [Qgate('rx', qnc, -sign*0.2/2)]
+            crx_a_c_020_gates += [Qgate('cz', qna, qnc)]
+            crx_a_c_020_gates += [Qgate('rx', qnc, sign*0.2/4)]
 
             # cVdag(a,c)
-            gates += [Qgate()]
-            gates += [Qgate('#', ' cVdag(a,c)')]
-            #   cH(a,c)
-            gates += [Qgate('s', qna)]
-            gates += [Qgate('h', qnc)]
-            gates += [Qgate('tdag', qnc)]
-            gates += [Qgate('tdag', qnc)]
-            gates += [Qgate('cx', qna, qnc)]
-            gates += [Qgate('h', qnc)]
-            gates += [Qgate('t', qnc)]
-            gates += [Qgate('cx', qna, qnc)]
-            gates += [Qgate('t', qnc)]
-            gates += [Qgate('h', qnc)]
-            gates += [Qgate('s', qnc)]
-            gates += [Qgate('x', qnc)]
-            #   cZ(a,c)
-            gates += [Qgate('cz', qna, qnc)]
-            #   cS(a,c)
-            gates += [Qgate('tdag', qna)]
-            gates += [Qgate('tdag', qnc)]
-            gates += [Qgate('cx', qna, qnc)]
-            gates += [Qgate('t', qnc)]
-            gates += [Qgate('cx', qna, qnc)]
-            #   cH(a,c)
-            gates += [Qgate('s', qna)]
-            gates += [Qgate('h', qnc)]
-            gates += [Qgate('tdag', qnc)]
-            gates += [Qgate('tdag', qnc)]
-            gates += [Qgate('cx', qna, qnc)]
-            gates += [Qgate('h', qnc)]
-            gates += [Qgate('t', qnc)]
-            gates += [Qgate('cx', qna, qnc)]
-            gates += [Qgate('t', qnc)]
-            gates += [Qgate('h', qnc)]
-            gates += [Qgate('s', qnc)]
-            gates += [Qgate('x', qnc)]
+            cvdag_a_c_gates = []
+            cvdag_a_c_gates += [Qgate()]
+            cvdag_a_c_gates += [Qgate('#', ' cVdag(a,c)')]
+            # cH(a,c)
+            cvdag_a_c_gates += [Qgate('t', qna)]
+            cvdag_a_c_gates += [Qgate('x', qna)]
+            cvdag_a_c_gates += [Qgate('tdag', qna)]
+            cvdag_a_c_gates += [Qgate('x', qna)]
+            cvdag_a_c_gates += [Qgate('h', qnc)]
+            cvdag_a_c_gates += [Qgate('tdag', qnc)]
+            cvdag_a_c_gates += [Qgate('tdag', qnc)]
+            cvdag_a_c_gates += [Qgate('cx', qna, qnc)]
+            cvdag_a_c_gates += [Qgate('h', qnc)]
+            cvdag_a_c_gates += [Qgate('t', qnc)]
+            cvdag_a_c_gates += [Qgate('cx', qna, qnc)]
+            cvdag_a_c_gates += [Qgate('t', qnc)]
+            cvdag_a_c_gates += [Qgate('h', qnc)]
+            cvdag_a_c_gates += [Qgate('s', qnc)]
+            cvdag_a_c_gates += [Qgate('x', qnc)]
+            # cZ(a,c)
+            cvdag_a_c_gates += [Qgate('cz', qna, qnc)]
+            # cS(a,c)
+            cvdag_a_c_gates += [Qgate('t', qna)]
+            cvdag_a_c_gates += [Qgate('t', qnc)]
+            cvdag_a_c_gates += [Qgate('cx', qna, qnc)]
+            cvdag_a_c_gates += [Qgate('tdag', qnc)]
+            cvdag_a_c_gates += [Qgate('cx', qna, qnc)]
+            # cH(a,c)
+            cvdag_a_c_gates += [Qgate('t', qna)]
+            cvdag_a_c_gates += [Qgate('x', qna)]
+            cvdag_a_c_gates += [Qgate('tdag', qna)]
+            cvdag_a_c_gates += [Qgate('x', qna)]
+            cvdag_a_c_gates += [Qgate('h', qnc)]
+            cvdag_a_c_gates += [Qgate('tdag', qnc)]
+            cvdag_a_c_gates += [Qgate('tdag', qnc)]
+            cvdag_a_c_gates += [Qgate('cx', qna, qnc)]
+            cvdag_a_c_gates += [Qgate('h', qnc)]
+            cvdag_a_c_gates += [Qgate('t', qnc)]
+            cvdag_a_c_gates += [Qgate('cx', qna, qnc)]
+            cvdag_a_c_gates += [Qgate('t', qnc)]
+            cvdag_a_c_gates += [Qgate('h', qnc)]
+            cvdag_a_c_gates += [Qgate('s', qnc)]
+            cvdag_a_c_gates += [Qgate('x', qnc)]
 
-            # Rz(a,0.38)
-            gates += [Qgate()]
-            gates += [Qgate('#', ' Rz(a,0.38)')]
-            gates += [Qgate('rz', qna, 0.38)]
+            # cV(a,c)
+            cv_a_c_gates = []
+            cv_a_c_gates += [Qgate()]
+            cv_a_c_gates += [Qgate('#', ' cV(a,c)')]
+            # cH(a,c)
+            cv_a_c_gates += [Qgate('t', qna)]
+            cv_a_c_gates += [Qgate('x', qna)]
+            cv_a_c_gates += [Qgate('tdag', qna)]
+            cv_a_c_gates += [Qgate('x', qna)]
+            cv_a_c_gates += [Qgate('h', qnc)]
+            cv_a_c_gates += [Qgate('tdag', qnc)]
+            cv_a_c_gates += [Qgate('tdag', qnc)]
+            cv_a_c_gates += [Qgate('cx', qna, qnc)]
+            cv_a_c_gates += [Qgate('h', qnc)]
+            cv_a_c_gates += [Qgate('t', qnc)]
+            cv_a_c_gates += [Qgate('cx', qna, qnc)]
+            cv_a_c_gates += [Qgate('t', qnc)]
+            cv_a_c_gates += [Qgate('h', qnc)]
+            cv_a_c_gates += [Qgate('s', qnc)]
+            cv_a_c_gates += [Qgate('x', qnc)]
+            # cS(a,c)
+            cv_a_c_gates += [Qgate('t', qna)]
+            cv_a_c_gates += [Qgate('t', qnc)]
+            cv_a_c_gates += [Qgate('cx', qna, qnc)]
+            cv_a_c_gates += [Qgate('tdag', qnc)]
+            cv_a_c_gates += [Qgate('cx', qna, qnc)]
+            # cH(a,c)
+            cv_a_c_gates += [Qgate('t', qna)]
+            cv_a_c_gates += [Qgate('x', qna)]
+            cv_a_c_gates += [Qgate('tdag', qna)]
+            cv_a_c_gates += [Qgate('x', qna)]
+            cv_a_c_gates += [Qgate('h', qnc)]
+            cv_a_c_gates += [Qgate('tdag', qnc)]
+            cv_a_c_gates += [Qgate('tdag', qnc)]
+            cv_a_c_gates += [Qgate('cx', qna, qnc)]
+            cv_a_c_gates += [Qgate('h', qnc)]
+            cv_a_c_gates += [Qgate('t', qnc)]
+            cv_a_c_gates += [Qgate('cx', qna, qnc)]
+            cv_a_c_gates += [Qgate('t', qnc)]
+            cv_a_c_gates += [Qgate('h', qnc)]
+            cv_a_c_gates += [Qgate('s', qnc)]
+            cv_a_c_gates += [Qgate('x', qnc)]
 
-            # cRx(a,b,0.98)
-            gates += [Qgate()]
-            gates += [Qgate('#', ' cRx(a,b,0.98)')]
-            gates += [Qgate('rx', qnc, 0.98/4)]
-            gates += [Qgate('cz', qna, qnc)]
-            gates += [Qgate('rx', qnc, -0.98/2)]
-            gates += [Qgate('cz', qna, qnc)]
-            gates += [Qgate('rx', qnc, 0.98/4)]
+            # Rz(a,sign*0.38)
+            rz_a_038_gates = []
+            rz_a_038_gates += [Qgate()]
+            rz_a_038_gates += [Qgate('#', ' Rz(a,{})'.format(sign*0.38))]
+            rz_a_038_gates += [Qgate('rz', qna, sign*0.38)]
 
-            # Rz(a,1.88)
-            gates += [Qgate()]
-            gates += [Qgate('#', ' Rz(a,1.88)')]
-            gates += [Qgate('rz', qna, 1.88)]
+            # cRx(a,b,sign*0.98)
+            crx_a_b_098_gates = []
+            crx_a_b_098_gates += [Qgate()]
+            crx_a_b_098_gates += [Qgate('#', ' cRx(a,b,{})'.format(sign*0.98))]
+            crx_a_b_098_gates += [Qgate('rx', qnb, sign*0.98/4)]
+            crx_a_b_098_gates += [Qgate('cz', qna, qnb)]
+            crx_a_b_098_gates += [Qgate('rx', qnb, -sign*0.98/2)]
+            crx_a_b_098_gates += [Qgate('cz', qna, qnb)]
+            crx_a_b_098_gates += [Qgate('rx', qnb, sign*0.98/4)]
+
+            # Rz(a,sign*1.88)
+            rz_a_188_gates = []
+            rz_a_188_gates += [Qgate()]
+            rz_a_188_gates += [Qgate('#', ' Rz(a,{})'.format(sign*1.88))]
+            rz_a_188_gates += [Qgate('rz', qna, sign*1.88)]
 
             # Toffoli(a,b,c)
-            gates += [Qgate()]
-            gates += [Qgate('#', ' Toffoli(a,b,c)')]
-            gates += [Qgate('toffoli', qna, qnb, qnc)]
+            toffoli_a_b_c_gates = []
+            toffoli_a_b_c_gates += [Qgate()]
+            toffoli_a_b_c_gates += [Qgate('#', ' Toffoli(a,b,c)')]
+            toffoli_a_b_c_gates += [Qgate('toffoli', qna, qnb, qnc)]
 
-            # cRx(a,b,0.59)
-            gates += [Qgate()]
-            gates += [Qgate('#', ' cRx(a,b,0.59)')]
-            gates += [Qgate('rx', qnc, 0.59/4)]
-            gates += [Qgate('cz', qna, qnc)]
-            gates += [Qgate('rx', qnc, -0.59/2)]
-            gates += [Qgate('cz', qna, qnc)]
-            gates += [Qgate('rx', qnc, 0.59/4)]
+            # cRx(a,b,sign*0.59)
+            crx_a_b_059_gates = []
+            crx_a_b_059_gates += [Qgate()]
+            crx_a_b_059_gates += [Qgate('#', ' cRx(a,b,{})'.format(sign*0.59))]
+            crx_a_b_059_gates += [Qgate('rx', qnb, sign*0.59/4)]
+            crx_a_b_059_gates += [Qgate('cz', qna, qnb)]
+            crx_a_b_059_gates += [Qgate('rx', qnb, -sign*0.59/2)]
+            crx_a_b_059_gates += [Qgate('cz', qna, qnb)]
+            crx_a_b_059_gates += [Qgate('rx', qnb, sign*0.59/4)]
 
-            # Toffoli(a,b,c)
-            gates += [Qgate()]
-            gates += [Qgate('#', ' Toffoli(a,b,c)')]
-            gates += [Qgate('toffoli', qna, qnb, qnc)]
+            # # Toffoli(a,b,c)
+            # toffoli_a_b_c_gates = []
+            # toffoli_a_b_c_gates += [Qgate()]
+            # toffoli_a_b_c_gates += [Qgate('#', ' Toffoli(a,b,c)')]
+            # toffoli_a_b_c_gates += [Qgate('toffoli', qna, qnb, qnc)]
 
             # cZ(a,c)
-            gates += [Qgate()]
-            gates += [Qgate('#', ' cZ(a,c)')]
-            gates += [Qgate('cz', qna, qnc)]
+            cz_a_c_gates = []
+            cz_a_c_gates += [Qgate()]
+            cz_a_c_gates += [Qgate('#', ' cZ(a,c)')]
+            cz_a_c_gates += [Qgate('cz', qna, qnc)]
+
+            gates = []
+
+            if sign == 1:
+                gates += ccz_a_b_c_gates + \
+                         crx_a_c_020_gates + \
+                         cvdag_a_c_gates + \
+                         rz_a_038_gates + \
+                         crx_a_b_098_gates + \
+                         rz_a_188_gates + \
+                         toffoli_a_b_c_gates + \
+                         crx_a_b_059_gates + \
+                         toffoli_a_b_c_gates + \
+                         cz_a_c_gates
+                
+            elif sign == -1:
+                gates += cz_a_c_gates + \
+                         toffoli_a_b_c_gates + \
+                         crx_a_b_059_gates + \
+                         toffoli_a_b_c_gates + \
+                         rz_a_188_gates + \
+                         crx_a_b_098_gates + \
+                         rz_a_038_gates + \
+                         cv_a_c_gates + \
+                         crx_a_c_020_gates + \
+                         ccz_a_b_c_gates
+                
+            else:
+                raise ValueError("variable 'sign' must be either +1 or -1")
 
             for i in range(n):
                 gates += [Qgate(), Qgate('#', '####')] + gates
@@ -133,9 +219,9 @@ class Cao2012Experiment(Qfunction):
                                     "on {} and {}, controlled by {}"
                                     .format(2*sign, 2**(4-n), qnb, qnc, qna)))
 
-            expAsr = Qsubroutine(name="expA", gates=gates)
+            expAsubroutine = Qsubroutine(name="expA", gates=gates)
 
-            return expAsr
+            return expAsubroutine
 
         def cRy(qubitnamea, qubitnameb, n, r):
             """"outputs controlled-Ry(2^(n)*pi/2^(r-1)) on qubit b, with qubit a as control"""
@@ -146,7 +232,7 @@ class Cao2012Experiment(Qfunction):
             theta = pi*2**(n-r+1)
 
             gates = []
-            gates += [Qgate('#', " performs Ry(2^({})*pi/2^({}-1)) = Ry(pi/2^{}) on {}, controlled by {}"
+            gates += [Qgate('#', " performs Ry(2^({})*pi/2^({}-1)) = Ry(pi/{}) on {}, controlled by {}"
                                  .format(n, r, 2**(r-n-1), qnb, qna))]
             gates += [Qgate('ry', qnb, theta/4)]
             gates += [Qgate('cx', qna, qnb)]
@@ -172,6 +258,7 @@ class Cao2012Experiment(Qfunction):
         for i in range(4):
             expAsubroutines += [expA(qubitnamea=qn[i+1], qubitnameb=qn[-2], qubitnamec=qn[-1], sign=-1, n=i)]
 
+        # reversesubroutine = REVERSE(n=4, qubitnames=qn[1:5])
         iqftsubroutine = iQFT(n=4, qubitnames=qn[1:5])
 
         swapsubroutine = Qsubroutine(name="swap", gates=[Qgate("swap", qn[2], qn[4])])
@@ -184,13 +271,15 @@ class Cao2012Experiment(Qfunction):
 
         unexpAsubroutines = []
         for i in reversed(range(4)):
-            unexpAsubroutines += [expA(qubitnamea=qn[i + 1], qubitnameb=qn[-2], qubitnamec=qn[-1], sign=1, n=i)]
+            unexpAsubroutines += [expA(qubitnamea=qn[i+1], qubitnameb=qn[-2], qubitnamec=qn[-1], sign=1, n=i)]
 
         uninitgates = []
         for i in range(1, 5):
             uninitgates += [Qgate("h", qn[i])]
         uninitsubroutine = Qsubroutine(name="uninit", gates=uninitgates)
 
+        #resultgates = [Qgate("measure"), Qgate("display"), Qgate("measure"), Qgate("display")]
+        #resultgates[0].options = ["q0"]
         resultgates = [Qgate("display"), Qgate("measure"), Qgate("display")]
         resultsubroutine = Qsubroutine(name="result", gates=resultgates)
 
@@ -198,9 +287,11 @@ class Cao2012Experiment(Qfunction):
         subroutines += [initsubroutine]
         subroutines += expAsubroutines
         subroutines += [iqftsubroutine]
+        # subroutines += [reversesubroutine]
         subroutines += [swapsubroutine]
         subroutines += cRysubroutines
         subroutines += [swapsubroutine]
+        # subroutines += [reversesubroutine]
         subroutines += [qftsubroutine]
         subroutines += unexpAsubroutines
         subroutines += [uninitsubroutine]
