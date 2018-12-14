@@ -19,8 +19,8 @@
 #    (x q1)
 # The commands in brackets are optional:
 # - if none of the bracketed commands are performed, we get [1;1;1;-1]
-# - If only the optional commands in the square brackets are performed, we get [1;1;-1;1]
-# - If only the optional commands in the round brackets are performed, we get [1;-1;1;1]
+# - If only the optional commands in the square brackets are performed, we get [1;-1;1;1]
+# - If only the optional commands in the round brackets are performed, we get [1;1;-1;1]
 # - If both the optional commands in the round and quare brackets are performed, we get [-1;1;1;1]
 
 qubits 3
@@ -56,12 +56,12 @@ qubits 3
   t q2
   cx q0,q2
   
-  # cRx(a,c,0.2)
-  rx q2,0.05
+  # cRx(a,c,-0.196)
+  rx q2,-0.049
   cz q0,q2
-  rx q2,-0.1
+  rx q2,0.098
   cz q0,q2
-  rx q2,0.05
+  rx q2,-0.049
   
   # cVdag(a,c)
   t q0
@@ -101,68 +101,114 @@ qubits 3
   s q2
   x q2
   
-  # Rz(a,0.38)
-  rz q0,0.38
+  # Rz(a,0.375)
+  rz q0,0.375
   
-  # cRx(a,b,0.98)
-  rx q1,0.245
+  # cRx(a,b,-0.982)
+  rx q1,-0.2455
   cz q0,q1
-  rx q1,-0.49
+  rx q1,0.491
   cz q0,q1
-  rx q1,0.245
+  rx q1,-0.2455
   
-  # Rz(a,1.88)
-  rz q0,1.88
+  # Rz(a,1.883)
+  rz q0,1.883
   
   # Toffoli(a,b,c)
   toffoli q0,q1,q2
   
-  # cRx(a,b,0.59)
-  rx q1,0.1475
+  # cRx(a,b,-0.589)
+  rx q1,-0.14725
   cz q0,q1
-  rx q1,-0.295
+  rx q1,0.2945
   cz q0,q1
-  rx q1,0.1475
+  rx q1,-0.14725
   
   # Toffoli(a,b,c)
   toffoli q0,q1,q2
   
   # cZ(a,c)
   cz q0,q2
+  
+  # cX(a,b)
+  cx q0,q1
+  
+  # ccZ(a,b,c)
+  tdag q1
+  cx q1,q2
+  t q2
+  cx q1,q2
+  cx q0,q1
+  t q1
+  cx q1,q2
+  tdag q2
+  cx q1,q2
+  cx q0,q1
+  tdag q0
+  tdag q2
+  cx q0,q2
+  t q2
+  cx q0,q2
+  
+  # cX(a,b)
+  cx q0,q1
   
   display
 
 .expA
   # performs exp(sign*i*A*t0*2^(n)/16) = exp(-2*pi*i*A/16) on q1 and q2, controlled by q0
   
+  # cX(a,b)
+  cx q0,q1
+  
+  # ccZ(a,b,c)
+  tdag q1
+  cx q1,q2
+  t q2
+  cx q1,q2
+  cx q0,q1
+  t q1
+  cx q1,q2
+  tdag q2
+  cx q1,q2
+  cx q0,q1
+  tdag q0
+  tdag q2
+  cx q0,q2
+  t q2
+  cx q0,q2
+  
+  # cX(a,b)
+  cx q0,q1
+  
   # cZ(a,c)
   cz q0,q2
   
   # Toffoli(a,b,c)
   toffoli q0,q1,q2
   
-  # cRx(a,b,-0.59)
-  rx q1,-0.1475
+  # cRx(a,b,0.589)
+  rx q1,0.14725
   cz q0,q1
-  rx q1,0.295
+  rx q1,-0.2945
   cz q0,q1
-  rx q1,-0.1475
+  rx q1,0.14725
   
   # Toffoli(a,b,c)
   toffoli q0,q1,q2
   
-  # Rz(a,-1.88)
-  rz q0,-1.88
+  # Rz(a,-1.883)
+  rz q0,-1.883
   
-  # cRx(a,b,-0.98)
-  rx q1,-0.245
+  # cRx(a,b,0.982)
+  rx q1,0.2455
   cz q0,q1
-  rx q1,0.49
+  rx q1,-0.491
   cz q0,q1
-  rx q1,-0.245
+  rx q1,0.2455
   
-  # Rz(a,-0.38)
-  rz q0,-0.38
+  # Rz(a,-0.375)
+  rz q0,-0.375
   
   # cV(a,c)
   t q0
@@ -201,12 +247,12 @@ qubits 3
   s q2
   x q2
   
-  # cRx(a,c,-0.2)
-  rx q2,-0.05
+  # cRx(a,c,0.196)
+  rx q2,0.049
   cz q0,q2
-  rx q2,0.1
+  rx q2,-0.098
   cz q0,q2
-  rx q2,-0.05
+  rx q2,0.049
   
   # ccZ(a,b,c)
   tdag q1

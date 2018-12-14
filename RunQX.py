@@ -34,10 +34,6 @@ if __name__ == "__main__":
     if not os.path.exists(path):
         os.makedirs(path)
 
-    inp_a = "10101"
-    inp_b = "01010"
-    inp_ctrl = "1"
-
     run_qft_test = False
     run_add_qft = False
     run_add_qft_ctrl = False
@@ -46,6 +42,10 @@ if __name__ == "__main__":
     run_mul_qft = False
     run_Cao2012 = True
     run_test = False
+
+    inp_a = "10101"
+    inp_b = "01010"
+    inp_ctrl = "1"
 
     na = len(inp_a)
     nb = len(inp_b)
@@ -207,4 +207,4 @@ if __name__ == "__main__":
 
     if run_test:
 
-        res_cao2012 = runQX('test_cry', 3, show_output=True)
+        res_cao2012 = runQX('test_expa', 3, show_output=True)

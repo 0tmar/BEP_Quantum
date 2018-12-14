@@ -34,15 +34,15 @@ class Cao2012Experiment(Qfunction):
             ccz_a_b_c_gates += [Qgate('t', qnc)]
             ccz_a_b_c_gates += [Qgate('cx', qna, qnc)]
 
-            # cRx(a,c,sign*0.2)
+            # cRx(a,c,sign*0.196)
             crx_a_c_020_gates = []
             crx_a_c_020_gates += [Qgate()]
-            crx_a_c_020_gates += [Qgate('#', ' cRx(a,c,{})'.format(sign*0.2))]
-            crx_a_c_020_gates += [Qgate('rx', qnc, sign*0.2/4)]
+            crx_a_c_020_gates += [Qgate('#', ' cRx(a,c,{})'.format(-sign*0.196))]
+            crx_a_c_020_gates += [Qgate('rx', qnc, -sign*0.196/4)]
             crx_a_c_020_gates += [Qgate('cz', qna, qnc)]
-            crx_a_c_020_gates += [Qgate('rx', qnc, -sign*0.2/2)]
+            crx_a_c_020_gates += [Qgate('rx', qnc, sign*0.196/2)]
             crx_a_c_020_gates += [Qgate('cz', qna, qnc)]
-            crx_a_c_020_gates += [Qgate('rx', qnc, sign*0.2/4)]
+            crx_a_c_020_gates += [Qgate('rx', qnc, -sign*0.196/4)]
 
             # cVdag(a,c)
             cvdag_a_c_gates = []
@@ -132,27 +132,27 @@ class Cao2012Experiment(Qfunction):
             cv_a_c_gates += [Qgate('s', qnc)]
             cv_a_c_gates += [Qgate('x', qnc)]
 
-            # Rz(a,sign*0.38)
+            # Rz(a,sign*0.375)
             rz_a_038_gates = []
             rz_a_038_gates += [Qgate()]
-            rz_a_038_gates += [Qgate('#', ' Rz(a,{})'.format(sign*0.38))]
-            rz_a_038_gates += [Qgate('rz', qna, sign*0.38)]
+            rz_a_038_gates += [Qgate('#', ' Rz(a,{})'.format(sign*0.375))]
+            rz_a_038_gates += [Qgate('rz', qna, sign*0.375)]
 
-            # cRx(a,b,sign*0.98)
+            # cRx(a,b,-sign*0.982)
             crx_a_b_098_gates = []
             crx_a_b_098_gates += [Qgate()]
-            crx_a_b_098_gates += [Qgate('#', ' cRx(a,b,{})'.format(sign*0.98))]
-            crx_a_b_098_gates += [Qgate('rx', qnb, sign*0.98/4)]
+            crx_a_b_098_gates += [Qgate('#', ' cRx(a,b,{})'.format(-sign*0.982))]
+            crx_a_b_098_gates += [Qgate('rx', qnb, -sign*0.982/4)]
             crx_a_b_098_gates += [Qgate('cz', qna, qnb)]
-            crx_a_b_098_gates += [Qgate('rx', qnb, -sign*0.98/2)]
+            crx_a_b_098_gates += [Qgate('rx', qnb, sign*0.982/2)]
             crx_a_b_098_gates += [Qgate('cz', qna, qnb)]
-            crx_a_b_098_gates += [Qgate('rx', qnb, sign*0.98/4)]
+            crx_a_b_098_gates += [Qgate('rx', qnb, -sign*0.982/4)]
 
-            # Rz(a,sign*1.88)
+            # Rz(a,sign*1.883)
             rz_a_188_gates = []
             rz_a_188_gates += [Qgate()]
-            rz_a_188_gates += [Qgate('#', ' Rz(a,{})'.format(sign*1.88))]
-            rz_a_188_gates += [Qgate('rz', qna, sign*1.88)]
+            rz_a_188_gates += [Qgate('#', ' Rz(a,{})'.format(sign*1.883))]
+            rz_a_188_gates += [Qgate('rz', qna, sign*1.883)]
 
             # Toffoli(a,b,c)
             toffoli_a_b_c_gates = []
@@ -160,15 +160,15 @@ class Cao2012Experiment(Qfunction):
             toffoli_a_b_c_gates += [Qgate('#', ' Toffoli(a,b,c)')]
             toffoli_a_b_c_gates += [Qgate('toffoli', qna, qnb, qnc)]
 
-            # cRx(a,b,sign*0.59)
+            # cRx(a,b,-sign*0.589)
             crx_a_b_059_gates = []
             crx_a_b_059_gates += [Qgate()]
-            crx_a_b_059_gates += [Qgate('#', ' cRx(a,b,{})'.format(sign*0.59))]
-            crx_a_b_059_gates += [Qgate('rx', qnb, sign*0.59/4)]
+            crx_a_b_059_gates += [Qgate('#', ' cRx(a,b,{})'.format(-sign*0.589))]
+            crx_a_b_059_gates += [Qgate('rx', qnb, -sign*0.589/4)]
             crx_a_b_059_gates += [Qgate('cz', qna, qnb)]
-            crx_a_b_059_gates += [Qgate('rx', qnb, -sign*0.59/2)]
+            crx_a_b_059_gates += [Qgate('rx', qnb, sign*0.589/2)]
             crx_a_b_059_gates += [Qgate('cz', qna, qnb)]
-            crx_a_b_059_gates += [Qgate('rx', qnb, sign*0.59/4)]
+            crx_a_b_059_gates += [Qgate('rx', qnb, -sign*0.589/4)]
 
             # # Toffoli(a,b,c)
             # toffoli_a_b_c_gates = []
@@ -182,6 +182,12 @@ class Cao2012Experiment(Qfunction):
             cz_a_c_gates += [Qgate('#', ' cZ(a,c)')]
             cz_a_c_gates += [Qgate('cz', qna, qnc)]
 
+            # cX(a,b)
+            cx_a_b_gates = []
+            cx_a_b_gates += [Qgate()]
+            cx_a_b_gates += [Qgate('#', ' cX(a,b)')]
+            cx_a_b_gates += [Qgate('cx', qna, qnb)]
+
             gates = []
 
             if sign == 1:
@@ -194,10 +200,16 @@ class Cao2012Experiment(Qfunction):
                          toffoli_a_b_c_gates + \
                          crx_a_b_059_gates + \
                          toffoli_a_b_c_gates + \
-                         cz_a_c_gates
+                         cz_a_c_gates + \
+                         cx_a_b_gates + \
+                         ccz_a_b_c_gates + \
+                         cx_a_b_gates
                 
             elif sign == -1:
-                gates += cz_a_c_gates + \
+                gates += cx_a_b_gates + \
+                         ccz_a_b_c_gates + \
+                         cx_a_b_gates + \
+                         cz_a_c_gates + \
                          toffoli_a_b_c_gates + \
                          crx_a_b_059_gates + \
                          toffoli_a_b_c_gates + \
@@ -232,13 +244,13 @@ class Cao2012Experiment(Qfunction):
             theta = pi*2**(n-r+1)
 
             gates = []
-            gates += [Qgate('#', " performs Ry(2^({})*pi/2^({}-1)) = Ry(pi/{}) on {}, controlled by {}"
+            gates += [Qgate('#', " performs Ry(-2^({})*pi/2^({}-1)) = Ry(-pi/{}) on {}, controlled by {}"
                                  .format(n, r, 2**(r-n-1), qnb, qna))]
-            gates += [Qgate('ry', qnb, theta/4)]
+            gates += [Qgate('ry', qnb, -theta/4)]
             gates += [Qgate('cx', qna, qnb)]
-            gates += [Qgate('ry', qnb, -theta/2)]
+            gates += [Qgate('ry', qnb, theta/2)]
             gates += [Qgate('cx', qna, qnb)]
-            gates += [Qgate('ry', qnb, theta/4)]
+            gates += [Qgate('ry', qnb, -theta/4)]
 
             cRysr = Qsubroutine(name="cRy", gates=gates)
 
