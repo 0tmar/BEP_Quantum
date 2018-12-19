@@ -9,6 +9,11 @@ qubits 7
   h q4
   h q5
   h q6
+  x q5
+  x q6
+  cz q5,q6
+  x q6
+  x q5
   display
 
 .expA
@@ -368,6 +373,8 @@ qubits 7
   cx q4,q6
 
 .iqft
+  display
+  
   h q4
   cr q4,q3
   cz q4,q3
@@ -396,41 +403,43 @@ qubits 7
   cr q2,q1
   cz q2,q1
   h q1
+  
+  display
 
 .swap
   swap q2,q4
 
 .cRy
-  # performs Ry(-2^(3)*pi/2^(5-1)) = Ry(-pi/2) on q0, controlled by q1
-  ry q0,-0.39269908169872414
+  # performs Ry(2^(3)*pi/2^(10-1)) = Ry(pi/64) on q0, controlled by q1
+  ry q0,0.01227184630308513
   cx q1,q0
-  ry q0,0.7853981633974483
+  ry q0,-0.02454369260617026
   cx q1,q0
-  ry q0,-0.39269908169872414
+  ry q0,0.01227184630308513
 
 .cRy
-  # performs Ry(-2^(2)*pi/2^(5-1)) = Ry(-pi/4) on q0, controlled by q2
-  ry q0,-0.19634954084936207
+  # performs Ry(2^(2)*pi/2^(10-1)) = Ry(pi/128) on q0, controlled by q2
+  ry q0,0.006135923151542565
   cx q2,q0
-  ry q0,0.39269908169872414
+  ry q0,-0.01227184630308513
   cx q2,q0
-  ry q0,-0.19634954084936207
+  ry q0,0.006135923151542565
 
 .cRy
-  # performs Ry(-2^(1)*pi/2^(5-1)) = Ry(-pi/8) on q0, controlled by q3
-  ry q0,-0.09817477042468103
+  # performs Ry(2^(1)*pi/2^(10-1)) = Ry(pi/256) on q0, controlled by q3
+  ry q0,0.0030679615757712823
   cx q3,q0
-  ry q0,0.19634954084936207
+  ry q0,-0.006135923151542565
   cx q3,q0
-  ry q0,-0.09817477042468103
+  ry q0,0.0030679615757712823
 
 .cRy
-  # performs Ry(-2^(0)*pi/2^(5-1)) = Ry(-pi/16) on q0, controlled by q4
-  ry q0,-0.04908738521234052
+  # performs Ry(2^(0)*pi/2^(10-1)) = Ry(pi/512) on q0, controlled by q4
+  ry q0,0.0015339807878856412
   cx q4,q0
-  ry q0,0.09817477042468103
+  ry q0,-0.0030679615757712823
   cx q4,q0
-  ry q0,-0.04908738521234052
+  ry q0,0.0015339807878856412
 
 .swap
   swap q2,q4
@@ -730,11 +739,10 @@ qubits 7
   h q6
   s q6
   x q6
-  cz q1,q6
-  t q1
-  t q6
-  cx q1,q6
+  tdag q1
   tdag q6
+  cx q1,q6
+  t q6
   cx q1,q6
   t q1
   x q1

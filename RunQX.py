@@ -66,7 +66,6 @@ if __name__ == "__main__":
             (n-na)*" " + inp_a,
             (n-na)*" " + outp_qft_test))
 
-
     if run_add_qft:
         f = open(path + "adder_qft.qc", "w")
         f.write(str(AdderQFT.ADDcircuit(inp_a=inp_a, inp_b=inp_b)))
@@ -162,40 +161,79 @@ if __name__ == "__main__":
             outp_a_times_b_qft, int(outp_a_times_b_qft, 2)))
 
     if run_Cao2012:
-        r = 5
+        r = 10
+        m = 0
+        n = None
+
+        do_plot = False
 
         f = open(path + "Cao2012.qc", "w")
-        f.write(str(Cao2012_Experiment.Cao2012Experiment(r=r)))
+        f.write(str(Cao2012_Experiment.Cao2012Experiment(r=r, m=m, n=n)))
         f.close()
 
         res_cao2012, raw_cao2012 = runQX('Cao2012', 7, return_res=True, return_raw=True, show_output=True)
 
         idx = raw_cao2012.rfind('> +')
         idx = raw_cao2012.rfind('> +', 0, idx)
-        outp_raw_cao2012 = raw_cao2012[idx-128*38+4:idx+4]
+        idx2 = raw_cao2012.rfind('> +', 0, idx-128*38+4)
+        idx3 = raw_cao2012.rfind('> +', 0, idx2-64*38+4)
+        # outp_raw_cao2012 = raw_cao2012[idx-128*38+4:idx+4]
+        # outp_raw_cao2012_2 = raw_cao2012[idx2-64*38+4:idx2+4]
+        # outp_raw_cao2012_3 = raw_cao2012[idx3-64*38+4:idx3+4]
 
-        A = np.zeros((128, 5))
-        state = []
-        statebin = []
-        areal = []
-        aimag = []
-        atot = []
-        for i in range(128):
-            state.append(int(raw_cao2012[idx-i*38-1:idx-i*38-8:-1], 2))
-            statebin.append(int(raw_cao2012[idx-i*38-1:idx-i*38-8:-1]))
-            areal.append(float(raw_cao2012[idx-i*38-29:idx-i*38-20]))
-            aimag.append(float(raw_cao2012[idx-i*38-19:idx-i*38-10]))
-            atot.append(np.sqrt(areal[-1]**2 + aimag[-1]**2))
-            A[127-i][:] = [state[-1], statebin[-1], areal[-1], aimag[-1], atot[-1]]
-        A = A[A[:, 0].argsort()]
+        def build_output_matrix(outp_raw, idx, qubits, lines, do_sort=True):
+            linelength = 31 + qubits
+            A = np.zeros((lines, 5))
+            state = []
+            statebin = []
+            areal = []
+            aimag = []
+            atot = []
+            for i in range(lines):
+                state.append(int(outp_raw[(idx - (i*linelength) - 1):(idx - (i*linelength) - (qubits+1)):(-1)], 2))
+                statebin.append(int(outp_raw[(idx - (i*linelength) - 1):(idx - (i*linelength) - (qubits+1)):(-1)]))
+                areal.append(float(outp_raw[(idx - (i*linelength) - (qubits+22)):(idx - (i*linelength) - (qubits+13))]))
+                aimag.append(float(outp_raw[(idx - (i*linelength) - (qubits+12)):(idx - (i*linelength) - (qubits+3))]))
+                atot.append(np.sqrt(areal[-1] ** 2 + aimag[-1] ** 2))
+                A[lines - (i+1)][:] = [state[-1], statebin[-1], areal[-1], aimag[-1], atot[-1]]
+            if do_sort:
+                A = A[A[:, 0].argsort()]
+            return A
 
+        A = build_output_matrix(outp_raw=raw_cao2012, idx=idx, qubits=7, lines=128, do_sort=True)
+        A2 = build_output_matrix(outp_raw=raw_cao2012, idx=idx2, qubits=7, lines=64, do_sort=True)
+        A3 = build_output_matrix(outp_raw=raw_cao2012, idx=idx3, qubits=7, lines=64, do_sort=False)
+
+        print(A3[:, 0:4])
+        print("")
+        print(A2[:, 0:4])
+        print("")
         print(A)
         print("")
+        print(A[0:4, :])
+        print("")
         print(A[64:68, :])
+        print("")
+        print(A[0:4, 2])
+        print(A[64:68, 2])
 
-        plt.bar(state, atot)
-        # plt.bar(state, 8 + np.log10(atot))
-        plt.show()
+        if do_plot:
+            fig = plt.figure()
+            ax = fig.add_subplot(1, 1, 1)
+            ax.bar(A[:, 0], A[:,2], width=1, align='edge')
+            major_xticks = np.arange(0, 129, 16)
+            minor_xticks = np.arange(0, 129, 4)
+            major_yticks = np.arange(-1, 1.01, 1)
+            minor_yticks = np.arange(-1, 1.01, .1)
+            ax.set_xticks(major_xticks)
+            ax.set_xticks(minor_xticks, minor=True)
+            ax.set_yticks(major_yticks)
+            ax.set_yticks(minor_yticks, minor=True)
+            ax.grid(which='minor', alpha=0.2)
+            ax.grid(which='major', alpha=0.5)
+            ax.set_xlim(1, 129)
+            ax.set_ylim(-1, 1)
+            fig.show()
 
         outp_bool_cao2012 = res_cao2012[0]
         outp_vec0_cao2012 = res_cao2012[5]

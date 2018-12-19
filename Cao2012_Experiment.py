@@ -60,13 +60,11 @@ def expA(qubitnamea, qubitnameb, qubitnamec, qubitnamed=None, sign=1, n=0, noglo
     cvdag_a_c_gates += [Qgate('h', qnc)]
     cvdag_a_c_gates += [Qgate('s', qnc)]
     cvdag_a_c_gates += [Qgate('x', qnc)]
-    # cZ(a,c)
-    cvdag_a_c_gates += [Qgate('cz', qna, qnc)]
-    # cS(a,c)
-    cvdag_a_c_gates += [Qgate('t', qna)]
-    cvdag_a_c_gates += [Qgate('t', qnc)]
-    cvdag_a_c_gates += [Qgate('cx', qna, qnc)]
+    # cSdag(a,c)
+    cvdag_a_c_gates += [Qgate('tdag', qna)]
     cvdag_a_c_gates += [Qgate('tdag', qnc)]
+    cvdag_a_c_gates += [Qgate('cx', qna, qnc)]
+    cvdag_a_c_gates += [Qgate('t', qnc)]
     cvdag_a_c_gates += [Qgate('cx', qna, qnc)]
     # cH(a,c)
     cvdag_a_c_gates += [Qgate('t', qna)]
@@ -282,13 +280,13 @@ def cRy(qubitnamea, qubitnameb, n, r):
     theta = pi*2**(n-r+1)
 
     gates = []
-    gates += [Qgate('#', " performs Ry(-2^({})*pi/2^({}-1)) = Ry(-pi/{}) on {}, controlled by {}"
+    gates += [Qgate('#', " performs Ry(2^({})*pi/2^({}-1)) = Ry(pi/{}) on {}, controlled by {}"
                          .format(n, r, 2**(r-n-1), qnb, qna))]
-    gates += [Qgate('ry', qnb, -theta/4)]
+    gates += [Qgate('ry', qnb, theta/4)]
     gates += [Qgate('cx', qna, qnb)]
-    gates += [Qgate('ry', qnb, theta/2)]
+    gates += [Qgate('ry', qnb, -theta/2)]
     gates += [Qgate('cx', qna, qnb)]
-    gates += [Qgate('ry', qnb, -theta/4)]
+    gates += [Qgate('ry', qnb, theta/4)]
 
     cRysr = Qsubroutine(name="cRy", gates=gates)
 
@@ -297,15 +295,41 @@ def cRy(qubitnamea, qubitnameb, n, r):
 
 class Cao2012Experiment(Qfunction):
 
-    def __init__(self, r=5):
+    def __init__(self, r=5, m=None, n=None):
 
         qubits = 7
 
         qn = buildnames(n=7, qubitnames="q")
 
         initgates = []
-        for i in range(1, 7):
+        for i in range(1, 5):
             initgates += [Qgate("h", qn[i])]
+        if n is None:
+            for i in range(5, 7):
+                initgates += [Qgate("h", qn[i])]
+        if m is not None:
+            if m == 0 or m == 1:
+                initgates += [Qgate("x", qn[5])]
+            else:
+                initgates += [Qgate("#", "x {}".format(qn[5]))]
+            if m == 0 or m == 2:
+                initgates += [Qgate("x", qn[6])]
+            else:
+                initgates += [Qgate("#", "x {}".format(qn[6]))]
+            initgates += [Qgate("cz", qn[5], qn[6])]
+            if m == 0 or m == 2:
+                initgates += [Qgate("x", qn[6])]
+            else:
+                initgates += [Qgate("#", "x {}".format(qn[6]))]
+            if m == 0 or m == 1:
+                initgates += [Qgate("x", qn[5])]
+            else:
+                initgates += [Qgate("#", "x {}".format(qn[5]))]
+        if n is not None:
+            if n == 2 or n == 3:
+                initgates += [Qgate("x", qn[5])]
+            if n == 1 or n == 3:
+                initgates += [Qgate("x", qn[6])]
         initgates += [Qgate("display")]
         initsubroutine = Qsubroutine(name="init", gates=initgates)
 
@@ -314,7 +338,12 @@ class Cao2012Experiment(Qfunction):
             expAsubroutines += [expA(qubitnamea=qn[i+1], qubitnameb=qn[5], qubitnamec=qn[6], sign=-1, n=i)]
 
         # reversesubroutine = REVERSE(n=4, qubitnames=qn[1:5])
+
         iqftsubroutine = iQFT(n=4, qubitnames=qn[1:5])
+        iqftsubroutine.gates.append(Qgate())
+        iqftsubroutine.gates.append(Qgate("display"))
+        iqftsubroutine.gates.insert(0, Qgate())
+        iqftsubroutine.gates.insert(0, Qgate("display"))
 
         swapsubroutine = Qsubroutine(name="swap", gates=[Qgate("swap", qn[2], qn[4])])
 
@@ -341,6 +370,7 @@ class Cao2012Experiment(Qfunction):
         subroutines = []
         subroutines += [initsubroutine]
         subroutines += expAsubroutines
+        # subroutines += [reversesubroutine]
         subroutines += [iqftsubroutine]
         # subroutines += [reversesubroutine]
         subroutines += [swapsubroutine]
@@ -348,6 +378,7 @@ class Cao2012Experiment(Qfunction):
         subroutines += [swapsubroutine]
         # subroutines += [reversesubroutine]
         subroutines += [qftsubroutine]
+        # subroutines += [reversesubroutine]
         subroutines += unexpAsubroutines
         subroutines += [uninitsubroutine]
         subroutines += [resultsubroutine]
