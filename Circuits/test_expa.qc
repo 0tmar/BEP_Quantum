@@ -18,22 +18,23 @@
 #    [x q2]
 #    (x q1)
 # The commands in brackets are optional:
-# - if none of the bracketed commands are performed, we get [1;1;1;-1]
-# - If only the optional commands in the square brackets are performed, we get [1;-1;1;1]
-# - If only the optional commands in the round brackets are performed, we get [1;1;-1;1]
-# - If both the optional commands in the round and quare brackets are performed, we get [-1;1;1;1]
+# - if none of the bracketed commands are performed, we get [1;1;1;-1], and a rotation of pi/8
+# - If only the optional commands in the round brackets are performed, we get [1;-1;1;1], and a rotation of pi/4
+# - If only the optional commands in the square brackets are performed, we get [1;1;-1;1], and a rotation of pi/2
+# - If both the optional commands in the round and quare brackets are performed, we get [-1;1;1;1], and a rotation of pi
 
-qubits 3
+qubits 4
 
 .init
   x q0
   h q1
   h q2
-  #x q1
-  #x q2
+  x q1
+  x q2
   cz q1,q2
-  #x q2
-  #x q1
+  x q2
+  x q1
+  x q3
   display
 
 .expA
@@ -153,10 +154,16 @@ qubits 3
   # cX(a,b)
   cx q0,q1
   
+  # Rz(d,2.258)
+  rz q3,2.258
+  
   display
 
 .expA
   # performs exp(sign*i*A*t0*2^(n)/16) = exp(-2*pi*i*A/16) on q1 and q2, controlled by q0
+  
+  # Rz(d,-2.258)
+  rz q3,-2.258
   
   # cX(a,b)
   cx q0,q1
@@ -270,9 +277,8 @@ qubits 3
   cx q0,q2
   t q2
   cx q0,q2
-  
-  display
 
 .result
+  display
   measure
   display

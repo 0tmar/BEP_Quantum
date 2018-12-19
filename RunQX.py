@@ -185,11 +185,13 @@ if __name__ == "__main__":
             statebin.append(int(raw_cao2012[idx-i*38-1:idx-i*38-8:-1]))
             areal.append(float(raw_cao2012[idx-i*38-29:idx-i*38-20]))
             aimag.append(float(raw_cao2012[idx-i*38-19:idx-i*38-10]))
-            atot.append(areal[-1]**2 + aimag[-1]**2)
+            atot.append(np.sqrt(areal[-1]**2 + aimag[-1]**2))
             A[127-i][:] = [state[-1], statebin[-1], areal[-1], aimag[-1], atot[-1]]
         A = A[A[:, 0].argsort()]
 
         print(A)
+        print("")
+        print(A[64:68, :])
 
         plt.bar(state, atot)
         # plt.bar(state, 8 + np.log10(atot))
@@ -207,4 +209,8 @@ if __name__ == "__main__":
 
     if run_test:
 
-        res_cao2012 = runQX('test_expa', 3, show_output=True)
+        f = open(path + "test_expa.qc", "w")
+        f.write(str(Cao2012_Experiment.test_expa(m=0, n=0, dorotation=True, noglobalrotation=True)))
+        f.close()
+
+        res_cao2012 = runQX('test_expa', 4, show_output=True)

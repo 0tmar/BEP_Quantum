@@ -7,28 +7,15 @@ qubits 2
   # init
   x q0
   x q1
-  display
   
-  # cRy(a,b,0.2)
-  ry q1,0.05
+  # cRy(a,b,-pi/2)
+  ry q1,-0.19634954084936207
   cx q0,q1
-  ry q1,-0.1
+  ry q1,0.39269908169872414
   cx q0,q1
-  ry q1,0.05
+  ry q1,-0.19634954084936207
   display
   
-  ## cRy(a,b,-0.2)
-  #ry q1,-0.05
-  #cx q0,q1
-  #ry q1,0.1
-  #cx q0,q1
-  #ry q1,-0.05
-  #display
-  
-  # Ry(b,-0.2)
-  ry q1,-0.2
-  display
-
-  # init
-  measure
+  # Ry(b,pi/2)
+  ry q1,0.7853981633974483
   display
