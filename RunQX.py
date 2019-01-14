@@ -4,6 +4,7 @@ import AdderQFT
 import AdderCuccaro
 import MultiplierQFT
 import Cao2012_Experiment
+import HLL_Linear_Solver
 import os
 import subprocess
 import math
@@ -40,7 +41,9 @@ if __name__ == "__main__":
     run_add_cuc = False
     run_add_cuc_ctrl = False
     run_mul_qft = False
-    run_Cao2012 = True
+    run_expa = False
+    run_Cao2012 = False
+    run_HLL_test = True
     run_test = False
 
     inp_a = "1110"
@@ -163,6 +166,14 @@ if __name__ == "__main__":
             na*" " + inp_b, int(inp_b, 2),
             outp_a_times_b_qft, int(outp_a_times_b_qft, 2)))
 
+    if run_expa:
+
+        f = open(path + "test_expa.qc", "w")
+        f.write(str(Cao2012_Experiment.test_expa(m=0, n=0, dorotation=True, noglobalrotation=True)))
+        f.close()
+
+        res_cao2012 = runQX('test_expa', 4, show_output=True)
+
     if run_Cao2012:
         r = 5  # 2^-r factor in ancilla rotation: higher r is higher precision, but lower a chance of |1>. Default r=5
         m = None  # inputs m-th eigenvector of A instead of the multi state (m=0..3 or None) (either m or n must be None)
@@ -248,10 +259,13 @@ if __name__ == "__main__":
             outp_vec0_cao2012,
             outp_vec1_cao2012))
 
-    if run_test:
+    if run_HLL_test:
 
-        f = open(path + "test_expa.qc", "w")
-        f.write(str(Cao2012_Experiment.test_expa(m=0, n=0, dorotation=True, noglobalrotation=True)))
+        f = open(path + "test_ccrz.qc", "w")
+        f.write(str(HLL_Linear_Solver.EigenvalueInversion_Circuit(n=2, x=0)))
         f.close()
 
-        res_cao2012 = runQX('test_expa', 4, show_output=True)
+        res_HLL = runQX('test_hll', 16, show_output=True)
+
+    if run_test:
+        res_test = runQX('test_ccrz', show_output=True)
