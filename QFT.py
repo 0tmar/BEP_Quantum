@@ -87,12 +87,12 @@ class QFTcircuit(Qfunction):
 
 class QFT_iQFTcircuit(Qfunction):
 
-    def __init__(self, inp="0"):
+    def __init__(self, inp="0", offset_pre=0, offset_post=0):
         name = "Back and forth Quantum Fourier Transform"
         n = len(inp)
-        qubits = n
-        qftsubroutine = QFT(n=n)
-        qn = qftsubroutine.qubitnames
+        qubits = n + offset_pre + offset_post
+        qn = buildnames(qubits, None)
+        qn = qn[offset_pre:(n + offset_pre)]
 
         if not isinstance(inp, str):
             raise TypeError("input must be of type string")
@@ -104,12 +104,16 @@ class QFT_iQFTcircuit(Qfunction):
         initgates += [Qgate("display")]
 
         initsubroutine = Qsubroutine(name="init", gates=initgates)
+
+        qftsubroutine = QFT(n=n, qubitnames=qn)
         iqftsubroutine = iQFT(n=n, qubitnames=qn)
+
+        displaysubroutine = Qsubroutine(name="display", gates=[Qgate("display")])
 
         resultgates = [Qgate("measure"), Qgate("display")]
         resultsubroutine = Qsubroutine(name="result", gates=resultgates)
 
-        subroutines = [initsubroutine, qftsubroutine, iqftsubroutine, resultsubroutine]
+        subroutines = [initsubroutine, qftsubroutine, displaysubroutine, iqftsubroutine, resultsubroutine]
         super().__init__(name=name, qubits=qubits, subroutines=subroutines)
 
 

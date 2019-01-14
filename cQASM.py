@@ -130,7 +130,7 @@ class Qgate(object):
     }
 
 
-def buildnames(n, qubitnames, defaultname="q"):
+def buildnames(n, qubitnames=None, defaultname="q"):
     if isinstance(qubitnames, list):
         if len(qubitnames) == n:
             qn = qubitnames

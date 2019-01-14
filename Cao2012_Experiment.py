@@ -335,9 +335,9 @@ class Cao2012Experiment(Qfunction):
 
         expAsubroutines = []
         for i in range(4):
-            expAsubroutines += [expA(qubitnamea=qn[i+1], qubitnameb=qn[5], qubitnamec=qn[6], sign=-1, n=i)]
+            expAsubroutines += [expA(qubitnamea=qn[i+1], qubitnameb=qn[5], qubitnamec=qn[6], sign=1, n=i)]
 
-        # reversesubroutine = REVERSE(n=4, qubitnames=qn[1:5])
+        reversesubroutine = REVERSE(n=4, qubitnames=qn[1:5])
 
         iqftsubroutine = iQFT(n=4, qubitnames=qn[1:5])
         iqftsubroutine.gates.append(Qgate())
@@ -345,7 +345,7 @@ class Cao2012Experiment(Qfunction):
         iqftsubroutine.gates.insert(0, Qgate())
         iqftsubroutine.gates.insert(0, Qgate("display"))
 
-        swapsubroutine = Qsubroutine(name="swap", gates=[Qgate("swap", qn[2], qn[4])])
+        # swapsubroutine = Qsubroutine(name="swap", gates=[Qgate("swap", qn[2], qn[4])])
 
         cRysubroutines = []
         for i in range(4):
@@ -355,7 +355,7 @@ class Cao2012Experiment(Qfunction):
 
         unexpAsubroutines = []
         for i in reversed(range(4)):
-            unexpAsubroutines += [expA(qubitnamea=qn[i+1], qubitnameb=qn[5], qubitnamec=qn[6], sign=1, n=i)]
+            unexpAsubroutines += [expA(qubitnamea=qn[i+1], qubitnameb=qn[5], qubitnamec=qn[6], sign=-1, n=i)]
 
         uninitgates = []
         for i in range(1, 5):
@@ -370,15 +370,13 @@ class Cao2012Experiment(Qfunction):
         subroutines = []
         subroutines += [initsubroutine]
         subroutines += expAsubroutines
-        # subroutines += [reversesubroutine]
         subroutines += [iqftsubroutine]
-        # subroutines += [reversesubroutine]
-        subroutines += [swapsubroutine]
+        subroutines += [reversesubroutine]
+        # subroutines += [swapsubroutine]
         subroutines += cRysubroutines
-        subroutines += [swapsubroutine]
-        # subroutines += [reversesubroutine]
+        # subroutines += [swapsubroutine]
+        subroutines += [reversesubroutine]
         subroutines += [qftsubroutine]
-        # subroutines += [reversesubroutine]
         subroutines += unexpAsubroutines
         subroutines += [uninitsubroutine]
         subroutines += [resultsubroutine]

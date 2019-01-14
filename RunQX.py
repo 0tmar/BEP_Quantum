@@ -43,8 +43,8 @@ if __name__ == "__main__":
     run_Cao2012 = True
     run_test = False
 
-    inp_a = "10101"
-    inp_b = "01010"
+    inp_a = "1110"
+    inp_b = "1110"
     inp_ctrl = "1"
 
     na = len(inp_a)
@@ -55,12 +55,15 @@ if __name__ == "__main__":
     n_tot = na + nb
 
     if run_qft_test:
+        offset_pre = 1
+        offset_post = 2
+
         f = open(path + "qftiqft.qc", "w")
-        f.write(str(QFT.QFT_iQFTcircuit(inp=inp_a)))
+        f.write(str(QFT.QFT_iQFTcircuit(inp=inp_a, offset_pre=offset_pre, offset_post=offset_post)))
         f.close()
 
-        res_qft_test = runQX('qftiqft', na, return_res=True)
-        outp_qft_test = res_qft_test
+        res_qft_test = runQX('qftiqft', na + offset_pre + offset_post, return_res=True, show_output=True)
+        outp_qft_test = res_qft_test[offset_pre:(na + offset_pre)]
 
         print("\n\nQFT-iQFT test:\n\ninput a    = {}\n\noutput a   = {}".format(
             (n-na)*" " + inp_a,
@@ -161,11 +164,11 @@ if __name__ == "__main__":
             outp_a_times_b_qft, int(outp_a_times_b_qft, 2)))
 
     if run_Cao2012:
-        r = 10
-        m = 0
-        n = None
+        r = 5  # 2^-r factor in ancilla rotation: higher r is higher precision, but lower a chance of |1>. Default r=5
+        m = None  # inputs m-th eigenvector of A instead of the multi state (m=0..3 or None) (either m or n must be None)
+        n = None  # inputs the n state iso the multi state (n=0: 00, n=1: 01, n=2: 10, n=3: 11)
 
-        do_plot = False
+        do_plot = True
 
         f = open(path + "Cao2012.qc", "w")
         f.write(str(Cao2012_Experiment.Cao2012Experiment(r=r, m=m, n=n)))
@@ -220,7 +223,7 @@ if __name__ == "__main__":
         if do_plot:
             fig = plt.figure()
             ax = fig.add_subplot(1, 1, 1)
-            ax.bar(A[:, 0], A[:,2], width=1, align='edge')
+            ax.bar(A[:, 0], A[:, 2], width=1, align='edge')
             major_xticks = np.arange(0, 129, 16)
             minor_xticks = np.arange(0, 129, 4)
             major_yticks = np.arange(-1, 1.01, 1)
@@ -231,7 +234,7 @@ if __name__ == "__main__":
             ax.set_yticks(minor_yticks, minor=True)
             ax.grid(which='minor', alpha=0.2)
             ax.grid(which='major', alpha=0.5)
-            ax.set_xlim(1, 129)
+            ax.set_xlim(0, 129)
             ax.set_ylim(-1, 1)
             fig.show()
 
