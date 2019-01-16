@@ -157,7 +157,7 @@ if __name__ == "__main__":
         f = open(path + "multiplier_qft.qc", "w")
         f.write(str(MultiplierQFT.MULcircuit(inp_a=inp_a, inp_b=inp_b)))
         f.close()
-
+Min
         res_add_qft = runQX('multiplier_qft', 2*n_tot + 1, return_res=True)
         outp_a_times_b_qft = res_add_qft[na+nb:-1:]
 
