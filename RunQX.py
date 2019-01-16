@@ -261,8 +261,8 @@ if __name__ == "__main__":
 
     if run_HLL_test:
 
-        f = open(path + "test_ccrz.qc", "w")
-        f.write(str(HLL_Linear_Solver.EigenvalueInversion_Circuit(n=2, x=0)))
+        f = open(path + "test_hll.qc", "w")
+        f.write(str(HLL_Linear_Solver.EigenvalueInversion_Circuit(n=3, x=1, remove_global_shift=True, save_value=False)))
         f.close()
 
         res_HLL = runQX('test_hll', 16, show_output=True)
