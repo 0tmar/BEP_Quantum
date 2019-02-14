@@ -1,6 +1,6 @@
 #function: Controlled QFT Quantum Adder
 
-qubits 12
+qubits 11
 
 .init
   map q0,c
@@ -8,18 +8,15 @@ qubits 12
   map q2,b1
   map q3,b2
   map q4,b3
-  map q5,b4
-  map q6,d
-  map q7,a0
-  map q8,a1
-  map q9,a2
-  map q10,a3
-  map q11,a4
+  map q5,d
+  map q6,a0
+  map q7,a1
+  map q8,a2
+  map q9,a3
+  map q10,a4
   x c
   x a0
-  x a2
-  x a4
-  x b1
+  x b0
   x b3
   display
 
@@ -42,30 +39,27 @@ qubits 12
 
 .cadd
   toffoli c,b0,d
-  cz d,a0
-  toffoli c,b0,d
-  toffoli c,b1,d
   cz d,a1
   swap d,a1
   cr a1,a0
   swap d,a1
+  toffoli c,b0,d
   toffoli c,b1,d
-  toffoli c,b2,d
   cz d,a2
   swap d,a2
   cr a2,a1
   cr a2,a0
   swap d,a2
+  toffoli c,b1,d
   toffoli c,b2,d
-  toffoli c,b3,d
   cz d,a3
   swap d,a3
   cr a3,a2
   cr a3,a1
   cr a3,a0
   swap d,a3
+  toffoli c,b2,d
   toffoli c,b3,d
-  toffoli c,b4,d
   cz d,a4
   swap d,a4
   cr a4,a3
@@ -73,7 +67,7 @@ qubits 12
   cr a4,a1
   cr a4,a0
   swap d,a4
-  toffoli c,b4,d
+  toffoli c,b3,d
 
 .iqft
   h a4

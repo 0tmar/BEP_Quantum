@@ -153,8 +153,8 @@ class EigenvalueInversion_Circuit(Qfunction):
                 sign=-1,
                 remove_global_shift=remove_global_shift)
             uninitgates = []
-            # for i in range(len(qnl)):
-            #     uninitgates += [Qgate('h', qnl[i])]
+            for i in range(len(qnl)):
+                uninitgates += [Qgate('h', qnl[i])]
             for i in range(len(qnm)):
                 uninitgates += [Qgate('h', qnm[i])]
             uninitsubroutine = Qsubroutine(name="uninit", gates=uninitgates)

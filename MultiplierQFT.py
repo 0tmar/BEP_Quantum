@@ -1,6 +1,54 @@
 from cQASM import *
 from QFT import QFT, iQFT
-from AdderQFT import cADD
+from AdderQFT import cADD, cSUB
+
+
+def MUL(na, nb, nc, qubitnamesa=None, qubitnamesb=None, qubitnamesc=None, qubitnamez=None):
+
+    if not nc >= na+nb:
+        raise ValueError("nc must be greater than or equal to na+nb")
+
+    qna = buildnames(n=na, qubitnames=qubitnamesa, defaultname="a")
+    qnb = buildnames(n=nb, qubitnames=qubitnamesb, defaultname="b")
+    qnc = buildnames(n=nc, qubitnames=qubitnamesc, defaultname="c")
+    qnz = buildnames(n=1, qubitnames=qubitnamez, defaultname="z")
+
+    subroutines = []
+
+    for i in range(na):
+        qftsubroutine = QFT(n=nc - i, qubitnames=qnc[:nc - i])
+        addsubroutine = cADD(na=nc - i, nb=nb, qubitnamesa=qnc[:nc - i], qubitnamesb=qnb, qubitnamec=qna[na - 1 - i],
+                             qubitnamed=qnz)
+        iqftsubroutine = iQFT(n=nc - i, qubitnames=qnc[:nc - i])
+        subroutines += [qftsubroutine, addsubroutine, iqftsubroutine]
+
+    return subroutines
+
+
+def MULSUB(na, nb, nc, qubitnamesa=None, qubitnamesb=None, qubitnamesc=None, qubitnamez=None):
+
+    if not nc >= na+nb:
+        raise ValueError("nc must be greater than or equal to na+nb")
+
+    qna = buildnames(n=na, qubitnames=qubitnamesa, defaultname="a")
+    qnb = buildnames(n=nb, qubitnames=qubitnamesb, defaultname="b")
+    qnc = buildnames(n=nc, qubitnames=qubitnamesc, defaultname="c")
+    if qubitnamez is None:
+        qnz = ["z"]
+    else:
+        qnz = qubitnamez
+
+    subroutines = []
+
+    for i in range(na):
+        qftsubroutine = QFT(n=nc - i, qubitnames=qnc[:nc - i])
+        addsubroutine = cSUB(na=nc - i, nb=nb, qubitnamesa=qnc[:nc - i], qubitnamesb=qnb, qubitnamec=qna[na - 1 - i],
+                             qubitnamed=qnz)
+        iqftsubroutine = iQFT(n=nc - i, qubitnames=qnc[:nc - i])
+        subroutines += [qftsubroutine, addsubroutine, iqftsubroutine]
+
+    return subroutines
+
 
 class MULcircuit(Qfunction):
 

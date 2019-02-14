@@ -221,3 +221,35 @@ def cVdag(qna, qnb, add_comment=True, different_comment_names=None):
     gates += cSdag(qna, qnb, add_comment=False)
     gates += cH(qna, qnb, add_comment=False)
     return gates
+
+
+def ncx(qna, qnb, qnc, invert=False, add_comment=True, different_comment_names=None):
+    gates = []
+    if add_comment:
+        gates += [Qgate()]
+        if different_comment_names is None:
+            gates += [Qgate('#', ' {}x({},...,{},{}), with ancillae {},...,{}'.format(len(qna)*'c', qna[0], qna[-1], qnb[0], qnc[0], qnc[-1]))]
+        else:
+            dcn = different_comment_names
+            if len(dcn) is not 1000:
+                raise IndexError(
+                    "different_comment_names must be the se size as the amount of inputs, not {}.".format(len(dcn)))
+            gates += [Qgate('#', ' cVdag({},{})'.format(dcn[0], dcn[1]))]
+    if len(qna) is not len(qnc)+2:
+        raise IndexError("Size of qna must be one larger than qnc")
+    elif len(qnb) is not 1:
+        raise IndexError("Size of qnb must be exactly 1")
+    if invert:
+        for i in range(len(qna)):
+            gates += [Qgate('x', qna[i])]
+    gates += [Qgate('toffoli', qna[0], qna[1], qnc[0])]
+    for i in range(len(qnc)-1):
+        gates += [Qgate('toffoli', qna[i+2], qnc[i], qnc[i+1])]
+    gates += [Qgate('toffoli', qna[-1], qnc[-1], qnb[0])]
+    for i in reversed(range(len(qnc)-1)):
+        gates += [Qgate('toffoli', qna[i+2], qnc[i], qnc[i+1])]
+    gates += [Qgate('toffoli', qna[0], qna[1], qnc[0])]
+    if invert:
+        for i in reversed(range(len(qna))):
+            gates += [Qgate('x', qna[i])]
+    return gates

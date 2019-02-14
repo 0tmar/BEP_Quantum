@@ -5,11 +5,13 @@ import AdderCuccaro
 import MultiplierQFT
 import Cao2012_Experiment
 import HLL_Linear_Solver
+import Number_Inversion
 import os
 import subprocess
 import math
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+np.set_printoptions(threshold=np.nan)
 
 
 def runQX(filename, qubitnum=1, return_res=False, return_raw=False, show_output=False):
@@ -30,6 +32,77 @@ def runQX(filename, qubitnum=1, return_res=False, return_raw=False, show_output=
         return qx_out_str
 
 
+def build_output_matrix(outp_raw, idx, qubits, lines, do_sort=True):
+    linelength = 31 + qubits
+    A = np.zeros((lines, 5))
+    state = []
+    statebin = []
+    areal = []
+    aimag = []
+    atot = []
+    for i in range(lines):
+        state.append(int(outp_raw[(idx - (i*linelength) - 1):(idx - (i*linelength) - (qubits+1)):(-1)], 2))
+        statebin.append(int(outp_raw[(idx - (i*linelength) - 1):(idx - (i*linelength) - (qubits+1)):(-1)]))
+        areal.append(float(outp_raw[(idx - (i*linelength) - (qubits+22)):(idx - (i*linelength) - (qubits+13))]))
+        aimag.append(float(outp_raw[(idx - (i*linelength) - (qubits+12)):(idx - (i*linelength) - (qubits+3))]))
+        atot.append(np.sqrt(areal[-1] ** 2 + aimag[-1] ** 2))
+        A[lines - (i+1)][:] = [state[-1], statebin[-1], areal[-1], aimag[-1], atot[-1]]
+    if do_sort:
+        A = A[A[:, 0].argsort()]
+    return A
+
+
+def find_next_output_matrix(outp_raw, idx=0, return_extra_info=False, do_sort=False):
+    L_intro = 46
+    L_line_outro = 5
+    L_line_no_qubits = 31
+
+    idx0 = outp_raw.find("--------------[quantum state]--------------", idx)
+
+    if idx0 is not -1:
+
+        idx1 = outp_raw.find("> +", idx0)
+        idx2 = outp_raw.find("-------------------------------------------", idx1)
+
+        N_qubits = idx1 - idx0 - L_intro + L_line_outro - L_line_no_qubits
+        L_line = L_line_no_qubits + N_qubits
+        L_states = idx2 - idx0 - L_intro
+        N_lines = L_states // L_line
+
+        A = build_output_matrix(outp_raw=outp_raw, idx=idx2-5, qubits=N_qubits, lines=N_lines, do_sort=do_sort)
+
+        if return_extra_info:
+            return A, True, idx0, N_qubits, N_lines
+        else:
+            return A
+
+    else:
+
+        A = np.zeros((0, 5))
+
+        if return_extra_info:
+            return A, False, idx0, 0, 0
+        else:
+            return A
+
+
+def find_output_matrices(outp_raw, do_sort=False):
+
+    A_lst = []
+    idx = -1
+
+    while True:
+
+        A, found_matrix, idx, nqubits, nlines = find_next_output_matrix(outp_raw=outp_raw, idx=idx+1, return_extra_info=True, do_sort=do_sort)
+
+        if found_matrix:
+            A_lst += [A]
+        else:
+            break
+
+    return A_lst
+
+
 if __name__ == "__main__":
     path = "Circuits/"
     if not os.path.exists(path):
@@ -43,11 +116,12 @@ if __name__ == "__main__":
     run_mul_qft = False
     run_expa = False
     run_Cao2012 = False
-    run_HLL_test = True
+    run_HLL_test = False
+    run_numinv_test = True
     run_test = False
 
-    inp_a = "1110"
-    inp_b = "1110"
+    inp_a = "0110"
+    inp_b = "1001"
     inp_ctrl = "1"
 
     na = len(inp_a)
@@ -157,7 +231,7 @@ if __name__ == "__main__":
         f = open(path + "multiplier_qft.qc", "w")
         f.write(str(MultiplierQFT.MULcircuit(inp_a=inp_a, inp_b=inp_b)))
         f.close()
-Min
+
         res_add_qft = runQX('multiplier_qft', 2*n_tot + 1, return_res=True)
         outp_a_times_b_qft = res_add_qft[na+nb:-1:]
 
@@ -172,7 +246,7 @@ Min
         f.write(str(Cao2012_Experiment.test_expa(m=0, n=0, dorotation=True, noglobalrotation=True)))
         f.close()
 
-        res_cao2012 = runQX('test_expa', 4, show_output=True)
+        res_expa = runQX('test_expa', 4, show_output=True)
 
     if run_Cao2012:
         r = 5  # 2^-r factor in ancilla rotation: higher r is higher precision, but lower a chance of |1>. Default r=5
@@ -187,36 +261,13 @@ Min
 
         res_cao2012, raw_cao2012 = runQX('Cao2012', 7, return_res=True, return_raw=True, show_output=True)
 
-        idx = raw_cao2012.rfind('> +')
-        idx = raw_cao2012.rfind('> +', 0, idx)
-        idx2 = raw_cao2012.rfind('> +', 0, idx-128*38+4)
-        idx3 = raw_cao2012.rfind('> +', 0, idx2-64*38+4)
-        # outp_raw_cao2012 = raw_cao2012[idx-128*38+4:idx+4]
-        # outp_raw_cao2012_2 = raw_cao2012[idx2-64*38+4:idx2+4]
-        # outp_raw_cao2012_3 = raw_cao2012[idx3-64*38+4:idx3+4]
+        A_lst = find_output_matrices(outp_raw=raw_cao2012, do_sort=False)
+        A = A_lst[-2]
+        A2 = A_lst[-3]
+        A3 = A_lst[-4]
 
-        def build_output_matrix(outp_raw, idx, qubits, lines, do_sort=True):
-            linelength = 31 + qubits
-            A = np.zeros((lines, 5))
-            state = []
-            statebin = []
-            areal = []
-            aimag = []
-            atot = []
-            for i in range(lines):
-                state.append(int(outp_raw[(idx - (i*linelength) - 1):(idx - (i*linelength) - (qubits+1)):(-1)], 2))
-                statebin.append(int(outp_raw[(idx - (i*linelength) - 1):(idx - (i*linelength) - (qubits+1)):(-1)]))
-                areal.append(float(outp_raw[(idx - (i*linelength) - (qubits+22)):(idx - (i*linelength) - (qubits+13))]))
-                aimag.append(float(outp_raw[(idx - (i*linelength) - (qubits+12)):(idx - (i*linelength) - (qubits+3))]))
-                atot.append(np.sqrt(areal[-1] ** 2 + aimag[-1] ** 2))
-                A[lines - (i+1)][:] = [state[-1], statebin[-1], areal[-1], aimag[-1], atot[-1]]
-            if do_sort:
-                A = A[A[:, 0].argsort()]
-            return A
-
-        A = build_output_matrix(outp_raw=raw_cao2012, idx=idx, qubits=7, lines=128, do_sort=True)
-        A2 = build_output_matrix(outp_raw=raw_cao2012, idx=idx2, qubits=7, lines=64, do_sort=True)
-        A3 = build_output_matrix(outp_raw=raw_cao2012, idx=idx3, qubits=7, lines=64, do_sort=False)
+        A = A[A[:, 0].argsort()]
+        A2 = A2[A2[:, 0].argsort()]
 
         print(A3[:, 0:4])
         print("")
@@ -262,10 +313,22 @@ Min
     if run_HLL_test:
 
         f = open(path + "test_hll.qc", "w")
-        f.write(str(HLL_Linear_Solver.EigenvalueInversion_Circuit(n=3, x=1, remove_global_shift=True, save_value=False)))
+        f.write(str(HLL_Linear_Solver.EigenvalueInversion_Circuit(n=3, x=1, remove_global_shift=True, save_value=True)))
         f.close()
 
-        res_HLL = runQX('test_hll', 16, show_output=True)
+        raw_HLL = runQX('test_hll', 16, show_output=True, return_raw=True)
+
+        A_lst = find_output_matrices(outp_raw=raw_HLL, do_sort=False)
+        A = A_lst[-1]
+        print(A[:, 0:4])
+
+    if run_numinv_test:
+
+        f = open(path + "test_numinv.qc", "w")
+        f.write(str(Number_Inversion.NUMINVcircuit(inp=inp_a, order=1)))
+        f.close()
+
+        raw_HLL = runQX('test_numinv', 3*na+1, show_output=True, return_raw=True)
 
     if run_test:
         res_test = runQX('test_ccrz', show_output=True)

@@ -5,6 +5,10 @@ from QFT import *
 class ADD(Qsubroutine):
 
     def __init__(self, na=1, nb=1, qubitnamesa=None, qubitnamesb=None):
+        """a: first number, to which b will be added (size na);
+           b: second number, which will be added to a (size nb<=na);
+           (a, b) -> (a+b, b)"""
+        # Note: the first qubit (e.g. q0) is the MSB
 
         if nb > na:
             raise ValueError("len(a) must be greater than or equal to len(b)")
@@ -34,6 +38,9 @@ class ADD(Qsubroutine):
 class SUB(Qsubroutine):
 
     def __init__(self, na=1, nb=1, qubitnamesa=None, qubitnamesb=None):
+        """a: first number, from which b will be subtracted (size na);
+           b: second number, which will be subtracted from a (size nb<=na);
+           (a, b) -> (a-b, b)"""
 
         if nb > na:
             raise ValueError("len(a) must be greater than or equal to len(b)")
@@ -68,6 +75,11 @@ class SUB(Qsubroutine):
 class cADD(Qsubroutine):
 
     def __init__(self, na=1, nb=1, qubitnamesa=None, qubitnamesb=None, qubitnamec=None, qubitnamed=None):
+        """a: first number, to which b will be added (size na);
+           b: second number, which will be added to a (size nb<=na);
+           c: control whether the addition is performed (size 1);
+           d: ancilla qubit (size 1);
+           (a, b, c, d) -> (a-b, b, c, d)"""
 
         if nb > na:
             raise ValueError("len(a) must be greater than or equal to len(b)")
@@ -106,6 +118,11 @@ class cADD(Qsubroutine):
 class cSUB(Qsubroutine):
 
     def __init__(self, na=1, nb=1, qubitnamesa=None, qubitnamesb=None, qubitnamec=None, qubitnamed=None):
+        """a: first number, from which b will be subtracted (size na);
+           b: second number, which will be subtracted from a (size nb<=na);
+           c: control whether the subtraction is performed (size 1);
+           d: ancilla qubit (size 1);
+           (a, b, c, d) -> (a-b, b, c, d)"""
 
         if nb > na:
             raise ValueError("len(a) must be greater than or equal to len(b)")
