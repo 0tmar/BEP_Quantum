@@ -6,6 +6,7 @@ import MultiplierQFT
 import Cao2012_Experiment
 import HLL_Linear_Solver
 import Number_Inversion
+import DivisionThapliyal
 import os
 import subprocess
 import math
@@ -108,21 +109,25 @@ if __name__ == "__main__":
     if not os.path.exists(path):
         os.makedirs(path)
 
-    run_qft_test = False
-    run_add_qft = False
-    run_add_qft_ctrl = False
-    run_add_cuc = False
-    run_add_cuc_ctrl = False
-    run_mul_qft = False
-    run_expa = False
-    run_Cao2012 = False
-    run_HLL_test = False
-    run_numinv_test = True
-    run_test = False
+    run_qft_test =              False
+    run_add_qft =               False
+    run_add_qft_ctrl =          False
+    run_add_cuc =               False
+    run_add_cuc_ctrl =          False
+    run_mul_qft =               False
+    run_expa =                  False
+    run_Cao2012 =               False
+    run_HLL_test =              False
+    run_numinv_test =           False
+    run_division_thapliyal =    True
+    run_test =                  False
 
-    inp_a = "0110"
-    inp_b = "1001"
+    inp_a = "10000"
+    inp_b = "01111"
     inp_ctrl = "1"
+
+    subtype = 'b-a'
+    do_overflow = True
 
     na = len(inp_a)
     nb = len(inp_b)
@@ -192,7 +197,7 @@ if __name__ == "__main__":
         f.write(str(AdderCuccaro.ADDcircuit(inp_a=inp_a, inp_b=inp_b)))
         f.close()
         f = open(path + "subtractor_cuccaro.qc", "w")
-        f.write(str(AdderCuccaro.SUBcircuit(inp_a=inp_a, inp_b=inp_b)))
+        f.write(str(AdderCuccaro.SUBcircuit(inp_a=inp_a, inp_b=inp_b, subtype=subtype, do_overflow=do_overflow)))
         f.close()
 
         res_add_cuc = runQX('adder_cuccaro', n_tot + 2, return_res=True)
@@ -201,18 +206,18 @@ if __name__ == "__main__":
         res_sub_cuc = runQX('subtractor_cuccaro', n_tot + 2, return_res=True)
         outp_a_minus_b_cuc = res_sub_cuc[-1::-2]
 
-        print("\n\nAdder Cuccaro:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\n\noutput a+b = {} = {}\noutput a-b = {} = {}".format(
+        print("\n\nAdder Cuccaro:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\n\noutput a+b = {} = {}\noutput {} = {} = {}".format(
             (n-na)*" " + inp_a, int(inp_a, 2),
             (n-nb)*" " + inp_b, int(inp_b, 2),
             outp_a_plus_b_cuc, int(outp_a_plus_b_cuc, 2),
-            outp_a_minus_b_cuc, int(outp_a_minus_b_cuc, 2)))
+            subtype, outp_a_minus_b_cuc, int(outp_a_minus_b_cuc, 2)))
 
     if run_add_cuc_ctrl:
         f = open(path + "adder_cuccaro_ctrl.qc", "w")
         f.write(str(AdderCuccaro.cADDcircuit(inp_a=inp_a, inp_b=inp_b, inp_ctrl=inp_ctrl)))
         f.close()
         f = open(path + "subtractor_cuccaro_ctrl.qc", "w")
-        f.write(str(AdderCuccaro.cSUBcircuit(inp_a=inp_a, inp_b=inp_b, inp_ctrl=inp_ctrl)))
+        f.write(str(AdderCuccaro.cSUBcircuit(inp_a=inp_a, inp_b=inp_b, inp_ctrl=inp_ctrl, subtype=subtype)))
         f.close()
 
         res_add_cuc_ctrl = runQX('adder_cuccaro_ctrl', n_tot + 3, return_res=True)
@@ -220,12 +225,12 @@ if __name__ == "__main__":
         res_sub_cuc_ctrl = runQX('subtractor_cuccaro_ctrl', n_tot + 3, return_res=True)
         outp_a_minus_b_cuc_ctrl = res_sub_cuc_ctrl[-1:0:-2]
 
-        print("\n\nAdder Cuccaro Controlled:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\ninput ctrl = {}\n\noutput a+b = {} = {}\noutput a+b = {} = {}".format(
+        print("\n\nAdder Cuccaro Controlled:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\ninput ctrl = {}\n\noutput a+b = {} = {}\noutput {} = {} = {}".format(
             (n-na)*" " + inp_a, int(inp_a, 2),
             (n-nb)*" " + inp_b, int(inp_b, 2),
             n*" " + inp_ctrl,
             outp_a_plus_b_cuc_ctrl, int(outp_a_plus_b_cuc_ctrl, 2),
-            outp_a_minus_b_cuc_ctrl, int(outp_a_minus_b_cuc_ctrl, 2)))
+            subtype, outp_a_minus_b_cuc_ctrl, int(outp_a_minus_b_cuc_ctrl, 2)))
 
     if run_mul_qft:
         f = open(path + "multiplier_qft.qc", "w")
@@ -329,6 +334,24 @@ if __name__ == "__main__":
         f.close()
 
         raw_HLL = runQX('test_numinv', 3*na+1, show_output=True, return_raw=True)
+
+    if run_division_thapliyal:
+
+        f = open(path + "division_thapliyal.qc", "w")
+        f.write(str(DivisionThapliyal.DIVcircuit(inp_n=inp_a, inp_d=inp_b)))
+        f.close()
+
+        res_division_thapliyal = runQX('division_thapliyal', 3*n + 1, show_output=True, return_res=True)
+        outp_q_division_thapliyal = res_division_thapliyal[(2*n)-1:n-1:-1]
+        outp_r_division_thapliyal = res_division_thapliyal[n-1::-1]
+
+        print("\n\nDivision Thapliyal:\n\ninput n        = {} = {}\ninput d        = {} = {}\n\noutput q = n/d = {} = {}\noutput r = n%d = {} = {}\n\ntest q*d + r   = {}*{} + {} = {}\ncorrectness:   {}".format(
+            inp_a, int(inp_a, 2),
+            inp_b, int(inp_b, 2),
+            outp_q_division_thapliyal, int(outp_q_division_thapliyal, 2),
+            outp_r_division_thapliyal, int(outp_r_division_thapliyal, 2),
+            int(outp_q_division_thapliyal, 2), int(inp_b, 2), int(outp_r_division_thapliyal, 2), int(outp_q_division_thapliyal, 2)*int(inp_b, 2) + int(outp_r_division_thapliyal, 2),
+            int(outp_q_division_thapliyal, 2)*int(inp_b, 2) + int(outp_r_division_thapliyal, 2) == int(inp_a, 2)))
 
     if run_test:
         res_test = runQX('test_ccrz', show_output=True)

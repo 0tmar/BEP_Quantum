@@ -1,6 +1,6 @@
 #function: Controlled Cuccaro Quantum Adder
 
-qubits 13
+qubits 11
 
 .init
   map q0,ctrl
@@ -13,15 +13,9 @@ qubits 13
   map q7,a2
   map q8,b3
   map q9,a3
-  map q10,b4
-  map q11,a4
-  map q12,z
-  x ctrl
+  map q10,z
   x a0
-  x a2
-  x a4
-  x b1
-  x b3
+  x b2
   display
 
 .cadd
@@ -37,13 +31,7 @@ qubits 13
   toffoli ctrl,a3,b3
   cx a3,a2
   toffoli a2,b3,a3
-  toffoli ctrl,a4,b4
-  cx a4,a3
-  toffoli a3,b4,a4
-  toffoli ctrl,a4,z
-  toffoli a3,b4,a4
-  cx a4,a3
-  toffoli ctrl,a3,b4
+  toffoli ctrl,a3,z
   toffoli a2,b3,a3
   cx a3,a2
   toffoli ctrl,a2,b3
