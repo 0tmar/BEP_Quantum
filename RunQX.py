@@ -109,21 +109,22 @@ if __name__ == "__main__":
     if not os.path.exists(path):
         os.makedirs(path)
 
-    run_qft_test =              False
-    run_add_qft =               False
-    run_add_qft_ctrl =          False
-    run_add_cuc =               False
-    run_add_cuc_ctrl =          False
-    run_mul_qft =               False
-    run_expa =                  False
-    run_Cao2012 =               False
-    run_HLL_test =              False
-    run_numinv_test =           False
-    run_division_thapliyal =    True
-    run_test =                  False
+    run_qft_test =                  False
+    run_add_qft =                   False
+    run_add_qft_ctrl =              False
+    run_add_cuc =                   False
+    run_add_cuc_ctrl =              False
+    run_mul_qft =                   False
+    run_expa =                      False
+    run_Cao2012 =                   False
+    run_HLL_test =                  False
+    run_numinv_test =               False
+    run_division_thapliyal =        True
+    run_division_thapliyal_matrix = False
+    run_test =                      False
 
-    inp_a = "10000"
-    inp_b = "01111"
+    inp_a = "11111"
+    inp_b = "10001"
     inp_ctrl = "1"
 
     subtype = 'b-a'
@@ -341,7 +342,7 @@ if __name__ == "__main__":
         f.write(str(DivisionThapliyal.DIVcircuit(inp_n=inp_a, inp_d=inp_b)))
         f.close()
 
-        res_division_thapliyal = runQX('division_thapliyal', 3*n + 1, show_output=True, return_res=True)
+        res_division_thapliyal = runQX('division_thapliyal', 3*n + 1, return_res=True)
         outp_q_division_thapliyal = res_division_thapliyal[(2*n)-1:n-1:-1]
         outp_r_division_thapliyal = res_division_thapliyal[n-1::-1]
 
@@ -352,6 +353,33 @@ if __name__ == "__main__":
             outp_r_division_thapliyal, int(outp_r_division_thapliyal, 2),
             int(outp_q_division_thapliyal, 2), int(inp_b, 2), int(outp_r_division_thapliyal, 2), int(outp_q_division_thapliyal, 2)*int(inp_b, 2) + int(outp_r_division_thapliyal, 2),
             int(outp_q_division_thapliyal, 2)*int(inp_b, 2) + int(outp_r_division_thapliyal, 2) == int(inp_a, 2)))
+
+    if run_division_thapliyal_matrix:
+
+        N = 5
+        n = math.ceil(math.log(N)/math.log(2))
+        corr_arr = np.zeros((2**N, 2**N), dtype=bool)
+
+        for i in range(2**N):
+            for j in range(2**N):
+
+
+                f = open(path + "division_thapliyal.qc", "w")
+                f.write(str(DivisionThapliyal.DIVcircuit(inp_n=f"{i:0{N}b}", inp_d=f"{j:0{N}b}")))  # Efficiently converts i and j to binary
+                f.close()
+
+                res_division_thapliyal = runQX('division_thapliyal', 3*N + 1, return_res=True)
+                outp_q = int(res_division_thapliyal[(2*N)-1:N-1:-1], 2)
+                outp_r = int(res_division_thapliyal[N-1::-1], 2)
+
+                if not (i==0 or j==0):
+                    is_corr = (outp_q == (i//j)) & (outp_r == (i%j))
+                else:
+                    is_corr = (outp_q == i) & (outp_r == 0)
+
+                if not is_corr:
+                    corr_arr[i, j] = is_corr
+                    print(f"n={i:>{n}}, d={j:>{n}}:   q={outp_q:>{n}}, r={outp_r:>{n}}")
 
     if run_test:
         res_test = runQX('test_ccrz', show_output=True)

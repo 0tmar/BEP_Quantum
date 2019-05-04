@@ -19,11 +19,13 @@ qubits 16
   map q13,d3
   map q14,d4
   map q15,c
+  x q0
+  x q1
+  x q2
+  x q3
   x q4
   x d0
-  x d1
-  x d2
-  x d3
+  x d4
   display
 
 .iteration
