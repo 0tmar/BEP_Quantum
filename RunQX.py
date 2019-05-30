@@ -117,14 +117,14 @@ if __name__ == "__main__":
     run_mul_qft =                   False
     run_expa =                      False
     run_Cao2012 =                   False
-    run_HLL_test =                  False
+    run_HLL_test =                  True
     run_numinv_test =               False
-    run_division_thapliyal =        True
+    run_division_thapliyal =        False
     run_division_thapliyal_matrix = False
     run_test =                      False
 
-    inp_a = "11111"
-    inp_b = "10001"
+    inp_a = "10101"
+    inp_b = "11111"
     inp_ctrl = "1"
 
     subtype = 'b-a'
@@ -356,7 +356,7 @@ if __name__ == "__main__":
 
     if run_division_thapliyal_matrix:
 
-        N = 5
+        N = 4
         n = math.ceil(math.log(N)/math.log(2))
         corr_arr = np.zeros((2**N, 2**N), dtype=bool)
 

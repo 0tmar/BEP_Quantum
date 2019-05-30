@@ -8,7 +8,7 @@ class DIV(Qfunction):
 
         def iteration(n, qny, qnr, qnd, qnc, i):
 
-            subsubroutine = SUB(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamec=qnc, do_overflow=False, subtype="b-a")
+            subsubroutine = SUB(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamec=qnc, qubitnamez=qnr, do_overflow=True, subtype="b-a")
             caddsubroutine = cADD(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamec=qnc, qubitnamectrl=qnr, do_overflow=False)
 
             gates = []
@@ -16,9 +16,9 @@ class DIV(Qfunction):
             gates += [Qgate()]
             gates += [Qgate("#", " SUB: Y - D, on Y")]
             gates += subsubroutine.gates
-            gates += [Qgate()]
-            gates += [Qgate("#", " cx on R, ctrl'd by Y[-1]")]
-            gates += [Qgate("cx", qny[-1], qnr)]
+            # gates += [Qgate()]
+            # gates += [Qgate("#", " cx on R, ctrl'd by Y[-1]")]
+            # gates += [Qgate("cx", qny[-1], qnr)]
             gates += [Qgate()]
             gates += [Qgate("#", " cADD: Y (+ D), on Y, ctrl'd by R")]
             gates += caddsubroutine.gates
