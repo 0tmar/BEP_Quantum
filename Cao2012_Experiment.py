@@ -53,17 +53,17 @@ def expA(qubitnamea, qubitnameb, qubitnamec, qubitnamed=None, sign=1, n=0, noglo
     # cRx(a,b,-sign*(2**n)*0.589)
     crx_a_b_059_gates = cRx(qna=qna, qnb=qnb, theta=-sign*(2**n)*0.589, different_comment_names=['a', 'b'])
 
-    # cZ(a,c)
-    cz_a_c_gates = []
-    cz_a_c_gates += [Qgate()]
-    cz_a_c_gates += [Qgate('#', ' cZ(a,c)')]
-    cz_a_c_gates += [Qgate('cz', qna, qnc)]
-
-    # cX(a,b)
-    cx_a_b_gates = []
-    cx_a_b_gates += [Qgate()]
-    cx_a_b_gates += [Qgate('#', ' cX(a,b)')]
-    cx_a_b_gates += [Qgate('cx', qna, qnb)]
+    # # cZ(a,c)
+    # cz_a_c_gates = []
+    # cz_a_c_gates += [Qgate()]
+    # cz_a_c_gates += [Qgate('#', ' cZ(a,c)')]
+    # cz_a_c_gates += [Qgate('cz', qna, qnc)]
+    #
+    # # cX(a,b)
+    # cx_a_b_gates = []
+    # cx_a_b_gates += [Qgate()]
+    # cx_a_b_gates += [Qgate('#', ' cX(a,b)')]
+    # cx_a_b_gates += [Qgate('cx', qna, qnb)]
 
     # # ccZ(a,b,c)
     # ccz_a_b_c_gates = []
@@ -269,25 +269,41 @@ def expA(qubitnamea, qubitnameb, qubitnamec, qubitnamed=None, sign=1, n=0, noglo
         elif n == 3:
             pass
 
+        # gates += rz_a_038_gates + \
+        #          crx_a_b_098_gates + \
+        #          rz_a_188_gates + \
+        #          toffoli_a_b_c_gates + \
+        #          crx_a_b_059_gates + \
+        #          toffoli_a_b_c_gates + \
+        #          cz_a_c_gates + \
+        #          cx_a_b_gates + \
+        #          ccz_a_b_c_gates + \
+        #          cx_a_b_gates
+
         gates += rz_a_038_gates + \
                  crx_a_b_098_gates + \
                  rz_a_188_gates + \
                  toffoli_a_b_c_gates + \
                  crx_a_b_059_gates + \
                  toffoli_a_b_c_gates + \
-                 cz_a_c_gates + \
-                 cx_a_b_gates + \
-                 ccz_a_b_c_gates + \
-                 cx_a_b_gates
+                 ccz_a_b_c_gates
 
         if noglobalrotation:
             gates += rz_d_113_gates
 
     elif sign == -1:
-        gates += cx_a_b_gates + \
-                 ccz_a_b_c_gates + \
-                 cx_a_b_gates + \
-                 cz_a_c_gates + \
+        # gates += cx_a_b_gates + \
+        #          ccz_a_b_c_gates + \
+        #          cx_a_b_gates + \
+        #          cz_a_c_gates + \
+        #          toffoli_a_b_c_gates + \
+        #          crx_a_b_059_gates + \
+        #          toffoli_a_b_c_gates + \
+        #          rz_a_188_gates + \
+        #          crx_a_b_098_gates + \
+        #          rz_a_038_gates
+
+        gates += ccz_a_b_c_gates + \
                  toffoli_a_b_c_gates + \
                  crx_a_b_059_gates + \
                  toffoli_a_b_c_gates + \

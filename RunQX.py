@@ -7,6 +7,7 @@ import Cao2012_Experiment
 import HLL_Linear_Solver
 import Number_Inversion
 import DivisionThapliyal
+import Ancilla_Rotation
 import os
 import subprocess
 import math
@@ -117,10 +118,11 @@ if __name__ == "__main__":
     run_mul_qft =                   False
     run_expa =                      False
     run_Cao2012 =                   False
-    run_HLL_test =                  True
+    run_HLL_test =                  False
     run_numinv_test =               False
     run_division_thapliyal =        False
     run_division_thapliyal_matrix = False
+    run_ry_cx_to_the_k =            True
     run_test =                      False
 
     inp_a = "10101"
@@ -380,6 +382,30 @@ if __name__ == "__main__":
                 if not is_corr:
                     corr_arr[i, j] = is_corr
                     print(f"n={i:>{n}}, d={j:>{n}}:   q={outp_q:>{n}}, r={outp_r:>{n}}")
+
+    if run_ry_cx_to_the_k:
+
+        c = .5
+        k = 3
+
+        f = open(path + "test_ry_cx_to_the_k.qc", "w")
+        f.write(str(Ancilla_Rotation.Ry_cx_to_the_k_circuit(inp=inp_a, c=c, k=k)))
+        f.close()
+
+        raw_Ry_cx_to_the_k = runQX('test_ry_cx_to_the_k', n + max(0, n-2) + 1, show_output=True, return_raw=True)
+        A_lst = find_output_matrices(outp_raw=raw_Ry_cx_to_the_k, do_sort=False)
+        p1 = A_lst[1][1, 2]
+        r = math.asin(p1)
+        x = int(inp_a, 2)/(2.**(len(inp_a)-1))
+
+        print(
+            "\n\nRy(c*x^k) rotation:\n\ninput c      = {}\ninput x      = {}\ninput k      = {}\n\noutput r     = {}\n\ntest (c*x)^k = {}\ncorrectness  = {}".format(
+                c,
+                x,
+                k,
+                r,
+                (c * x) ** k,
+                r/((c * x) ** k)))
 
     if run_test:
         res_test = runQX('test_ccrz', show_output=True)

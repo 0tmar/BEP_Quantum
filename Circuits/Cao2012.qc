@@ -101,12 +101,6 @@ qubits 7
   # Toffoli(a,b,c)
   toffoli q1,q5,q6
   
-  # cZ(a,c)
-  cz q1,q6
-  
-  # cX(a,b)
-  cx q1,q5
-  
   # ccZ(a,b,c)
   tdag q5
   cx q5,q6
@@ -123,9 +117,6 @@ qubits 7
   cx q1,q6
   t q6
   cx q1,q6
-  
-  # cX(a,b)
-  cx q1,q5
 
 .expA
   # performs exp(sign*i*A*t0*2^(n)/16) = exp(2*pi*i*A/8) on q5 and q6, controlled by q2
@@ -183,12 +174,6 @@ qubits 7
   # Toffoli(a,b,c)
   toffoli q2,q5,q6
   
-  # cZ(a,c)
-  cz q2,q6
-  
-  # cX(a,b)
-  cx q2,q5
-  
   # ccZ(a,b,c)
   tdag q5
   cx q5,q6
@@ -205,9 +190,6 @@ qubits 7
   cx q2,q6
   t q6
   cx q2,q6
-  
-  # cX(a,b)
-  cx q2,q5
 
 .expA
   # performs exp(sign*i*A*t0*2^(n)/16) = exp(2*pi*i*A/4) on q5 and q6, controlled by q3
@@ -262,12 +244,6 @@ qubits 7
   # Toffoli(a,b,c)
   toffoli q3,q5,q6
   
-  # cZ(a,c)
-  cz q3,q6
-  
-  # cX(a,b)
-  cx q3,q5
-  
   # ccZ(a,b,c)
   tdag q5
   cx q5,q6
@@ -284,9 +260,6 @@ qubits 7
   cx q3,q6
   t q6
   cx q3,q6
-  
-  # cX(a,b)
-  cx q3,q5
 
 .expA
   # performs exp(sign*i*A*t0*2^(n)/16) = exp(2*pi*i*A/2) on q5 and q6, controlled by q4
@@ -341,12 +314,6 @@ qubits 7
   # Toffoli(a,b,c)
   toffoli q4,q5,q6
   
-  # cZ(a,c)
-  cz q4,q6
-  
-  # cX(a,b)
-  cx q4,q5
-  
   # ccZ(a,b,c)
   tdag q5
   cx q5,q6
@@ -363,9 +330,6 @@ qubits 7
   cx q4,q6
   t q6
   cx q4,q6
-  
-  # cX(a,b)
-  cx q4,q5
 
 .iqft
   display
@@ -406,36 +370,36 @@ qubits 7
   swap q2,q3
 
 .cRy
-  # performs Ry(2^(3)*pi/2^(5-1)) = Ry(pi/2) on q0, controlled by q1
-  ry q0,0.39269908169872414
-  cx q1,q0
-  ry q0,-0.7853981633974483
-  cx q1,q0
-  ry q0,0.39269908169872414
-
-.cRy
-  # performs Ry(2^(2)*pi/2^(5-1)) = Ry(pi/4) on q0, controlled by q2
+  # performs Ry(2^(3)*pi/2^(6-1)) = Ry(pi/4) on q0, controlled by q1
   ry q0,0.19634954084936207
-  cx q2,q0
+  cx q1,q0
   ry q0,-0.39269908169872414
-  cx q2,q0
+  cx q1,q0
   ry q0,0.19634954084936207
 
 .cRy
-  # performs Ry(2^(1)*pi/2^(5-1)) = Ry(pi/8) on q0, controlled by q3
+  # performs Ry(2^(2)*pi/2^(6-1)) = Ry(pi/8) on q0, controlled by q2
   ry q0,0.09817477042468103
-  cx q3,q0
+  cx q2,q0
   ry q0,-0.19634954084936207
-  cx q3,q0
+  cx q2,q0
   ry q0,0.09817477042468103
 
 .cRy
-  # performs Ry(2^(0)*pi/2^(5-1)) = Ry(pi/16) on q0, controlled by q4
+  # performs Ry(2^(1)*pi/2^(6-1)) = Ry(pi/16) on q0, controlled by q3
   ry q0,0.04908738521234052
-  cx q4,q0
+  cx q3,q0
   ry q0,-0.09817477042468103
-  cx q4,q0
+  cx q3,q0
   ry q0,0.04908738521234052
+
+.cRy
+  # performs Ry(2^(0)*pi/2^(6-1)) = Ry(pi/32) on q0, controlled by q4
+  ry q0,0.02454369260617026
+  cx q4,q0
+  ry q0,-0.04908738521234052
+  cx q4,q0
+  ry q0,0.02454369260617026
 
 .reverse
   swap q1,q4
@@ -456,9 +420,6 @@ qubits 7
 .expA
   # performs exp(sign*i*A*t0*2^(n)/16) = exp(-2*pi*i*A/2) on q5 and q6, controlled by q4
   
-  # cX(a,b)
-  cx q4,q5
-  
   # ccZ(a,b,c)
   tdag q5
   cx q5,q6
@@ -475,12 +436,6 @@ qubits 7
   cx q4,q6
   t q6
   cx q4,q6
-  
-  # cX(a,b)
-  cx q4,q5
-  
-  # cZ(a,c)
-  cz q4,q6
   
   # Toffoli(a,b,c)
   toffoli q4,q5,q6
@@ -535,9 +490,6 @@ qubits 7
 .expA
   # performs exp(sign*i*A*t0*2^(n)/16) = exp(-2*pi*i*A/4) on q5 and q6, controlled by q3
   
-  # cX(a,b)
-  cx q3,q5
-  
   # ccZ(a,b,c)
   tdag q5
   cx q5,q6
@@ -554,12 +506,6 @@ qubits 7
   cx q3,q6
   t q6
   cx q3,q6
-  
-  # cX(a,b)
-  cx q3,q5
-  
-  # cZ(a,c)
-  cz q3,q6
   
   # Toffoli(a,b,c)
   toffoli q3,q5,q6
@@ -614,9 +560,6 @@ qubits 7
 .expA
   # performs exp(sign*i*A*t0*2^(n)/16) = exp(-2*pi*i*A/8) on q5 and q6, controlled by q2
   
-  # cX(a,b)
-  cx q2,q5
-  
   # ccZ(a,b,c)
   tdag q5
   cx q5,q6
@@ -633,12 +576,6 @@ qubits 7
   cx q2,q6
   t q6
   cx q2,q6
-  
-  # cX(a,b)
-  cx q2,q5
-  
-  # cZ(a,c)
-  cz q2,q6
   
   # Toffoli(a,b,c)
   toffoli q2,q5,q6
@@ -696,9 +633,6 @@ qubits 7
 .expA
   # performs exp(sign*i*A*t0*2^(n)/16) = exp(-2*pi*i*A/16) on q5 and q6, controlled by q1
   
-  # cX(a,b)
-  cx q1,q5
-  
   # ccZ(a,b,c)
   tdag q5
   cx q5,q6
@@ -715,12 +649,6 @@ qubits 7
   cx q1,q6
   t q6
   cx q1,q6
-  
-  # cX(a,b)
-  cx q1,q5
-  
-  # cZ(a,c)
-  cz q1,q6
   
   # Toffoli(a,b,c)
   toffoli q1,q5,q6

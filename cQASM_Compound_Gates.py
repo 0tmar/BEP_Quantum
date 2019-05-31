@@ -91,6 +91,58 @@ def cRz(qna, qnb, theta, add_comment=True, different_comment_names=None):
     return gates
 
 
+def ccRx(qna, qnb, qnc, theta, add_comment=True, different_comment_names=None):
+    gates = []
+    if add_comment:
+        gates += [Qgate()]
+        if different_comment_names is None:
+            gates += [Qgate('#', ' ccRx({},{},{},{})'.format(qna, qnb, qnc, theta))]
+        else:
+            dcn = different_comment_names
+            if len(dcn) is not 3:
+                raise IndexError(
+                    "different_comment_names must be the se size as the amount of inputs (3), not {}.".format(len(dcn)))
+            gates += [Qgate('#', ' ccRx({},{},{},{})'.format(dcn[0], dcn[1], dcn[2], theta))]
+    gates += [Qgate("rx", qnc, theta/4)]
+    gates += [Qgate("cz", qnb, qnc)]
+    gates += [Qgate("rx", qnc, -theta/4)]
+    gates += [Qgate("cz", qna, qnb)]
+    gates += [Qgate("cz", qna, qnc)]
+    gates += [Qgate("rx", qnc, theta/4)]
+    gates += [Qgate("cz", qnb, qnc)]
+    gates += [Qgate("cz", qna, qnb)]
+    gates += [Qgate("cz", qna, qnc)]
+    gates += [Qgate("rx", qnc, -theta/4)]
+    gates += [Qgate("cz", qna, qnc)]
+    return gates
+
+
+def ccRy(qna, qnb, qnc, theta, add_comment=True, different_comment_names=None):
+    gates = []
+    if add_comment:
+        gates += [Qgate()]
+        if different_comment_names is None:
+            gates += [Qgate('#', ' ccRy({},{},{},{})'.format(qna, qnb, qnc, theta))]
+        else:
+            dcn = different_comment_names
+            if len(dcn) is not 3:
+                raise IndexError(
+                    "different_comment_names must be the se size as the amount of inputs (3), not {}.".format(len(dcn)))
+            gates += [Qgate('#', ' ccRy({},{},{},{})'.format(dcn[0], dcn[1], dcn[2], theta))]
+    gates += [Qgate("ry", qnc, theta/4)]
+    gates += [Qgate("cx", qnb, qnc)]
+    gates += [Qgate("ry", qnc, -theta/4)]
+    gates += [Qgate("cx", qna, qnb)]
+    gates += [Qgate("cx", qna, qnc)]
+    gates += [Qgate("ry", qnc, theta/4)]
+    gates += [Qgate("cx", qnb, qnc)]
+    gates += [Qgate("cx", qna, qnb)]
+    gates += [Qgate("cx", qna, qnc)]
+    gates += [Qgate("ry", qnc, -theta/4)]
+    gates += [Qgate("cx", qna, qnc)]
+    return gates
+
+
 def ccRz(qna, qnb, qnc, theta, add_comment=True, different_comment_names=None):
     gates = []
     if add_comment:

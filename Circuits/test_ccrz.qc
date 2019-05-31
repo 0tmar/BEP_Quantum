@@ -7,6 +7,7 @@ qubits 3
   # init
   x q0
   x q1
+  # x q2
   display
   
   # ccRz(a,b,c,4.0)
@@ -21,6 +22,7 @@ qubits 3
   cx q0,q2
   rz q2,-1.0
   cx q0,q2
+  display
   
   # meas
   measure
