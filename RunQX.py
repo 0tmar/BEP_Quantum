@@ -385,7 +385,7 @@ if __name__ == "__main__":
 
     if run_ry_cx_to_the_k:
 
-        c = .5
+        c = .25
         k = 3
 
         f = open(path + "test_ry_cx_to_the_k.qc", "w")
