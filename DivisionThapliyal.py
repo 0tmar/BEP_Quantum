@@ -4,7 +4,7 @@ from AdderCuccaro import *
 
 class DIV(Qfunction):
 
-    def __init__(self, n=1, qubitnamesq=None, qubitnamesr=None, qubitnamesd=None, qubitnamec=None):
+    def __init__(self, n=1, m=None, qubitnamesq=None, qubitnamesr=None, qubitnamesd=None, qubitnamec=None):
 
         def iteration(n, qny, qnr, qnd, qnc, i):
 
@@ -28,9 +28,14 @@ class DIV(Qfunction):
 
             return Qsubroutine(name="iteration", gates=gates)
 
+        if m is None:
+            m = n
+        elif m > n:
+            raise ValueError("Value of m must be smaller than or equal to n")
+
         qnq = buildnames(n, qubitnamesq, "q")
-        qnr = buildnames(n, qubitnamesr, "r")
-        qnd = buildnames(n, qubitnamesd, "d")
+        qnr = buildnames(m, qubitnamesr, "r")
+        qnd = buildnames(m, qubitnamesd, "d")
         qnc = buildnames(1, qubitnamec, "c")
         qnc = qnc[0]
 
@@ -43,9 +48,13 @@ class DIV(Qfunction):
 
         for i in range(n):
 
-            qny = qnq[-i-1:] + qnr[:n-i-1]
-            qnrtemp = qnr[n-i-1]
-            subroutines += [iteration(n=n, qny=qny, qnd=qnd, qnr=qnrtemp, qnc=qnc, i=i+1)]
+            if i < m:
+                qny = qnq[-i-1:] + qnr[:m-i-1]
+                qnrtemp = qnr[m-i-1]
+            else:
+                qny = qnq[-i-1:m-i-1]
+                qnrtemp = qnq[m-i-1]
+            subroutines += [iteration(n=m, qny=qny, qnd=qnd, qnr=qnrtemp, qnc=qnc, i=i+1)]
 
         super().__init__(name="Thapliyal Division", subroutines=subroutines)
 
@@ -57,8 +66,8 @@ class DIVcircuit(Qfunction):
         na = len(inp_n)
         nb = len(inp_d)
         n = max(na, nb)
-        inp_n = (n - na) * "0" + inp_n
-        inp_d = (n - nb) * "0" + inp_d
+        inp_n = (n-na)*"0" + inp_n
+        inp_d = (n-nb)*"0" + inp_d
         qubits = 3*n + 1
         divfunction = DIV(n=n)
         qnq = divfunction.qubitnamesq
@@ -81,6 +90,52 @@ class DIVcircuit(Qfunction):
                 initgates += [Qgate("x", qnq[i])]
         for i in range(n):
             if inp_d[-i - 1] == "1":
+                initgates += [Qgate("x", qnd[i])]
+        initgates += [Qgate("display")]
+        initsubroutine = Qsubroutine(name="init", gates=initgates)
+
+        divsubroutines = divfunction.subroutines
+
+        resultgates = [Qgate("measure"), Qgate("display")]
+        resultsubroutine = Qsubroutine(name="result", gates=resultgates)
+
+        subroutines = [initsubroutine] + divsubroutines + [resultsubroutine]
+        super().__init__(name=name, qubits=qubits, subroutines=subroutines)
+
+
+class DivUnequalCircuit(Qfunction):
+
+    def __init__(self, inp_n="0", inp_d="0"):
+        if not isinstance(inp_n, str):
+            raise TypeError("input for inp_n must be of type string")
+        if not isinstance(inp_d, str):
+            raise TypeError("input for inp_d must be of type string")
+
+        name = "Thapliyal Division"
+        na = len(inp_n)
+        nb = len(inp_d)
+        n = na
+        m = nb
+        if inp_d[0] == '1' and n > m:
+            inp_d = "0" + inp_d
+            m += 1
+        qubits = n + 2*m + 1
+        divfunction = DIV(n=n, m=m)
+        qnq = divfunction.qubitnamesq
+        qnr = divfunction.qubitnamesr
+        qnd = divfunction.qubitnamesd
+        qnc = divfunction.qubitnamec
+        qnc = qnc[0]
+        qn = qnq + qnr + qnd + [qnc]
+
+        initgates = []
+        for i in range(qubits):
+            initgates += [Qgate("map", "q"+str(i), qn[i])]
+        for i in range(n):
+            if inp_n[-i-1] == "1":
+                initgates += [Qgate("x", qnq[i])]
+        for i in range(m):
+            if inp_d[-i-1] == "1":
                 initgates += [Qgate("x", qnd[i])]
         initgates += [Qgate("display")]
         initsubroutine = Qsubroutine(name="init", gates=initgates)

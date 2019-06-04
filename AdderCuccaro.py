@@ -45,6 +45,19 @@ def COMPLEMENT_gates(n=None, qubitnames=None):
         return gates
 
 
+def COMPLEMENT_gates_controlled(n=None, qubitnames=None, qubitnamectrl=None):
+
+        qn = buildnames(n, qubitnames)
+        qnctrl = buildnames(1, qubitnamectrl)
+
+        gates = []
+
+        for i in range(n):
+            gates += [Qgate('cx', qnctrl[0], qn[i])]
+
+        return gates
+
+
 class COMPLEMENT(Qsubroutine):
 
     def __init__(self, n=None, qubitnames=None):
@@ -203,7 +216,7 @@ class cSUB(Qsubroutine):
 
         if subtype == "a-b":
             initcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qna)
-            endcomplementgates = COMPLEMENT_gates(n=2*n, qubitnames=qna+qnb)
+            endcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qna) + COMPLEMENT_gates_controlled(n=n, qubitnames=qna, qubitnamectrl=qnctrl)
         elif subtype == "b-a":
             initcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qnb)
             endcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qnb)

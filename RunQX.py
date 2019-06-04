@@ -2,6 +2,7 @@
 import QFT
 import AdderQFT
 import AdderCuccaro
+import AdderMunozCoreas
 import MultiplierQFT
 import Cao2012_Experiment
 import HLL_Linear_Solver
@@ -115,6 +116,7 @@ if __name__ == "__main__":
     run_add_qft_ctrl =              False
     run_add_cuc =                   False
     run_add_cuc_ctrl =              False
+    run_add_mun_cor =               True
     run_mul_qft =                   False
     run_expa =                      False
     run_Cao2012 =                   False
@@ -122,11 +124,11 @@ if __name__ == "__main__":
     run_numinv_test =               False
     run_division_thapliyal =        False
     run_division_thapliyal_matrix = False
-    run_ry_cx_to_the_k =            True
+    run_ry_cx_to_the_k =            False
     run_test =                      False
 
-    inp_a = "10101"
-    inp_b = "11111"
+    inp_a = "00000"
+    inp_b = "00000"
     inp_ctrl = "1"
 
     subtype = 'b-a'
@@ -235,6 +237,26 @@ if __name__ == "__main__":
             outp_a_plus_b_cuc_ctrl, int(outp_a_plus_b_cuc_ctrl, 2),
             subtype, outp_a_minus_b_cuc_ctrl, int(outp_a_minus_b_cuc_ctrl, 2)))
 
+    if run_add_mun_cor:
+        f = open(path + "adder_munoz_coreas.qc", "w")
+        f.write(str(AdderMunozCoreas.ADDcircuit(inp_a=inp_a, inp_b=inp_b, inp_ctrl=inp_ctrl, do_overflow=True, do_ctrl=True)))
+        f.close()
+        f = open(path + "subtractor_munoz_coreas.qc", "w")
+        f.write(str(AdderMunozCoreas.SUBcircuit(inp_a=inp_a, inp_b=inp_b, inp_ctrl=inp_ctrl, do_overflow=True, do_ctrl=True)))
+        f.close()
+
+        res_add_mun_cor = runQX('adder_munoz_coreas', n_tot + 3, return_res=True, show_output=True)
+        outp_a_plus_b_mun_cor = res_add_mun_cor[-2:0:-2]
+        res_sub_mun_cor = runQX('subtractor_munoz_coreas', n_tot + 3, return_res=True, show_output=False)
+        outp_a_minus_b_mun_cor = res_sub_mun_cor[-2:0:-2]
+
+        print("\n\nAdder Munoz-Coreas:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\ninput ctrl = {}\n\noutput a+b = {} = {}\noutput {} = {} = {}".format(
+            (n-na)*" " + inp_a, int(inp_a, 2),
+            (n-nb)*" " + inp_b, int(inp_b, 2),
+            n*" " + inp_ctrl,
+            outp_a_plus_b_mun_cor, int(outp_a_plus_b_mun_cor, 2),
+            subtype, outp_a_minus_b_mun_cor, int(outp_a_minus_b_mun_cor, 2)))
+
     if run_mul_qft:
         f = open(path + "multiplier_qft.qc", "w")
         f.write(str(MultiplierQFT.MULcircuit(inp_a=inp_a, inp_b=inp_b)))
@@ -340,13 +362,20 @@ if __name__ == "__main__":
 
     if run_division_thapliyal:
 
+        if inp_b[0] == '1' and na > nb:
+            inp_b_temp = "0" + inp_b
+            nb_temp = nb + 1
+        else:
+            inp_b_temp = inp_b
+            nb_temp = nb
+
         f = open(path + "division_thapliyal.qc", "w")
-        f.write(str(DivisionThapliyal.DIVcircuit(inp_n=inp_a, inp_d=inp_b)))
+        f.write(str(DivisionThapliyal.DivUnequalCircuit(inp_n=inp_a, inp_d=inp_b_temp)))
         f.close()
 
-        res_division_thapliyal = runQX('division_thapliyal', 3*n + 1, return_res=True)
-        outp_q_division_thapliyal = res_division_thapliyal[(2*n)-1:n-1:-1]
-        outp_r_division_thapliyal = res_division_thapliyal[n-1::-1]
+        res_division_thapliyal = runQX('division_thapliyal', na + 2*nb_temp + 1, return_res=True)
+        outp_q_division_thapliyal = res_division_thapliyal[(na+nb)-1:nb_temp-1:-1]
+        outp_r_division_thapliyal = res_division_thapliyal[nb_temp-1::-1]
 
         print("\n\nDivision Thapliyal:\n\ninput n        = {} = {}\ninput d        = {} = {}\n\noutput q = n/d = {} = {}\noutput r = n%d = {} = {}\n\ntest q*d + r   = {}*{} + {} = {}\ncorrectness:   {}".format(
             inp_a, int(inp_a, 2),
