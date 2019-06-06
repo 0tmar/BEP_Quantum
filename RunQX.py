@@ -116,20 +116,20 @@ if __name__ == "__main__":
     run_add_qft_ctrl =              False
     run_add_cuc =                   False
     run_add_cuc_ctrl =              False
-    run_add_mun_cor =               True
+    run_add_mun_cor =               False
     run_mul_qft =                   False
     run_expa =                      False
     run_Cao2012 =                   False
     run_HLL_test =                  False
     run_numinv_test =               False
     run_division_thapliyal =        False
-    run_division_thapliyal_matrix = False
+    run_division_thapliyal_matrix = True
     run_ry_c_x_to_the_k =           False
     run_ancilla_rotation =          False
     run_test =                      False
 
-    inp_a = "1101"
-    inp_b = "0101"
+    inp_a = "111111"
+    inp_b = "000110"
     inp_ctrl = "1"
 
     subtype = 'a-b'

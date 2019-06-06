@@ -1,15 +1,15 @@
 from cQASM import *
-from AdderCuccaro import *
+from AdderMunozCoreas import *
 
 
 class DIV(Qfunction):
 
     def __init__(self, n=1, m=None, qubitnamesq=None, qubitnamesr=None, qubitnamesd=None, qubitnamec=None):
 
-        def iteration(n, qny, qnr, qnd, qnc, i):
+        def iteration(n, qny, qnr, qnd, i):
 
-            subsubroutine = SUB(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamec=qnc, qubitnamez=qnr, do_overflow=True, subtype="b-a")
-            caddsubroutine = cADD(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamec=qnc, qubitnamectrl=qnr, do_overflow=False)
+            subsubroutine = SUB(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamez=qnr, do_overflow=True, do_ctrl=False, subtype="b-a")
+            caddsubroutine = ADD(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamectrl=qnr, do_overflow=False, do_ctrl=True)
 
             gates = []
             gates += [Qgate("#", "## Iteration {}, where Y = [{}, ..., {}] and R = {}".format(i, qny[0], qny[-1], qnr))]
@@ -36,13 +36,10 @@ class DIV(Qfunction):
         qnq = buildnames(n, qubitnamesq, "q")
         qnr = buildnames(m, qubitnamesr, "r")
         qnd = buildnames(m, qubitnamesd, "d")
-        qnc = buildnames(1, qubitnamec, "c")
-        qnc = qnc[0]
 
         self.qubitnamesq = qnq
         self.qubitnamesr = qnr
         self.qubitnamesd = qnd
-        self.qubitnamec = qnc
 
         subroutines = []
 
@@ -54,7 +51,7 @@ class DIV(Qfunction):
             else:
                 qny = qnq[-i-1:m-i-1]
                 qnrtemp = qnq[m-i-1]
-            subroutines += [iteration(n=m, qny=qny, qnd=qnd, qnr=qnrtemp, qnc=qnc, i=i+1)]
+            subroutines += [iteration(n=m, qny=qny, qnd=qnd, qnr=qnrtemp, i=i+1)]
 
         super().__init__(name="Thapliyal Division", subroutines=subroutines)
 
@@ -68,14 +65,12 @@ class DIVcircuit(Qfunction):
         n = max(na, nb)
         inp_n = (n-na)*"0" + inp_n
         inp_d = (n-nb)*"0" + inp_d
-        qubits = 3*n + 1
+        qubits = 3*n
         divfunction = DIV(n=n)
         qnq = divfunction.qubitnamesq
         qnr = divfunction.qubitnamesr
         qnd = divfunction.qubitnamesd
-        qnc = divfunction.qubitnamec
-        qnc = qnc[0]
-        qn = qnq + qnr + qnd + [qnc]
+        qn = qnq + qnr + qnd
 
         if not isinstance(inp_n, str):
             raise TypeError("input for inp_n must be of type string")
@@ -119,14 +114,12 @@ class DivUnequalCircuit(Qfunction):
         if inp_d[0] == '1' and n > m:
             inp_d = "0" + inp_d
             m += 1
-        qubits = n + 2*m + 1
+        qubits = n + 2*m
         divfunction = DIV(n=n, m=m)
         qnq = divfunction.qubitnamesq
         qnr = divfunction.qubitnamesr
         qnd = divfunction.qubitnamesd
-        qnc = divfunction.qubitnamec
-        qnc = qnc[0]
-        qn = qnq + qnr + qnd + [qnc]
+        qn = qnq + qnr + qnd
 
         initgates = []
         for i in range(qubits):
