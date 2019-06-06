@@ -116,7 +116,7 @@ if __name__ == "__main__":
     run_add_qft_ctrl =              False
     run_add_cuc =                   False
     run_add_cuc_ctrl =              False
-    run_add_mun_cor =               True
+    run_add_mun_cor =               False
     run_mul_qft =                   False
     run_expa =                      False
     run_Cao2012 =                   False
@@ -124,10 +124,11 @@ if __name__ == "__main__":
     run_numinv_test =               False
     run_division_thapliyal =        False
     run_division_thapliyal_matrix = False
-    run_ry_cx_to_the_k =            False
+    run_ry_c_x_to_the_k =           False
+    run_ancilla_rotation =          True
     run_test =                      False
 
-    inp_a = "00000"
+    inp_a = "10000"
     inp_b = "00000"
     inp_ctrl = "1"
 
@@ -412,29 +413,58 @@ if __name__ == "__main__":
                     corr_arr[i, j] = is_corr
                     print(f"n={i:>{n}}, d={j:>{n}}:   q={outp_q:>{n}}, r={outp_r:>{n}}")
 
-    if run_ry_cx_to_the_k:
+    if run_ry_c_x_to_the_k:
 
-        c = .25
-        k = 3
+        c = 1.1
+        k = 7
 
-        f = open(path + "test_ry_cx_to_the_k.qc", "w")
-        f.write(str(Ancilla_Rotation.Ry_cx_to_the_k_circuit(inp=inp_a, c=c, k=k)))
+        f = open(path + "test_r_y_cx_to_the_k.qc", "w")
+        f.write(str(Ancilla_Rotation.Ry_c_x_to_the_k_circuit(inp=inp_a, c=c, k=k)))
         f.close()
 
-        raw_Ry_cx_to_the_k = runQX('test_ry_cx_to_the_k', n + max(0, n-2) + 1, show_output=True, return_raw=True)
-        A_lst = find_output_matrices(outp_raw=raw_Ry_cx_to_the_k, do_sort=False)
+        raw_Ry_c_x_to_the_k = runQX('test_r_y_cx_to_the_k', n + max(0, k-2) + 1, show_output=True, return_raw=True)
+        A_lst = find_output_matrices(outp_raw=raw_Ry_c_x_to_the_k, do_sort=False)
         p1 = A_lst[1][1, 2]
         r = math.asin(p1)
         x = int(inp_a, 2)/(2.**(len(inp_a)-1))
 
         print(
-            "\n\nRy(c*x^k) rotation:\n\ninput c      = {}\ninput x      = {}\ninput k      = {}\n\noutput r     = {}\n\ntest (c*x)^k = {}\ncorrectness  = {}".format(
+            "\n\nRy(c*x^k) rotation:\n\ninput c       = {}\ninput x       = {}\ninput k       = {}\n\noutput sin(r) = {}\noutput r      = {}\n\ntest c*(x^k)  = {}\nrel error     = {}{}".format(
                 c,
                 x,
                 k,
+                p1,
                 r,
-                (c * x) ** k,
-                r/((c * x) ** k)))
+                c * (x ** k),
+                abs(1 - abs(r/(c * (x ** k)))),
+                "\n\nWARNING: THE ROTATION IS LARGER THAN pi/2, MEANING THAT THE INPUT AND OUTPUT WILL NOT MATCH!"*((c * (x ** k)) > (math.pi/2))))
+
+    if run_ancilla_rotation:
+
+        c = 1
+        m = 5
+
+        # f = open(path + "test_ancilla_rotation.qc", "w")
+        # f.write(str(Ancilla_Rotation.AncillaRotationCircuit(inp=inp_a, c=c, m=m)))
+        # f.close()
+        #
+        # print("Finished building circuit")
+
+        raw_ancilla_rotation = runQX('test_ancilla_rotation', n + max(0, 2*min(n, m)-1) + 1, show_output=True, return_raw=True)
+        A_lst = find_output_matrices(outp_raw=raw_ancilla_rotation, do_sort=False)
+        p1 = A_lst[1][1, 2]
+        r = math.asin(p1)
+        x = int(inp_a, 2)/(2.**(len(inp_a)-1))
+
+        print(
+            "\n\nAncilla rotation:\n\ninput c       = {}\ninput x       = {}\ninput m       = {}\n\noutput sin(r) = {}\n\ntest c*x      = {}\nrel error     = {}".format(
+                c,
+                x,
+                m,
+                p1,
+                c*x,
+                abs(c*x-p1)/c*x))
+
 
     if run_test:
         res_test = runQX('test_ccrz', show_output=True)
