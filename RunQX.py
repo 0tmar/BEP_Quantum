@@ -116,7 +116,7 @@ if __name__ == "__main__":
     run_add_qft_ctrl =              False
     run_add_cuc =                   False
     run_add_cuc_ctrl =              False
-    run_add_mun_cor =               False
+    run_add_mun_cor =               True
     run_mul_qft =                   False
     run_expa =                      False
     run_Cao2012 =                   False
@@ -125,14 +125,14 @@ if __name__ == "__main__":
     run_division_thapliyal =        False
     run_division_thapliyal_matrix = False
     run_ry_c_x_to_the_k =           False
-    run_ancilla_rotation =          True
+    run_ancilla_rotation =          False
     run_test =                      False
 
-    inp_a = "10000"
-    inp_b = "00000"
+    inp_a = "1101"
+    inp_b = "0101"
     inp_ctrl = "1"
 
-    subtype = 'b-a'
+    subtype = 'a-b'
     do_overflow = True
 
     na = len(inp_a)
@@ -239,24 +239,60 @@ if __name__ == "__main__":
             subtype, outp_a_minus_b_cuc_ctrl, int(outp_a_minus_b_cuc_ctrl, 2)))
 
     if run_add_mun_cor:
+        do_overflow = True
+        do_ctrl = True
+        do_ancilla = (do_overflow and do_ctrl)
+        if do_overflow and do_ctrl:
+            read_start = -2
+            read_end = 0
+        elif do_ctrl:
+            read_start = -2
+            read_end = 0
+        elif do_overflow:
+            read_start = -1
+            read_end = None
+        else:
+            read_start = -2
+            read_end = None
+
         f = open(path + "adder_munoz_coreas.qc", "w")
-        f.write(str(AdderMunozCoreas.ADDcircuit(inp_a=inp_a, inp_b=inp_b, inp_ctrl=inp_ctrl, do_overflow=True, do_ctrl=True)))
+        f.write(str(AdderMunozCoreas.ADDcircuit(inp_a=inp_a, inp_b=inp_b, inp_ctrl=inp_ctrl, do_overflow=do_overflow, do_ctrl=do_ctrl)))
         f.close()
         f = open(path + "subtractor_munoz_coreas.qc", "w")
-        f.write(str(AdderMunozCoreas.SUBcircuit(inp_a=inp_a, inp_b=inp_b, inp_ctrl=inp_ctrl, do_overflow=True, do_ctrl=True)))
+        f.write(str(AdderMunozCoreas.SUBcircuit(inp_a=inp_a, inp_b=inp_b, inp_ctrl=inp_ctrl, do_overflow=do_overflow, do_ctrl=do_ctrl, subtype=subtype)))
         f.close()
 
-        res_add_mun_cor = runQX('adder_munoz_coreas', n_tot + 3, return_res=True, show_output=True)
-        outp_a_plus_b_mun_cor = res_add_mun_cor[-2:0:-2]
-        res_sub_mun_cor = runQX('subtractor_munoz_coreas', n_tot + 3, return_res=True, show_output=False)
-        outp_a_minus_b_mun_cor = res_sub_mun_cor[-2:0:-2]
+        res_add_mun_cor = runQX('adder_munoz_coreas', n_tot + 1*do_overflow + 1*do_ctrl + 1*do_ancilla, return_res=True, show_output=False)
+        outp_a_plus_b_mun_cor = res_add_mun_cor[read_start:read_end:-2]
+        res_sub_mun_cor = runQX('subtractor_munoz_coreas', n_tot + 1*do_overflow + 1*do_ctrl + 1*do_ancilla, return_res=True, show_output=False)
+        outp_a_minus_b_mun_cor = res_sub_mun_cor[read_start:read_end:-2]
 
-        print("\n\nAdder Munoz-Coreas:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\ninput ctrl = {}\n\noutput a+b = {} = {}\noutput {} = {} = {}".format(
-            (n-na)*" " + inp_a, int(inp_a, 2),
-            (n-nb)*" " + inp_b, int(inp_b, 2),
-            n*" " + inp_ctrl,
-            outp_a_plus_b_mun_cor, int(outp_a_plus_b_mun_cor, 2),
-            subtype, outp_a_minus_b_mun_cor, int(outp_a_minus_b_mun_cor, 2)))
+        if do_overflow and do_ctrl:
+            print("\n\nAdder Munoz-Coreas:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\ninput ctrl = {}\n\noutput a+b = {} = {}\noutput {} = {} = {}".format(
+                (n-na)*" " + inp_a, int(inp_a, 2),
+                (n-nb)*" " + inp_b, int(inp_b, 2),
+                n*" " + inp_ctrl,
+                outp_a_plus_b_mun_cor, int(outp_a_plus_b_mun_cor, 2),
+                subtype, outp_a_minus_b_mun_cor, int(outp_a_minus_b_mun_cor, 2)))
+        elif do_overflow:
+            print("\n\nAdder Munoz-Coreas:\n\ninput a    =  {} = {}\ninput b    =  {} = {}\n\noutput a+b = {} = {}\noutput {} = {} = {}".format(
+                (n-na)*" " + inp_a, int(inp_a, 2),
+                (n-nb)*" " + inp_b, int(inp_b, 2),
+                outp_a_plus_b_mun_cor, int(outp_a_plus_b_mun_cor, 2),
+                subtype, outp_a_minus_b_mun_cor, int(outp_a_minus_b_mun_cor, 2)))
+        elif do_ctrl:
+            print("\n\nAdder Munoz-Coreas:\n\ninput a    = {} = {}\ninput b    = {} = {}\ninput ctrl = {}\n\noutput a+b = {} = {}\noutput {} = {} = {}".format(
+                (n-na)*" " + inp_a, int(inp_a, 2),
+                (n-nb)*" " + inp_b, int(inp_b, 2),
+                (n-1)*" " + inp_ctrl,
+                outp_a_plus_b_mun_cor, int(outp_a_plus_b_mun_cor, 2),
+                subtype, outp_a_minus_b_mun_cor, int(outp_a_minus_b_mun_cor, 2)))
+        else:
+            print("\n\nAdder Munoz-Coreas:\n\ninput a    = {} = {}\ninput b    = {} = {}\n\noutput a+b = {} = {}\noutput {} = {} = {}".format(
+                (n-na)*" " + inp_a, int(inp_a, 2),
+                (n-nb)*" " + inp_b, int(inp_b, 2),
+                outp_a_plus_b_mun_cor, int(outp_a_plus_b_mun_cor, 2),
+                subtype, outp_a_minus_b_mun_cor, int(outp_a_minus_b_mun_cor, 2)))
 
     if run_mul_qft:
         f = open(path + "multiplier_qft.qc", "w")

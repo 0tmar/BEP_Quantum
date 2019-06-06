@@ -1,6 +1,6 @@
 #function: Munoz-Coreas Quantum Subtractor
 
-qubits 13
+qubits 11
 
 .init
   map q0,ctrl
@@ -12,11 +12,14 @@ qubits 13
   map q6,a2
   map q7,b3
   map q8,a3
-  map q9,b4
-  map q10,a4
-  map q11,c
-  map q12,z
+  map q9,z
+  map q10,d
   x ctrl
+  x a0
+  x a2
+  x a3
+  x b0
+  x b2
   display
 
 .sub
@@ -24,25 +27,18 @@ qubits 13
   x a1
   x a2
   x a3
-  x a4
   cx a1,b1
   cx a2,b2
   cx a3,b3
-  cx a4,b4
-  cx a3,a4
+  toffoli ctrl,a3,z
   cx a2,a3
   cx a1,a2
   toffoli a0,b0,a1
   toffoli a1,b1,a2
   toffoli a2,b2,a3
-  toffoli a3,b3,a4
-  toffoli a4,b4,c
-  display
-  toffoli ctrl,c,z
-  display
-  toffoli a4,b4,c
-  toffoli ctrl,a4,b4
-  toffoli a3,b3,a4
+  toffoli a3,b3,d
+  toffoli ctrl,d,z
+  toffoli a3,b3,d
   toffoli ctrl,a3,b3
   toffoli a2,b2,a3
   toffoli ctrl,a2,b2
@@ -52,8 +48,6 @@ qubits 13
   toffoli ctrl,a0,b0
   cx a1,a2
   cx a2,a3
-  cx a3,a4
-  cx a4,b4
   cx a3,b3
   cx a2,b2
   cx a1,b1
@@ -61,13 +55,10 @@ qubits 13
   x a1
   x a2
   x a3
-  x a4
   cx ctrl,b0
   cx ctrl,b1
   cx ctrl,b2
   cx ctrl,b3
-  cx ctrl,b4
-  cx ctrl,z
 
 .result
   measure

@@ -36,7 +36,7 @@ class ADD(Qsubroutine):
         qna = buildnames(n, qubitnamesa, "a")
         qnb = buildnames(n, qubitnamesb, "b")
         if qubitnamec is None:
-            qnc = "c"
+            qnc = "d"
         else:
             qnc = qubitnamec
         if do_overflow:
@@ -67,13 +67,11 @@ class ADD(Qsubroutine):
 
         for i in range(n-1):
             gates += [Qgate("cx", qna[i+1], qnb[i+1])]
-        # if do_overflow:
-        #     if do_ctrl:
-        #         gates += [Qgate("toffoli", qna[-1], qnb[-1], qnc)]
-        #         gates += [Qgate("toffoli", qnctrl, qnc, qnz)]
-        #         gates += [Qgate("toffoli", qna[-1], qnb[-1], qnc)]
-        #     else:
-        #         gates += [Qgate("toffoli", qna[-1], qnb[-1], qnz)]
+        if do_overflow:
+            if do_ctrl:
+                gates += [Qgate("toffoli", qnctrl, qna[-1], qnz)]
+            else:
+                gates += [Qgate("cx", qna[-1], qnz)]
         for i in range(n-2):
             gates += [Qgate("cx", qna[-i-2], qna[-i-1])]
         for i in range(n-1):
@@ -81,9 +79,7 @@ class ADD(Qsubroutine):
         if do_overflow:
             if do_ctrl:
                 gates += [Qgate("toffoli", qna[-1], qnb[-1], qnc)]
-                gates += [Qgate("display")]
                 gates += [Qgate("toffoli", qnctrl, qnc, qnz)]
-                gates += [Qgate("display")]
                 gates += [Qgate("toffoli", qna[-1], qnb[-1], qnc)]
             else:
                 gates += [Qgate("toffoli", qna[-1], qnb[-1], qnz)]
@@ -139,15 +135,18 @@ class SUB(Qsubroutine):
             if do_ctrl:
                 endcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qna)
                 if do_overflow:
-                    endcomplementgates += COMPLEMENT_gates_controlled(n=n+1, qubitnames=qnb+[qnz], qubitnamectrl=qnctrl)
+                    # endcomplementgates += COMPLEMENT_gates_controlled(n=n+1, qubitnames=qnb+[qnz], qubitnamectrl=qnctrl)
+                    endcomplementgates += COMPLEMENT_gates_controlled(n=n, qubitnames=qnb, qubitnamectrl=qnctrl)
                 else:
                     endcomplementgates += COMPLEMENT_gates_controlled(n=n, qubitnames=qnb, qubitnamectrl=qnctrl)
             else:
                 endcomplementgates = COMPLEMENT_gates(n=2*n, qubitnames=qna+qnb)
         elif subtype == "b-a":
             if do_overflow:
-                initcomplementgates = COMPLEMENT_gates(n=n+1, qubitnames=qnb+[qnz])
-                endcomplementgates = COMPLEMENT_gates(n=n+1, qubitnames=qnb+[qnz])
+                # initcomplementgates = COMPLEMENT_gates(n=n+1, qubitnames=qnb+[qnz])
+                # endcomplementgates = COMPLEMENT_gates(n=n+1, qubitnames=qnb+[qnz])
+                initcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qnb)
+                endcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qnb)
             else:
                 initcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qnb)
                 endcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qnb)
@@ -206,10 +205,11 @@ class ADDcircuit(Qfunction):
             initgates += [Qgate("map", "q"+str(2*i+j+1), qna[i])]
         if do_overflow:
             initgates += [Qgate("map", "q" + str(2*n+j), qnz)]
+            j += 1
         if do_overflow and do_ctrl:
             initgates += [Qgate("map", "q" + str(2*n+j), qnc)]
             j += 1
-        if inp_ctrl == "1":
+        if inp_ctrl == "1" and do_ctrl:
             initgates += [Qgate("x", qnctrl)]
         for i in range(n):
             if inp_a[-i-1] == "1":
@@ -231,7 +231,7 @@ class ADDcircuit(Qfunction):
 
 class SUBcircuit(Qfunction):
 
-    def __init__(self, inp_a="0", inp_b="0", inp_ctrl="0", do_overflow=True, do_ctrl=True):
+    def __init__(self, inp_a="0", inp_b="0", inp_ctrl="0", do_overflow=True, do_ctrl=True, subtype="a-b"):
         name = "Munoz-Coreas Quantum Subtractor"
         na = len(inp_a)
         nb = len(inp_b)
@@ -245,7 +245,7 @@ class SUBcircuit(Qfunction):
             qubits += 1
         if do_overflow and do_ctrl:
             qubits += 1
-        subsubroutine = SUB(n=n, do_overflow=do_overflow, do_ctrl=do_ctrl)
+        subsubroutine = SUB(n=n, do_overflow=do_overflow, do_ctrl=do_ctrl, subtype=subtype)
         qna = subsubroutine.qubitnamesa
         qnb = subsubroutine.qubitnamesb
         if do_overflow and do_ctrl:
@@ -274,12 +274,13 @@ class SUBcircuit(Qfunction):
         for i in range(n):
             initgates += [Qgate("map", "q"+str(2*i+j), qnb[i])]
             initgates += [Qgate("map", "q"+str(2*i+j+1), qna[i])]
+        if do_overflow:
+            initgates += [Qgate("map", "q" + str(2*n+j), qnz)]
+            j += 1
         if do_overflow and do_ctrl:
             initgates += [Qgate("map", "q" + str(2*n+j), qnc)]
             j += 1
-        if do_overflow:
-            initgates += [Qgate("map", "q" + str(2*n+j), qnz)]
-        if inp_ctrl == "1":
+        if inp_ctrl == "1" and do_ctrl:
             initgates += [Qgate("x", qnctrl)]
         for i in range(n):
             if inp_a[-i-1] == "1":
