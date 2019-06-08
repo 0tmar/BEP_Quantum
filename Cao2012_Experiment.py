@@ -367,6 +367,9 @@ def cRy(qubitnamea, qubitnameb, n, r):
 class Cao2012Experiment(Qfunction):
 
     def __init__(self, r=5, m=None, n=None):
+        # r: 2^-r factor in ancilla rotation: higher r is higher precision, but a lower chance of |1>. Default r=5
+        # m: inputs m-th eigenvector of A instead of the multi state (m=0..3 or None) (either m or n must be None)
+        # n: inputs the n state iso the multi state (n=0: 00, n=1: 01, n=2: 10, n=3: 11)
 
         qubits = 7
 

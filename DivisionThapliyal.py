@@ -2,31 +2,60 @@ from cQASM import *
 from AdderMunozCoreas import *
 
 
-class DIV(Qfunction):
+class DIV(Qsubroutine):
 
-    def __init__(self, n=1, m=None, qubitnamesq=None, qubitnamesr=None, qubitnamesd=None, qubitnamec=None):
+    def __init__(self, n=1, m=None, qubitnamesq=None, qubitnamesr=None, qubitnamesd=None, sign=1):
 
-        def iteration(n, qny, qnr, qnd, i):
+        if not (sign == -1 or sign == 1):
+            raise ValueError("Variable 'sign' should be either 1 or -1, not {}".format(sign))
 
-            subsubroutine = SUB(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamez=qnr, do_overflow=True, do_ctrl=False, subtype="b-a")
-            caddsubroutine = ADD(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamectrl=qnr, do_overflow=False, do_ctrl=True)
+        def iteration(n, qny, qnz, qnd, i, sign=1):
 
             gates = []
-            gates += [Qgate("#", "## Iteration {}, where Y = [{}, ..., {}] and R = {}".format(i, qny[0], qny[-1], qnr))]
-            gates += [Qgate()]
-            gates += [Qgate("#", " SUB: Y - D, on Y")]
-            gates += subsubroutine.gates
-            # gates += [Qgate()]
-            # gates += [Qgate("#", " cx on R, ctrl'd by Y[-1]")]
-            # gates += [Qgate("cx", qny[-1], qnr)]
-            gates += [Qgate()]
-            gates += [Qgate("#", " cADD: Y (+ D), on Y, ctrl'd by R")]
-            gates += caddsubroutine.gates
-            gates += [Qgate()]
-            gates += [Qgate("#", " x on R")]
-            gates += [Qgate("x", qnr)]
 
-            return Qsubroutine(name="iteration", gates=gates)
+            if sign == 1:
+
+                name = "iteration"
+
+                subsubroutine = SUB(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamez=qnz, do_overflow=True, do_ctrl=False, subtype="b-a")
+                caddsubroutine = ADD(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamectrl=qnz, do_overflow=False, do_ctrl=True)
+
+                gates += [Qgate("#", "## Iteration {}, where Y = [{}, ..., {}] and Z = {}".format(i, qny[0], qny[-1], qnz))]
+                gates += [Qgate()]
+                gates += [Qgate("#", " SUB: Y - D, on Y")]
+                gates += subsubroutine.gates
+                # gates += [Qgate()]
+                # gates += [Qgate("#", " cx on Z, ctrl'd by Y[-1]")]
+                # gates += [Qgate("cx", qny[-1], qnz)]
+                gates += [Qgate()]
+                gates += [Qgate("#", " cADD: Y (+ D), on Y, ctrl'd by Z")]
+                gates += caddsubroutine.gates
+                gates += [Qgate()]
+                gates += [Qgate("#", " x on Z")]
+                gates += [Qgate("x", qnz)]
+
+            else:
+
+                name = "un_iteration"
+
+                unsubsubroutine = ADD(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamez=qnz, do_overflow=True, do_ctrl=False)
+                uncaddsubroutine = SUB(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamectrl=qnz, do_overflow=False, do_ctrl=True, subtype="b-a")
+
+                gates += [Qgate("#", "## Un-iteration {}, where Y = [{}, ..., {}] and R = {}".format(i, qny[0], qny[-1], qnz))]
+                gates += [Qgate()]
+                gates += [Qgate("#", " x on Z")]
+                gates += [Qgate("x", qnz)]
+                gates += [Qgate()]
+                gates += [Qgate("#", " un-cADD: Y (+ D), on Y, ctrl'd by Z")]
+                gates += uncaddsubroutine.gates
+                gates += [Qgate()]
+                # gates += [Qgate()]
+                # gates += [Qgate("#", " cx on Z, ctrl'd by Y[-1]")]
+                # gates += [Qgate("cx", qny[-1], qnz)]
+                gates += [Qgate("#", " un-SUB: Y - D, on Y")]
+                gates += unsubsubroutine.gates
+
+            return gates
 
         if m is None:
             m = n
@@ -41,19 +70,32 @@ class DIV(Qfunction):
         self.qubitnamesr = qnr
         self.qubitnamesd = qnd
 
-        subroutines = []
+        gates = []
 
-        for i in range(n):
+        if sign == 1:
+            gates += [Qgate("#", "#### Thapliyal division with Q = [{}, ..., {}], R = [{}, ..., {}] and D = [{}, ..., {}]". format(qnq[0], qnq[-1], qnr[0], qnr[-1], qnd[0], qnd[-1]))]
+            rng = list(range(n))
+        else:
+            gates += [Qgate("#", "#### un-Thapliyal division with Q = [{}, ..., {}], R = [{}, ..., {}] and D = [{}, ..., {}]". format(qnq[0], qnq[-1], qnr[0], qnr[-1], qnd[0], qnd[-1]))]
+            rng = list(reversed(range(n)))
+
+        gates += [Qgate()]
+
+        for i in rng:
 
             if i < m:
                 qny = qnq[-i-1:] + qnr[:m-i-1]
-                qnrtemp = qnr[m-i-1]
+                qnztemp = qnr[m-i-1]
             else:
                 qny = qnq[-i-1:m-i-1]
-                qnrtemp = qnq[m-i-1]
-            subroutines += [iteration(n=m, qny=qny, qnd=qnd, qnr=qnrtemp, i=i+1)]
+                qnztemp = qnq[m-i-1]
 
-        super().__init__(name="Thapliyal Division", subroutines=subroutines)
+            gates += iteration(n=m, qny=qny, qnd=qnd, qnz=qnztemp, i=i+1, sign=sign)
+
+            if i is not rng[-1]:
+                gates += [Qgate()]
+
+        super().__init__(name="thapliyal_division", gates=gates)
 
 
 class DIVcircuit(Qfunction):
@@ -66,10 +108,10 @@ class DIVcircuit(Qfunction):
         inp_n = (n-na)*"0" + inp_n
         inp_d = (n-nb)*"0" + inp_d
         qubits = 3*n
-        divfunction = DIV(n=n)
-        qnq = divfunction.qubitnamesq
-        qnr = divfunction.qubitnamesr
-        qnd = divfunction.qubitnamesd
+        divsubroutine = DIV(n=n)
+        qnq = divsubroutine.qubitnamesq
+        qnr = divsubroutine.qubitnamesr
+        qnd = divsubroutine.qubitnamesd
         qn = qnq + qnr + qnd
 
         if not isinstance(inp_n, str):
@@ -89,12 +131,10 @@ class DIVcircuit(Qfunction):
         initgates += [Qgate("display")]
         initsubroutine = Qsubroutine(name="init", gates=initgates)
 
-        divsubroutines = divfunction.subroutines
-
         resultgates = [Qgate("measure"), Qgate("display")]
         resultsubroutine = Qsubroutine(name="result", gates=resultgates)
 
-        subroutines = [initsubroutine] + divsubroutines + [resultsubroutine]
+        subroutines = [initsubroutine, divsubroutine, resultsubroutine]
         super().__init__(name=name, qubits=qubits, subroutines=subroutines)
 
 
@@ -115,10 +155,10 @@ class DivUnequalCircuit(Qfunction):
             inp_d = "0" + inp_d
             m += 1
         qubits = n + 2*m
-        divfunction = DIV(n=n, m=m)
-        qnq = divfunction.qubitnamesq
-        qnr = divfunction.qubitnamesr
-        qnd = divfunction.qubitnamesd
+        divsubroutine = DIV(n=n, m=m)
+        qnq = divsubroutine.qubitnamesq
+        qnr = divsubroutine.qubitnamesr
+        qnd = divsubroutine.qubitnamesd
         qn = qnq + qnr + qnd
 
         initgates = []
@@ -133,12 +173,10 @@ class DivUnequalCircuit(Qfunction):
         initgates += [Qgate("display")]
         initsubroutine = Qsubroutine(name="init", gates=initgates)
 
-        divsubroutines = divfunction.subroutines
-
         resultgates = [Qgate("measure"), Qgate("display")]
         resultsubroutine = Qsubroutine(name="result", gates=resultgates)
 
-        subroutines = [initsubroutine] + divsubroutines + [resultsubroutine]
+        subroutines = [initsubroutine, divsubroutine, resultsubroutine]
         super().__init__(name=name, qubits=qubits, subroutines=subroutines)
 
 

@@ -97,7 +97,7 @@ def ancilla_rotation_subroutines(qnc, qnr, qna, c=1, m=2):
     n = len(qnc)
     subroutines = []
 
-    for i in range(m):
+    for i in range(m+1):
         a_i = arcsin_taylor_factor(i)
         c_i = c**(1+2*i)
         subroutines += [Ry_c_x_to_the_k(n=n, c=a_i*c_i, k=1+2*i, qubitnamesc=qnc, qubitnamer=qnr, qubitnamesa=qna)]

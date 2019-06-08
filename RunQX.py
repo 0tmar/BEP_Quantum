@@ -9,6 +9,7 @@ import HLL_Linear_Solver
 import Number_Inversion
 import DivisionThapliyal
 import Ancilla_Rotation
+import CompleteQLSA
 import os
 import subprocess
 import math
@@ -162,18 +163,19 @@ if __name__ == "__main__":
     run_add_mun_cor =               False
     run_mul_qft =                   False
     run_division_thapliyal =        False
-    run_division_thapliyal_matrix = True
+    run_division_thapliyal_matrix = False
     run_ry_c_x_to_the_k =           False
     run_ancilla_rotation =          False
     run_expa =                      False
     run_Cao2012 =                   False
     run_HLL_test =                  False
     run_numinv_test =               False
+    run_complete_qlsa =             True
     run_test =                      False
 
     # Binary number inputs used in many of the arithmetic circuits
-    inp_a = "111111"
-    inp_b = "000110"
+    inp_a = "100000"
+    inp_b = "0010"
 
     # Extra options for some of the circuits
     inp_ctrl = "1"      # For the controlled adders, what the value of the control qubit is; '1' or '0'
@@ -404,8 +406,8 @@ if __name__ == "__main__":
         f.close()
 
         # Running the circuit in the QX simulator and retrieving the results
-        res_division_thapliyal = runQX('division_thapliyal', na + 2*nb_temp + 1, return_res=True)
-        outp_q_division_thapliyal = res_division_thapliyal[(na+nb)-1:nb_temp-1:-1]
+        res_division_thapliyal = runQX('division_thapliyal', na + 2*nb_temp, return_res=True)
+        outp_q_division_thapliyal = res_division_thapliyal[(na+nb_temp)-1:nb_temp-1:-1]
         outp_r_division_thapliyal = res_division_thapliyal[nb_temp-1::-1]
 
         # Showing the results
@@ -481,6 +483,7 @@ if __name__ == "__main__":
                 "\n\nWARNING: THE ROTATION IS LARGER THAN pi/2, MEANING THAT THE INPUT AND OUTPUT WILL NOT MATCH!"*(y > (math.pi/2))))
 
     if run_ancilla_rotation:
+        '''Runs the Ancilla Rotation subroutine of the HHL algorithm'''
 
         # Writing the circuit to a file
         f = open(path + "test_ancilla_rotation.qc", "w")
@@ -506,6 +509,7 @@ if __name__ == "__main__":
                 "\n\nWARNING: THE DESIRED PROBABILITY IS LARGER THAN 1, MEANING THAT THE DESIRED OUTPUT CAN NEVER MATCH!"*(y > 1)))
 
     if run_expa:
+        '''Performs the exp(i*A*t) gate with A defined as in the Cao2012 paper'''
 
         # Writing the circuit to a file
         f = open(path + "test_expa.qc", "w")
@@ -516,7 +520,9 @@ if __name__ == "__main__":
         res_expa = runQX('test_expa', 4, show_output=True)
 
     if run_Cao2012:
-        r = 5     # 2^-r factor in ancilla rotation: higher r is higher precision, but lower a chance of |1>. Default r=5
+        '''Runs the proprietary HHL circuit from Cao2012'''
+
+        r = 5     # 2^-r factor in ancilla rotation: higher r is higher precision, but a lower chance of |1>. Default r=5
         m = None  # inputs m-th eigenvector of A instead of the multi state (m=0..3 or None) (either m or n must be None)
         n = None  # inputs the n state iso the multi state (n=0: 00, n=1: 01, n=2: 10, n=3: 11)
 
@@ -583,6 +589,7 @@ if __name__ == "__main__":
             outp_vec1_cao2012))
 
     if run_HLL_test:
+        '''Runs the Cao number inversion algorithm (the files should be renamed)'''
 
         # Writing the circuit to a file
         f = open(path + "test_hll.qc", "w")
@@ -596,6 +603,7 @@ if __name__ == "__main__":
         print(A[:, 0:4])
 
     if run_numinv_test:
+        '''Performs the number inversion based on Newton-Raphson iteration'''
 
         # Writing the circuit to a file
         f = open(path + "test_numinv.qc", "w")
@@ -605,8 +613,26 @@ if __name__ == "__main__":
         # Running the circuit in the QX simulator and retrieving the results
         raw_HLL = runQX('test_numinv', 3*na+1, show_output=True, return_raw=True)
 
+    if run_complete_qlsa:
+        '''Runs a complete QLSA using the Cao matrix'''
+
+        # Defining extra variables
+        n_eig_inv = 5
+        m_anc_rot = 1
+        r_anc_rot = 3
+        input_eigenvector = None
+        input_n_state = None
+
+        # Writing the circuit to a file
+        f = open(path + "complete_qlsa_cao_matrix.qc", "w")
+        f.write(str(CompleteQLSA.CompleteQlsaWithCaoMatrix(n_eig_inv=n_eig_inv, m_anc_rot=m_anc_rot, r_anc_rot=r_anc_rot, input_eigenvector=input_eigenvector, input_n_state=input_n_state)))
+        f.close()
+
+        # Running the circuit in the QX simulator and retrieving the results
+        raw_HLL = runQX('complete_qlsa_cao_matrix', 2 + 4 + (4 + n_eig_inv + 3) + (1 + max(0, min(n_eig_inv+1, 1+2*m_anc_rot) - 2)), show_output=True, return_raw=True)
 
     if run_test:
+        '''Runs any circuit requested, specifically to test the self-developed controlled gates'''
 
         # Running the circuit in the QX simulator and retrieving the results
         res_test = runQX('test_ccrz', show_output=True)
