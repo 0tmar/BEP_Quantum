@@ -10,26 +10,32 @@ class CompleteQlsaWithCaoMatrix(Qfunction):
 
     def __init__(self, n_eig_inv, m_anc_rot, r_anc_rot, input_eigenvector=None, input_n_state=None):
 
+        n_vec_b = 2   # Number of qubits used for saving vector b
+        n_lambda = 4  # Number of qubits used to store the eigenvalues
+
+        if n_eig_inv < n_lambda:
+            raise ValueError("Value for n_eig_inv must be equal to or greater than n_lambda = 4.")
+
         # 2 qubits for storing |b>, 4 qubits for storing the eigenvalues, (4+ n_eig_inv + 2) for inverting them,
         # and (1 + max(0, min(n_eig_inv+1, 1+2*m_anc_rot) - 2)) qubits for the ancilla rotation.
-        qubits = 2 + 4 + (4 + n_eig_inv + 3) + (1 + max(0, min(n_eig_inv+1, 1+2*m_anc_rot) - 2))
+        qubits = n_vec_b + n_lambda + (n_lambda + n_eig_inv + 3) + (1 + max(0, min(n_eig_inv, 1+2*m_anc_rot) - 2))
 
-        qna = buildnames(n=2, qubitnames="a")                      # qubits storing vector |b>
-        qnb = buildnames(n=4+1, qubitnames="b")                    # qubits storing the eigenvalues
+        qna = buildnames(n=n_vec_b, qubitnames="a")                # qubits storing vector |b>
+        qnb = buildnames(n=n_lambda+1, qubitnames="b")             # qubits storing the eigenvalues
         qnc = buildnames(n=n_eig_inv+1, qubitnames="c")            # qubits storing the inverted eigenvalues
-        qnd = buildnames(n=4+1, qubitnames="d")                    # ancilla qubits for inverting the eigenvalues
-        qne = buildnames(n=max(0, min(n_eig_inv+1, 1+2*m_anc_rot) - 2), qubitnames="e")  # ancilla qubits for the ancilla rotation
+        qnd = buildnames(n=n_lambda+1, qubitnames="d")             # ancilla qubits for inverting the eigenvalues
+        qne = buildnames(n=max(0, min(n_eig_inv, 1+2*m_anc_rot) - 2), qubitnames="e")  # ancilla qubits for the ancilla rotation
         qnf = buildnames(n=1, qubitnames="f")                      # ancilla qubit which is being rotated
 
-        qn = qna + qnb + qnc + qnd + qne + qnf
+        qn = qnf + qne + qnd + qnc + qnb + qna
 
         initgates = []
         for i in range(qubits):
             initgates += [Qgate("map", "q"+str(i), qn[i])]
-        for i in range(len(qnb)-1):
+        for i in range(n_lambda):
             initgates += [Qgate("h", qnb[i])]
         if input_n_state is None:
-            for i in range(len(qna)):
+            for i in range(n_vec_b):
                 initgates += [Qgate("h", qna[i])]
         if input_eigenvector is not None:
             if input_eigenvector == 0 or input_eigenvector == 1:
@@ -54,31 +60,77 @@ class CompleteQlsaWithCaoMatrix(Qfunction):
                 initgates += [Qgate("x", qna[0])]
             if input_n_state == 1 or input_n_state == 3:
                 initgates += [Qgate("x", qna[1])]
-        initgates += [Qgate("x", qnc[-1])]
+        initgates += [Qgate("x", qnd[-1])]
         initgates += [Qgate("display")]
         initsubroutine = Qsubroutine(name="init", gates=initgates)
 
-        expAsubroutines = []
-        for i in range(len(qnb)-1):
-            expAsubroutines += [expA(qubitnamea=qnb[i], qubitnameb=qna[0], qubitnamec=qna[1], sign=1, n=i)]
+        if n_eig_inv == n_lambda:
+            ancrotgates = list(reversed(qnc[1:]))
+        elif n_eig_inv == n_lambda + 1:
+            ancrotgates = list(reversed(qnc))
+        else:
+            ancrotgates = list(reversed(qnd[(-n_eig_inv + n_lambda + 1):] + qnc))
 
-        iqftsubroutine = iQFT(n=len(qnb)-1, qubitnames=qnb[:-1])
-        reversesubroutine = REVERSE(n=len(qnb)-1, qubitnames=qnb[:-1])
-        divsubroutine = DIV(n=n_eig_inv+1, m=len(qnb), qubitnamesq=qnc, qubitnamesr=qnd, qubitnamesd=qnb, sign=1)
-        ancrotsubroutine = AncillaRotation(n=n_eig_inv+1, c=math.pi/(2**(r_anc_rot-1)), m=m_anc_rot, qubitnamesc=list(reversed(qnc[(-n_eig_inv-1+len(qnd)):]+qnd)), qubitnamer=qnf, qubitnamesa=qne)
-        undivsubroutine = DIV(n=n_eig_inv+1, m=len(qnb), qubitnamesq=qnc, qubitnamesr=qnd, qubitnamesd=qnb, sign=-1)
-        qftsubroutine = QFT(n=len(qnb)-1, qubitnames=qnb[:-1])
+        expAsubroutines = []
+        for i in range(n_lambda):
+            expAsubroutines += [expA(
+                qubitnamea=qnb[i],
+                qubitnameb=qna[0],
+                qubitnamec=qna[1],
+                sign=1,
+                n=i)]
+
+        iqftsubroutine = iQFT(
+            n=n_lambda,
+            qubitnames=qnb[:-1])
+
+        reversesubroutine = REVERSE(
+            n=n_lambda,
+            qubitnames=qnb[:-1])
+
+        divsubroutine = DIV(
+            n=n_eig_inv+1,
+            m=n_lambda+1,
+            qubitnamesn=qnd,
+            qubitnameso=qnc,
+            qubitnamesd=qnb,
+            sign=1)
+
+        ancrotsubroutine = AncillaRotation(
+            n=n_eig_inv,
+            c=math.pi/(2**(r_anc_rot-1)),
+            m=m_anc_rot,
+            qubitnamesc=ancrotgates,
+            qubitnamer=qnf,
+            qubitnamesa=qne)
+
+        undivsubroutine = DIV(
+            n=n_eig_inv+1,
+            m=n_lambda+1,
+            qubitnamesn=qnd,
+            qubitnameso=qnc,
+            qubitnamesd=qnb,
+            sign=-1)
+
+        qftsubroutine = QFT(
+            n=n_lambda,
+            qubitnames=qnb[:-1])
 
         displaysubroutine = Qsubroutine(name="display", gates=[Qgate("display")])
 
         unexpAsubroutines = []
-        for i in reversed(range(len(qnb)-1)):
-            unexpAsubroutines += [expA(qubitnamea=qnb[i], qubitnameb=qna[0], qubitnamec=qna[1], sign=-1, n=i)]
+        for i in reversed(range(n_lambda)):
+            unexpAsubroutines += [expA(
+                qubitnamea=qnb[i],
+                qubitnameb=qna[0],
+                qubitnamec=qna[1],
+                sign=-1,
+                n=i)]
 
         uninitgates = []
-        for i in range(len(qnb)-1):
+        for i in range(n_lambda):
             uninitgates += [Qgate("h", qnb[i])]
-        uninitgates += [Qgate("x", qnc[-1])]
+        uninitgates += [Qgate("x", qnd[-1])]
         uninitsubroutine = Qsubroutine(name="uninit", gates=uninitgates)
 
         resultgates = [Qgate("display"), Qgate("measure"), Qgate("display")]

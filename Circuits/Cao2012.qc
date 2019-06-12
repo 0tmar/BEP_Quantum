@@ -370,36 +370,36 @@ qubits 7
   swap q2,q3
 
 .cRy
-  # performs Ry(2^(3)*pi/2^(6-1)) = Ry(pi/4) on q0, controlled by q1
-  ry q0,0.19634954084936207
+  # performs Ry(2^(3)*pi/2^(5-1)) = Ry(pi/2) on q0, controlled by q1
+  ry q0,0.39269908169872414
   cx q1,q0
+  ry q0,-0.7853981633974483
+  cx q1,q0
+  ry q0,0.39269908169872414
+
+.cRy
+  # performs Ry(2^(2)*pi/2^(5-1)) = Ry(pi/4) on q0, controlled by q2
+  ry q0,0.19634954084936207
+  cx q2,q0
   ry q0,-0.39269908169872414
-  cx q1,q0
+  cx q2,q0
   ry q0,0.19634954084936207
 
 .cRy
-  # performs Ry(2^(2)*pi/2^(6-1)) = Ry(pi/8) on q0, controlled by q2
+  # performs Ry(2^(1)*pi/2^(5-1)) = Ry(pi/8) on q0, controlled by q3
   ry q0,0.09817477042468103
-  cx q2,q0
+  cx q3,q0
   ry q0,-0.19634954084936207
-  cx q2,q0
+  cx q3,q0
   ry q0,0.09817477042468103
 
 .cRy
-  # performs Ry(2^(1)*pi/2^(6-1)) = Ry(pi/16) on q0, controlled by q3
+  # performs Ry(2^(0)*pi/2^(5-1)) = Ry(pi/16) on q0, controlled by q4
   ry q0,0.04908738521234052
-  cx q3,q0
+  cx q4,q0
   ry q0,-0.09817477042468103
-  cx q3,q0
+  cx q4,q0
   ry q0,0.04908738521234052
-
-.cRy
-  # performs Ry(2^(0)*pi/2^(6-1)) = Ry(pi/32) on q0, controlled by q4
-  ry q0,0.02454369260617026
-  cx q4,q0
-  ry q0,-0.04908738521234052
-  cx q4,q0
-  ry q0,0.02454369260617026
 
 .reverse
   swap q1,q4

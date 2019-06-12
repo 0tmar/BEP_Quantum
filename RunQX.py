@@ -522,8 +522,8 @@ if __name__ == "__main__":
     if run_Cao2012:
         '''Runs the proprietary HHL circuit from Cao2012'''
 
-        r = 5     # 2^-r factor in ancilla rotation: higher r is higher precision, but a lower chance of |1>. Default r=5
-        m = None  # inputs m-th eigenvector of A instead of the multi state (m=0..3 or None) (either m or n must be None)
+        r = 5     # 2^-r factor in ancilla rotation: higher r is higher precision, but lower chance of |1>. Default r=5
+        m = None  # inputs mth eigenvector of A instead of the multi state (m=0..3 or None) (either m or n must be None)
         n = None  # inputs the n state iso the multi state (n=0: 00, n=1: 01, n=2: 10, n=3: 11)
 
         do_plot = True
@@ -593,7 +593,11 @@ if __name__ == "__main__":
 
         # Writing the circuit to a file
         f = open(path + "test_hll.qc", "w")
-        f.write(str(HLL_Linear_Solver.EigenvalueInversion_Circuit(n=3, x=1, remove_global_shift=True, save_value=True)))
+        f.write(str(HLL_Linear_Solver.EigenvalueInversion_Circuit(
+            n=3,
+            x=1,
+            remove_global_shift=True,
+            save_value=True)))
         f.close()
 
         # Running the circuit in the QX simulator and retrieving the results
@@ -617,19 +621,55 @@ if __name__ == "__main__":
         '''Runs a complete QLSA using the Cao matrix'''
 
         # Defining extra variables
-        n_eig_inv = 5
-        m_anc_rot = 1
-        r_anc_rot = 3
+        n_eig_inv = 4
+        m_anc_rot = 2
+        r_anc_rot = 4
         input_eigenvector = None
         input_n_state = None
+        do_plot = True
 
         # Writing the circuit to a file
         f = open(path + "complete_qlsa_cao_matrix.qc", "w")
-        f.write(str(CompleteQLSA.CompleteQlsaWithCaoMatrix(n_eig_inv=n_eig_inv, m_anc_rot=m_anc_rot, r_anc_rot=r_anc_rot, input_eigenvector=input_eigenvector, input_n_state=input_n_state)))
+        f.write(str(CompleteQLSA.CompleteQlsaWithCaoMatrix(
+            n_eig_inv=n_eig_inv,
+            m_anc_rot=m_anc_rot,
+            r_anc_rot=r_anc_rot,
+            input_eigenvector=input_eigenvector,
+            input_n_state=input_n_state)))
         f.close()
 
         # Running the circuit in the QX simulator and retrieving the results
-        raw_HLL = runQX('complete_qlsa_cao_matrix', 2 + 4 + (4 + n_eig_inv + 3) + (1 + max(0, min(n_eig_inv+1, 1+2*m_anc_rot) - 2)), show_output=True, return_raw=True)
+        raw_qlsa = runQX(
+            'complete_qlsa_cao_matrix',
+            2 + 4 + (4 + n_eig_inv + 3) + (1 + max(0, min(n_eig_inv+1, 1+2*m_anc_rot) - 2)),
+            show_output=True,
+            return_raw=True)
+        A_lst = find_output_matrices(outp_raw=raw_qlsa, do_sort=False)
+        A = A_lst[-2]
+        A = A[A[:, 0].argsort()]
+
+        outcome_rel = -A[[64, 65, 66, 67], 2]/A[64, 2]
+        print(outcome_rel)
+
+        # Plotting the results
+        if do_plot:
+            fig = plt.figure()
+            ax = fig.add_subplot(1, 1, 1)
+            # ax.bar(A[:, 0], A[:, 2], width=1, align='edge')
+            ax.bar(np.arange(2**7), A[:, 2], width=1, align='edge')
+            major_xticks = np.arange(0, 2**7 + 1, 16)
+            minor_xticks = np.arange(0, 2**7 + 1, 4)
+            major_yticks = np.arange(-1, 1.01, 1)
+            minor_yticks = np.arange(-1, 1.01, .1)
+            ax.set_xticks(major_xticks)
+            ax.set_xticks(minor_xticks, minor=True)
+            ax.set_yticks(major_yticks)
+            ax.set_yticks(minor_yticks, minor=True)
+            ax.grid(which='minor', alpha=0.2)
+            ax.grid(which='major', alpha=0.5)
+            ax.set_xlim(0, 2**7 + 1)
+            ax.set_ylim(-1, 1)
+            fig.show()
 
     if run_test:
         '''Runs any circuit requested, specifically to test the self-developed controlled gates'''

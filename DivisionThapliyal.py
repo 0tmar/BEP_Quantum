@@ -4,7 +4,7 @@ from AdderMunozCoreas import *
 
 class DIV(Qsubroutine):
 
-    def __init__(self, n=1, m=None, qubitnamesq=None, qubitnamesr=None, qubitnamesd=None, sign=1):
+    def __init__(self, n=1, m=None, qubitnamesn=None, qubitnameso=None, qubitnamesd=None, sign=1):
 
         if not (sign == -1 or sign == 1):
             raise ValueError("Variable 'sign' should be either 1 or -1, not {}".format(sign))
@@ -14,8 +14,6 @@ class DIV(Qsubroutine):
             gates = []
 
             if sign == 1:
-
-                name = "iteration"
 
                 subsubroutine = SUB(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamez=qnz, do_overflow=True, do_ctrl=False, subtype="b-a")
                 caddsubroutine = ADD(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamectrl=qnz, do_overflow=False, do_ctrl=True)
@@ -35,8 +33,6 @@ class DIV(Qsubroutine):
                 gates += [Qgate("x", qnz)]
 
             else:
-
-                name = "un_iteration"
 
                 unsubsubroutine = ADD(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamez=qnz, do_overflow=True, do_ctrl=False)
                 uncaddsubroutine = SUB(n=n, qubitnamesa=qnd, qubitnamesb=qny, qubitnamectrl=qnz, do_overflow=False, do_ctrl=True, subtype="b-a")
@@ -62,21 +58,21 @@ class DIV(Qsubroutine):
         elif m > n:
             raise ValueError("Value of m must be smaller than or equal to n")
 
-        qnq = buildnames(n, qubitnamesq, "q")
-        qnr = buildnames(m, qubitnamesr, "r")
+        qnn = buildnames(n, qubitnamesn, "n")
+        qno = buildnames(m, qubitnameso, "o")
         qnd = buildnames(m, qubitnamesd, "d")
 
-        self.qubitnamesq = qnq
-        self.qubitnamesr = qnr
+        self.qubitnamesn = qnn
+        self.qubitnameso = qno
         self.qubitnamesd = qnd
 
         gates = []
 
         if sign == 1:
-            gates += [Qgate("#", "#### Thapliyal division with Q = [{}, ..., {}], R = [{}, ..., {}] and D = [{}, ..., {}]". format(qnq[0], qnq[-1], qnr[0], qnr[-1], qnd[0], qnd[-1]))]
+            gates += [Qgate("#", "#### Thapliyal division with N = [{}, ..., {}], O = [{}, ..., {}] and D = [{}, ..., {}]". format(qnn[0], qnn[-1], qno[0], qno[-1], qnd[0], qnd[-1]))]
             rng = list(range(n))
         else:
-            gates += [Qgate("#", "#### un-Thapliyal division with Q = [{}, ..., {}], R = [{}, ..., {}] and D = [{}, ..., {}]". format(qnq[0], qnq[-1], qnr[0], qnr[-1], qnd[0], qnd[-1]))]
+            gates += [Qgate("#", "#### un-Thapliyal division with N = [{}, ..., {}], O = [{}, ..., {}] and D = [{}, ..., {}]". format(qnn[0], qnn[-1], qno[0], qno[-1], qnd[0], qnd[-1]))]
             rng = list(reversed(range(n)))
 
         gates += [Qgate()]
@@ -84,11 +80,11 @@ class DIV(Qsubroutine):
         for i in rng:
 
             if i < m:
-                qny = qnq[-i-1:] + qnr[:m-i-1]
-                qnztemp = qnr[m-i-1]
+                qny = qnn[-i-1:] + qno[:m-i-1]
+                qnztemp = qno[m-i-1]
             else:
-                qny = qnq[-i-1:m-i-1]
-                qnztemp = qnq[m-i-1]
+                qny = qnn[-i-1:m-i-1]
+                qnztemp = qnn[m-i-1]
 
             gates += iteration(n=m, qny=qny, qnd=qnd, qnz=qnztemp, i=i+1, sign=sign)
 
@@ -102,17 +98,17 @@ class DIVcircuit(Qfunction):
 
     def __init__(self, inp_n="0", inp_d="0"):
         name = "Thapliyal Division"
-        na = len(inp_n)
-        nb = len(inp_d)
-        n = max(na, nb)
-        inp_n = (n-na)*"0" + inp_n
-        inp_d = (n-nb)*"0" + inp_d
+        nn = len(inp_n)
+        nd = len(inp_d)
+        n = max(nn, nd)
+        inp_n = (n-nn)*"0" + inp_n
+        inp_d = (n-nd)*"0" + inp_d
         qubits = 3*n
         divsubroutine = DIV(n=n)
-        qnq = divsubroutine.qubitnamesq
-        qnr = divsubroutine.qubitnamesr
+        qnn = divsubroutine.qubitnamesn
+        qno = divsubroutine.qubitnameso
         qnd = divsubroutine.qubitnamesd
-        qn = qnq + qnr + qnd
+        qn = qnn + qno + qnd
 
         if not isinstance(inp_n, str):
             raise TypeError("input for inp_n must be of type string")
@@ -124,7 +120,7 @@ class DIVcircuit(Qfunction):
             initgates += [Qgate("map", "q"+str(i), qn[i])]
         for i in range(n):
             if inp_n[-i - 1] == "1":
-                initgates += [Qgate("x", qnq[i])]
+                initgates += [Qgate("x", qnn[i])]
         for i in range(n):
             if inp_d[-i - 1] == "1":
                 initgates += [Qgate("x", qnd[i])]
@@ -147,26 +143,26 @@ class DivUnequalCircuit(Qfunction):
             raise TypeError("input for inp_d must be of type string")
 
         name = "Thapliyal Division"
-        na = len(inp_n)
-        nb = len(inp_d)
-        n = na
-        m = nb
+        nn = len(inp_n)
+        no = len(inp_d)
+        n = nn
+        m = no
         if inp_d[0] == '1' and n > m:
             inp_d = "0" + inp_d
             m += 1
         qubits = n + 2*m
         divsubroutine = DIV(n=n, m=m)
-        qnq = divsubroutine.qubitnamesq
-        qnr = divsubroutine.qubitnamesr
+        qnn = divsubroutine.qubitnamesn
+        qno = divsubroutine.qubitnameso
         qnd = divsubroutine.qubitnamesd
-        qn = qnq + qnr + qnd
+        qn = qnn + qno + qnd
 
         initgates = []
         for i in range(qubits):
             initgates += [Qgate("map", "q"+str(i), qn[i])]
         for i in range(n):
             if inp_n[-i-1] == "1":
-                initgates += [Qgate("x", qnq[i])]
+                initgates += [Qgate("x", qnn[i])]
         for i in range(m):
             if inp_d[-i-1] == "1":
                 initgates += [Qgate("x", qnd[i])]
