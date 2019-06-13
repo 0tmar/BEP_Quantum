@@ -527,6 +527,7 @@ if __name__ == "__main__":
         n = None  # inputs the n state iso the multi state (n=0: 00, n=1: 01, n=2: 10, n=3: 11)
 
         do_plot = True
+        do_save = False
 
         # Writing the circuit to a file
         f = open(path + "Cao2012.qc", "w")
@@ -543,23 +544,24 @@ if __name__ == "__main__":
         A = A[A[:, 0].argsort()]
         A2 = A2[A2[:, 0].argsort()]
 
-        # Yeah no idea anymore what all these are it's been too long
-        print(A3[:, 0:4])
-        print("")
-        print(A2[:, 0:4])
-        print("")
-        print(A)
-        print("")
-        print(A[0:4, :])
-        print("")
-        print(A[64:68, :])
-        print("")
-        print(A[0:4, 2])
-        print(A[64:68, 2])
+        # # Printing some inside information
+        # print(A3[:, 0:4])  # Complete state right before the iQFT
+        # print("")
+        # print(A2[:, 0:4])  # Complete state right after the iQFT
+        # print("")
+        # print(A)  # Complete final state
+        # print("")
+        # print(A[0:4, :])  # Complete final state minus the total amplitude of each state
+        # print("")
+        # print(A[64:68, :])  # States of the qubits carrying the information of the output vector
+        # print("")
+        # print(A[0:4, 2])  # Real amplitudes of the garbage states
+        # print(A[64:68, 2])  # Real amplitudes of the qubits carrying the information of the output vector
+        # print(7*A[64:68, 2]/A[65, 2])  # Relative version of previous line
 
         # Plotting the results
         if do_plot:
-            fig = plt.figure()
+            fig = plt.figure(1)
             ax = fig.add_subplot(1, 1, 1)
             ax.bar(A[:, 0], A[:, 2], width=1, align='edge')
             major_xticks = np.arange(0, 129, 16)
@@ -575,18 +577,39 @@ if __name__ == "__main__":
             ax.set_xlim(0, 129)
             ax.set_ylim(-1, 1)
             fig.show()
+            if do_save:
+                fig.savefig(f'Images/Cao2012_output_r{r:d}.png', bbox_inches='tight')
 
-        # The (irrelevant) measured outputs of the circuit
-        outp_bool_cao2012 = res_cao2012[0]
-        outp_vec0_cao2012 = res_cao2012[5]
-        outp_vec1_cao2012 = res_cao2012[5]
+        # # The (irrelevant) measured outputs of the circuit
+        # outp_bool_cao2012 = res_cao2012[0]
+        # outp_vec0_cao2012 = res_cao2012[5]
+        # outp_vec1_cao2012 = res_cao2012[5]
+        #
+        # # Showing the (ir)relevant measured qubit outputs
+        # print("\n\nCao2012 Experiment:\n\ninput r    = {}\n\noutput phi = {}\noutput v0  = {}\noutput v1  = {}".format(
+        #     r,
+        #     outp_bool_cao2012,
+        #     outp_vec0_cao2012,
+        #     outp_vec1_cao2012))
 
-        # Showing the (ir)relevant measured qubit outputs
-        print("\n\nCao2012 Experiment:\n\ninput r    = {}\n\noutput phi = {}\noutput v0  = {}\noutput v1  = {}".format(
+        outp_garbage = A[0:4, 2]
+        outp_x = A[64:68, 2]
+        outp_x_ideal = np.array([-1, 7, 11, 13])*math.pi/(2**(2+r))
+        outp_prob_x = sum(outp_x**2)
+
+        np.set_printoptions(precision=5)    # Number of decimals
+        np.set_printoptions(suppress=True)  # Whether to suppress scientific notation
+        print("\n\nCao2012 Experiment:\n\ninput r        = {}\n\noutput x       = {}\noutput x ideal = {}\n\noutput x rel   = {}\n\nabs error      = {}\nrel error      = {}".format(
             r,
-            outp_bool_cao2012,
-            outp_vec0_cao2012,
-            outp_vec1_cao2012))
+            outp_x,
+            outp_x_ideal,
+            -outp_x/outp_x[0],
+            abs(outp_x-outp_x_ideal),
+            1 - outp_x/outp_x_ideal))
+
+        np.set_printoptions(suppress=True)  # Whether to suppress scientific notation
+        print("\nP(|1>) = {}".format(
+            outp_prob_x))
 
     if run_HLL_test:
         '''Runs the Cao number inversion algorithm (the files should be renamed)'''
@@ -622,18 +645,19 @@ if __name__ == "__main__":
 
         # Defining extra variables
         n_eig_inv = 4
-        m_anc_rot = 2
-        r_anc_rot = 4
+        m_anc_rot = 9
+        r_anc_rot = 5
         input_eigenvector = None
         input_n_state = None
         do_plot = True
+        do_save = False
 
         # Writing the circuit to a file
         f = open(path + "complete_qlsa_cao_matrix.qc", "w")
         f.write(str(CompleteQLSA.CompleteQlsaWithCaoMatrix(
             n_eig_inv=n_eig_inv,
             m_anc_rot=m_anc_rot,
-            r_anc_rot=r_anc_rot,
+            r_anc_rot=r_anc_rot-2,
             input_eigenvector=input_eigenvector,
             input_n_state=input_n_state)))
         f.close()
@@ -648,12 +672,12 @@ if __name__ == "__main__":
         A = A_lst[-2]
         A = A[A[:, 0].argsort()]
 
-        outcome_rel = -A[[64, 65, 66, 67], 2]/A[64, 2]
+        outcome_rel = -A[64:68, 2]/A[64, 2]
         print(outcome_rel)
 
         # Plotting the results
         if do_plot:
-            fig = plt.figure()
+            fig = plt.figure(1)
             ax = fig.add_subplot(1, 1, 1)
             # ax.bar(A[:, 0], A[:, 2], width=1, align='edge')
             ax.bar(np.arange(2**7), A[:, 2], width=1, align='edge')
@@ -670,6 +694,28 @@ if __name__ == "__main__":
             ax.set_xlim(0, 2**7 + 1)
             ax.set_ylim(-1, 1)
             fig.show()
+            if do_save:
+                fig.savefig(f'Images/Cao2012_output_r{r_anc_rot:d}_m{m_anc_rot:d}.png', bbox_inches='tight')
+
+        outp_garbage = A[0:4, 2]
+        outp_x = A[64:68, 2]
+        outp_x_ideal = np.array([-1, 7, 11, 13])*math.pi/(2**(2+r_anc_rot))
+        outp_prob_x = sum(outp_x**2)
+
+        np.set_printoptions(precision=5)    # Number of decimals
+        np.set_printoptions(suppress=True)  # Whether to suppress scientific notation
+        print("\n\nCao2012 Experiment general circuit:\n\ninput r        = {}\ninput m        = {}\n\noutput x       = {}\noutput x ideal = {}\n\noutput x rel   = {}\n\nabs error      = {}\nrel error      = {}".format(
+            r_anc_rot,
+            m_anc_rot,
+            outp_x,
+            outp_x_ideal,
+            -outp_x/outp_x[0],
+            abs(outp_x-outp_x_ideal),
+            1 - outp_x/outp_x_ideal))
+
+        np.set_printoptions(suppress=True)  # Whether to suppress scientific notation
+        print("\nP(|1>) = {}".format(
+            outp_prob_x))
 
     if run_test:
         '''Runs any circuit requested, specifically to test the self-developed controlled gates'''

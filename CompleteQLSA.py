@@ -97,7 +97,7 @@ class CompleteQlsaWithCaoMatrix(Qfunction):
             sign=1)
 
         ancrotsubroutine = AncillaRotation(
-            n=n_eig_inv,
+            n=n_eig_inv,  # In general this should be n_eig_inv+1, but it is not necessary due to
             c=math.pi/(2**(r_anc_rot-1)),
             m=m_anc_rot,
             qubitnamesc=ancrotgates,

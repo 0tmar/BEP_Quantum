@@ -771,403 +771,1754 @@ qubits 20
   display
 
 .ancilla_rotation
-  ####### Ancilla rotation using the first m terms of arcsin(x) and c=0.39269908169872414
+  ####### Ancilla rotation using the first m terms of arcsin(x) and c=0.7853981633974483
   
-  ##### Performs Ry(c*(x^k)) for c=0.39269908169872414 and k=1
+  ##### Performs Ry(c*(x^k)) for c=0.7853981633974483 and k=1
   
   ### Rotations controlled by 1 qubit(s)
   
-  # Rotation c*theta with c = 0.39269908169872414 and theta = 0.25, controlled by [2]
-  ry f,0.04908738521234052
-  cx c2,f
-  ry f,-0.09817477042468103
-  cx c2,f
-  ry f,0.04908738521234052
-  
-  # Rotation c*theta with c = 0.39269908169872414 and theta = 1.0, controlled by [0]
-  ry f,0.19634954084936207
-  cx c4,f
-  ry f,-0.39269908169872414
-  cx c4,f
-  ry f,0.19634954084936207
-  
-  # Rotation c*theta with c = 0.39269908169872414 and theta = 0.125, controlled by [3]
-  ry f,0.02454369260617026
-  cx c1,f
-  ry f,-0.04908738521234052
-  cx c1,f
-  ry f,0.02454369260617026
-  
-  # Rotation c*theta with c = 0.39269908169872414 and theta = 0.5, controlled by [1]
+  # Rotation c*theta with c = 0.7853981633974483 and theta = 0.25, controlled by [2]
   ry f,0.09817477042468103
-  cx c3,f
+  cx c2,f
   ry f,-0.19634954084936207
-  cx c3,f
+  cx c2,f
   ry f,0.09817477042468103
   
-  ##### Performs Ry(c*(x^k)) for c=0.010093189023535096 and k=3
+  # Rotation c*theta with c = 0.7853981633974483 and theta = 1.0, controlled by [0]
+  ry f,0.39269908169872414
+  cx c4,f
+  ry f,-0.7853981633974483
+  cx c4,f
+  ry f,0.39269908169872414
+  
+  # Rotation c*theta with c = 0.7853981633974483 and theta = 0.125, controlled by [3]
+  ry f,0.04908738521234052
+  cx c1,f
+  ry f,-0.09817477042468103
+  cx c1,f
+  ry f,0.04908738521234052
+  
+  # Rotation c*theta with c = 0.7853981633974483 and theta = 0.5, controlled by [1]
+  ry f,0.19634954084936207
+  cx c3,f
+  ry f,-0.39269908169872414
+  cx c3,f
+  ry f,0.19634954084936207
+  
+  ##### Performs Ry(c*(x^k)) for c=0.08074551218828077 and k=3
   
   ### Rotations controlled by 1 qubit(s)
   
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 0.015625, controlled by [2]
-  ry f,7.885303924636794e-05
-  cx c2,f
-  ry f,-0.00015770607849273588
-  cx c2,f
-  ry f,7.885303924636794e-05
-  
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 1.0, controlled by [0]
-  ry f,0.005046594511767548
-  cx c4,f
-  ry f,-0.010093189023535096
-  cx c4,f
-  ry f,0.005046594511767548
-  
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 0.001953125, controlled by [3]
-  ry f,9.856629905795993e-06
-  cx c1,f
-  ry f,-1.9713259811591985e-05
-  cx c1,f
-  ry f,9.856629905795993e-06
-  
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 0.125, controlled by [1]
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 0.015625, controlled by [2]
   ry f,0.0006308243139709435
-  cx c3,f
+  cx c2,f
   ry f,-0.001261648627941887
-  cx c3,f
+  cx c2,f
   ry f,0.0006308243139709435
+  
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 1.0, controlled by [0]
+  ry f,0.040372756094140386
+  cx c4,f
+  ry f,-0.08074551218828077
+  cx c4,f
+  ry f,0.040372756094140386
+  
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 0.001953125, controlled by [3]
+  ry f,7.885303924636794e-05
+  cx c1,f
+  ry f,-0.00015770607849273588
+  cx c1,f
+  ry f,7.885303924636794e-05
+  
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 0.125, controlled by [1]
+  ry f,0.005046594511767548
+  cx c3,f
+  ry f,-0.010093189023535096
+  cx c3,f
+  ry f,0.005046594511767548
   
   ### Rotations controlled by 2 qubit(s)
   
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 2.25, controlled by [0, 1]
-  ry f,0.011354837651476983
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 2.25, controlled by [0, 1]
+  ry f,0.09083870121181586
   cx c3,f
-  ry f,-0.011354837651476983
+  ry f,-0.09083870121181586
   cx c4,c3
   cx c4,f
-  ry f,0.011354837651476983
+  ry f,0.09083870121181586
   cx c3,f
   cx c4,c3
   cx c4,f
+  ry f,-0.09083870121181586
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 0.28125, controlled by [1, 2]
+  ry f,0.011354837651476983
+  cx c2,f
   ry f,-0.011354837651476983
-  cx c4,f
-  
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 0.28125, controlled by [1, 2]
-  ry f,0.0014193547064346229
-  cx c2,f
-  ry f,-0.0014193547064346229
   cx c3,c2
   cx c3,f
-  ry f,0.0014193547064346229
+  ry f,0.011354837651476983
   cx c2,f
   cx c3,c2
   cx c3,f
+  ry f,-0.011354837651476983
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 0.1171875, controlled by [1, 3]
+  ry f,0.0047311823547820766
+  cx c1,f
+  ry f,-0.0047311823547820766
+  cx c3,c1
+  cx c3,f
+  ry f,0.0047311823547820766
+  cx c1,f
+  cx c3,c1
+  cx c3,f
+  ry f,-0.0047311823547820766
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 0.03515625, controlled by [2, 3]
+  ry f,0.0014193547064346229
+  cx c1,f
   ry f,-0.0014193547064346229
-  cx c3,f
-  
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 0.1171875, controlled by [1, 3]
-  ry f,0.0005913977943477596
-  cx c1,f
-  ry f,-0.0005913977943477596
-  cx c3,c1
-  cx c3,f
-  ry f,0.0005913977943477596
-  cx c1,f
-  cx c3,c1
-  cx c3,f
-  ry f,-0.0005913977943477596
-  cx c3,f
-  
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 0.03515625, controlled by [2, 3]
-  ry f,0.00017741933830432786
-  cx c1,f
-  ry f,-0.00017741933830432786
   cx c2,c1
   cx c2,f
-  ry f,0.00017741933830432786
+  ry f,0.0014193547064346229
   cx c1,f
   cx c2,c1
   cx c2,f
-  ry f,-0.00017741933830432786
+  ry f,-0.0014193547064346229
   cx c2,f
   
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 0.421875, controlled by [0, 3]
-  ry f,0.0021290320596519343
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 0.421875, controlled by [0, 3]
+  ry f,0.017032256477215475
   cx c1,f
-  ry f,-0.0021290320596519343
+  ry f,-0.017032256477215475
   cx c4,c1
   cx c4,f
-  ry f,0.0021290320596519343
+  ry f,0.017032256477215475
   cx c1,f
   cx c4,c1
   cx c4,f
-  ry f,-0.0021290320596519343
+  ry f,-0.017032256477215475
   cx c4,f
   
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 0.9375, controlled by [0, 2]
-  ry f,0.0047311823547820766
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 0.9375, controlled by [0, 2]
+  ry f,0.03784945883825661
   cx c2,f
-  ry f,-0.0047311823547820766
+  ry f,-0.03784945883825661
   cx c4,c2
   cx c4,f
-  ry f,0.0047311823547820766
+  ry f,0.03784945883825661
   cx c2,f
   cx c4,c2
   cx c4,f
-  ry f,-0.0047311823547820766
+  ry f,-0.03784945883825661
   cx c4,f
   
   ### Rotations controlled by 3 qubit(s)
   
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 0.75, controlled by [0, 1, 2]
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 0.75, controlled by [0, 1, 2]
   toffoli c4,c3,e0
+  ry f,0.03027956707060529
+  cx e0,f
+  ry f,-0.03027956707060529
+  cx c2,e0
+  cx c2,f
+  ry f,0.03027956707060529
+  cx e0,f
+  cx c2,e0
+  cx c2,f
+  ry f,-0.03027956707060529
+  cx c2,f
+  toffoli c4,c3,e0
+  
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 0.1875, controlled by [0, 2, 3]
+  toffoli c4,c2,e0
+  ry f,0.007569891767651322
+  cx e0,f
+  ry f,-0.007569891767651322
+  cx c1,e0
+  cx c1,f
+  ry f,0.007569891767651322
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.007569891767651322
+  cx c1,f
+  toffoli c4,c2,e0
+  
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 0.09375, controlled by [1, 2, 3]
+  toffoli c3,c2,e0
   ry f,0.003784945883825661
   cx e0,f
   ry f,-0.003784945883825661
-  cx c2,e0
-  cx c2,f
+  cx c1,e0
+  cx c1,f
   ry f,0.003784945883825661
   cx e0,f
-  cx c2,e0
-  cx c2,f
+  cx c1,e0
+  cx c1,f
   ry f,-0.003784945883825661
-  cx c2,f
-  toffoli c4,c3,e0
-  
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 0.1875, controlled by [0, 2, 3]
-  toffoli c4,c2,e0
-  ry f,0.0009462364709564153
-  cx e0,f
-  ry f,-0.0009462364709564153
-  cx c1,e0
-  cx c1,f
-  ry f,0.0009462364709564153
-  cx e0,f
-  cx c1,e0
-  cx c1,f
-  ry f,-0.0009462364709564153
-  cx c1,f
-  toffoli c4,c2,e0
-  
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 0.09375, controlled by [1, 2, 3]
-  toffoli c3,c2,e0
-  ry f,0.00047311823547820764
-  cx e0,f
-  ry f,-0.00047311823547820764
-  cx c1,e0
-  cx c1,f
-  ry f,0.00047311823547820764
-  cx e0,f
-  cx c1,e0
-  cx c1,f
-  ry f,-0.00047311823547820764
   cx c1,f
   toffoli c3,c2,e0
   
-  # Rotation c*theta with c = 0.010093189023535096 and theta = 0.375, controlled by [0, 1, 3]
+  # Rotation c*theta with c = 0.08074551218828077 and theta = 0.375, controlled by [0, 1, 3]
   toffoli c4,c3,e0
-  ry f,0.0018924729419128306
+  ry f,0.015139783535302645
   cx e0,f
-  ry f,-0.0018924729419128306
+  ry f,-0.015139783535302645
   cx c1,e0
   cx c1,f
-  ry f,0.0018924729419128306
+  ry f,0.015139783535302645
   cx e0,f
   cx c1,e0
   cx c1,f
-  ry f,-0.0018924729419128306
+  ry f,-0.015139783535302645
   cx c1,f
   toffoli c4,c3,e0
   
-  ##### Performs Ry(c*(x^k)) for c=0.0007004234728667024 and k=5
+  ##### Performs Ry(c*(x^k)) for c=0.022413551131734478 and k=5
   
   ### Rotations controlled by 1 qubit(s)
   
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 0.0009765625, controlled by [2]
-  ry f,3.4200364886069455e-07
-  cx c2,f
-  ry f,-6.840072977213891e-07
-  cx c2,f
-  ry f,3.4200364886069455e-07
-  
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 1.0, controlled by [0]
-  ry f,0.0003502117364333512
-  cx c4,f
-  ry f,-0.0007004234728667024
-  cx c4,f
-  ry f,0.0003502117364333512
-  
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 3.0517578125e-05, controlled by [3]
-  ry f,1.0687614026896705e-08
-  cx c1,f
-  ry f,-2.137522805379341e-08
-  cx c1,f
-  ry f,1.0687614026896705e-08
-  
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 0.03125, controlled by [1]
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 0.0009765625, controlled by [2]
   ry f,1.0944116763542225e-05
-  cx c3,f
+  cx c2,f
   ry f,-2.188823352708445e-05
-  cx c3,f
+  cx c2,f
   ry f,1.0944116763542225e-05
+  
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 1.0, controlled by [0]
+  ry f,0.011206775565867239
+  cx c4,f
+  ry f,-0.022413551131734478
+  cx c4,f
+  ry f,0.011206775565867239
+  
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 3.0517578125e-05, controlled by [3]
+  ry f,3.4200364886069455e-07
+  cx c1,f
+  ry f,-6.840072977213891e-07
+  cx c1,f
+  ry f,3.4200364886069455e-07
+  
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 0.03125, controlled by [1]
+  ry f,0.0003502117364333512
+  cx c3,f
+  ry f,-0.0007004234728667024
+  cx c3,f
+  ry f,0.0003502117364333512
   
   ### Rotations controlled by 2 qubit(s)
   
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 6.5625, controlled by [0, 1]
-  ry f,0.0022982645203438673
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 6.5625, controlled by [0, 1]
+  ry f,0.07354446465100375
   cx c3,f
-  ry f,-0.0022982645203438673
+  ry f,-0.07354446465100375
   cx c4,c3
   cx c4,f
-  ry f,0.0022982645203438673
+  ry f,0.07354446465100375
   cx c3,f
   cx c4,c3
   cx c4,f
+  ry f,-0.07354446465100375
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 0.205078125, controlled by [1, 2]
+  ry f,0.0022982645203438673
+  cx c2,f
   ry f,-0.0022982645203438673
-  cx c4,f
-  
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 0.205078125, controlled by [1, 2]
-  ry f,7.182076626074585e-05
-  cx c2,f
-  ry f,-7.182076626074585e-05
   cx c3,c2
   cx c3,f
-  ry f,7.182076626074585e-05
+  ry f,0.0022982645203438673
   cx c2,f
   cx c3,c2
   cx c3,f
+  ry f,-0.0022982645203438673
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 0.0640869140625, controlled by [1, 3]
+  ry f,0.0007182076626074586
+  cx c1,f
+  ry f,-0.0007182076626074586
+  cx c3,c1
+  cx c3,f
+  ry f,0.0007182076626074586
+  cx c1,f
+  cx c3,c1
+  cx c3,f
+  ry f,-0.0007182076626074586
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 0.00640869140625, controlled by [2, 3]
+  ry f,7.182076626074585e-05
+  cx c1,f
   ry f,-7.182076626074585e-05
-  cx c3,f
-  
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 0.0640869140625, controlled by [1, 3]
-  ry f,2.244398945648308e-05
-  cx c1,f
-  ry f,-2.244398945648308e-05
-  cx c3,c1
-  cx c3,f
-  ry f,2.244398945648308e-05
-  cx c1,f
-  cx c3,c1
-  cx c3,f
-  ry f,-2.244398945648308e-05
-  cx c3,f
-  
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 0.00640869140625, controlled by [2, 3]
-  ry f,2.244398945648308e-06
-  cx c1,f
-  ry f,-2.244398945648308e-06
   cx c2,c1
   cx c2,f
-  ry f,2.244398945648308e-06
+  ry f,7.182076626074585e-05
   cx c1,f
   cx c2,c1
   cx c2,f
-  ry f,-2.244398945648308e-06
+  ry f,-7.182076626074585e-05
   cx c2,f
   
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 0.802001953125, controlled by [0, 3]
-  ry f,0.0002808704966268454
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 0.802001953125, controlled by [0, 3]
+  ry f,0.008987855892059053
   cx c1,f
-  ry f,-0.0002808704966268454
+  ry f,-0.008987855892059053
   cx c4,c1
   cx c4,f
-  ry f,0.0002808704966268454
+  ry f,0.008987855892059053
   cx c1,f
   cx c4,c1
   cx c4,f
-  ry f,-0.0002808704966268454
+  ry f,-0.008987855892059053
   cx c4,f
   
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 2.05078125, controlled by [0, 2]
-  ry f,0.0007182076626074586
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 2.05078125, controlled by [0, 2]
+  ry f,0.022982645203438675
   cx c2,f
-  ry f,-0.0007182076626074586
+  ry f,-0.022982645203438675
   cx c4,c2
   cx c4,f
-  ry f,0.0007182076626074586
+  ry f,0.022982645203438675
   cx c2,f
   cx c4,c2
   cx c4,f
-  ry f,-0.0007182076626074586
+  ry f,-0.022982645203438675
   cx c4,f
   
   ### Rotations controlled by 3 qubit(s)
   
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 6.5625, controlled by [0, 1, 2]
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 6.5625, controlled by [0, 1, 2]
   toffoli c4,c3,e0
+  ry f,0.07354446465100375
+  cx e0,f
+  ry f,-0.07354446465100375
+  cx c2,e0
+  cx c2,f
+  ry f,0.07354446465100375
+  cx e0,f
+  cx c2,e0
+  cx c2,f
+  ry f,-0.07354446465100375
+  cx c2,f
+  toffoli c4,c3,e0
+  
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 1.0546875, controlled by [0, 2, 3]
+  toffoli c4,c2,e0
+  ry f,0.011819646104625603
+  cx e0,f
+  ry f,-0.011819646104625603
+  cx c1,e0
+  cx c1,f
+  ry f,0.011819646104625603
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.011819646104625603
+  cx c1,f
+  toffoli c4,c2,e0
+  
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 0.205078125, controlled by [1, 2, 3]
+  toffoli c3,c2,e0
   ry f,0.0022982645203438673
   cx e0,f
   ry f,-0.0022982645203438673
-  cx c2,e0
-  cx c2,f
+  cx c1,e0
+  cx c1,f
   ry f,0.0022982645203438673
   cx e0,f
-  cx c2,e0
-  cx c2,f
+  cx c1,e0
+  cx c1,f
   ry f,-0.0022982645203438673
-  cx c2,f
-  toffoli c4,c3,e0
-  
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 1.0546875, controlled by [0, 2, 3]
-  toffoli c4,c2,e0
-  ry f,0.0003693639407695501
-  cx e0,f
-  ry f,-0.0003693639407695501
-  cx c1,e0
-  cx c1,f
-  ry f,0.0003693639407695501
-  cx e0,f
-  cx c1,e0
-  cx c1,f
-  ry f,-0.0003693639407695501
-  cx c1,f
-  toffoli c4,c2,e0
-  
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 0.205078125, controlled by [1, 2, 3]
-  toffoli c3,c2,e0
-  ry f,7.182076626074585e-05
-  cx e0,f
-  ry f,-7.182076626074585e-05
-  cx c1,e0
-  cx c1,f
-  ry f,7.182076626074585e-05
-  cx e0,f
-  cx c1,e0
-  cx c1,f
-  ry f,-7.182076626074585e-05
   cx c1,f
   toffoli c3,c2,e0
   
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 2.87109375, controlled by [0, 1, 3]
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 2.87109375, controlled by [0, 1, 3]
   toffoli c4,c3,e0
-  ry f,0.001005490727650442
+  ry f,0.032175703284814144
   cx e0,f
-  ry f,-0.001005490727650442
+  ry f,-0.032175703284814144
   cx c1,e0
   cx c1,f
-  ry f,0.001005490727650442
+  ry f,0.032175703284814144
   cx e0,f
   cx c1,e0
   cx c1,f
-  ry f,-0.001005490727650442
+  ry f,-0.032175703284814144
   cx c1,f
   toffoli c4,c3,e0
   
   ### Rotations controlled by 4 qubit(s)
   
-  # Rotation c*theta with c = 0.0007004234728667024 and theta = 1.7578125, controlled by [0, 1, 2, 3]
+  # Rotation c*theta with c = 0.022413551131734478 and theta = 1.7578125, controlled by [0, 1, 2, 3]
   toffoli c4,c3,e0
   toffoli c2,e0,e1
-  ry f,0.0006156065679492502
+  ry f,0.019699410174376007
   cx e1,f
-  ry f,-0.0006156065679492502
+  ry f,-0.019699410174376007
   cx c1,e1
   cx c1,f
-  ry f,0.0006156065679492502
+  ry f,0.019699410174376007
   cx e1,f
   cx c1,e1
   cx c1,f
-  ry f,-0.0006156065679492502
+  ry f,-0.019699410174376007
+  cx c1,f
+  toffoli c2,e0,e1
+  toffoli c4,c3,e0
+  
+  ##### Performs Ry(c*(x^k)) for c=0.00822964594098988 and k=7
+  
+  ### Rotations controlled by 1 qubit(s)
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 6.103515625e-05, controlled by [2]
+  ry f,2.511488629452478e-07
+  cx c2,f
+  ry f,-5.022977258904956e-07
+  cx c2,f
+  ry f,2.511488629452478e-07
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 1.0, controlled by [0]
+  ry f,0.00411482297049494
+  cx c4,f
+  ry f,-0.00822964594098988
+  cx c4,f
+  ry f,0.00411482297049494
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 4.76837158203125e-07, controlled by [3]
+  ry f,1.9621004917597486e-09
+  cx c1,f
+  ry f,-3.924200983519497e-09
+  cx c1,f
+  ry f,1.9621004917597486e-09
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 0.0078125, controlled by [1]
+  ry f,3.214705445699172e-05
+  cx c3,f
+  ry f,-6.429410891398344e-05
+  cx c3,f
+  ry f,3.214705445699172e-05
+  
+  ### Rotations controlled by 2 qubit(s)
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 16.078125, controlled by [0, 1]
+  ry f,0.06615863807248896
+  cx c3,f
+  ry f,-0.06615863807248896
+  cx c4,c3
+  cx c4,f
+  ry f,0.06615863807248896
+  cx c3,f
+  cx c4,c3
+  cx c4,f
+  ry f,-0.06615863807248896
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 0.1256103515625, controlled by [1, 2]
+  ry f,0.00051686435994132
+  cx c2,f
+  ry f,-0.00051686435994132
+  cx c3,c2
+  cx c3,f
+  ry f,0.00051686435994132
+  cx c2,f
+  cx c3,c2
+  cx c3,f
+  ry f,-0.00051686435994132
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 0.029439926147460938, controlled by [1, 3]
+  ry f,0.00012114008436124688
+  cx c1,f
+  ry f,-0.00012114008436124688
+  cx c3,c1
+  cx c3,f
+  ry f,0.00012114008436124688
+  cx c1,f
+  cx c3,c1
+  cx c3,f
+  ry f,-0.00012114008436124688
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 0.0009813308715820312, controlled by [2, 3]
+  ry f,4.038002812041563e-06
+  cx c1,f
+  ry f,-4.038002812041563e-06
+  cx c2,c1
+  cx c2,f
+  ry f,4.038002812041563e-06
+  cx c1,f
+  cx c2,c1
+  cx c2,f
+  ry f,-4.038002812041563e-06
+  cx c2,f
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 1.2806968688964844, controlled by [0, 3]
+  ry f,0.005269840894376201
+  cx c1,f
+  ry f,-0.005269840894376201
+  cx c4,c1
+  cx c4,f
+  ry f,0.005269840894376201
+  cx c1,f
+  cx c4,c1
+  cx c4,f
+  ry f,-0.005269840894376201
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 3.768310546875, controlled by [0, 2]
+  ry f,0.0155059307982396
+  cx c2,f
+  ry f,-0.0155059307982396
+  cx c4,c2
+  cx c4,f
+  ry f,0.0155059307982396
+  cx c2,f
+  cx c4,c2
+  cx c4,f
+  ry f,-0.0155059307982396
+  cx c4,f
+  
+  ### Rotations controlled by 3 qubit(s)
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 29.28515625, controlled by [0, 1, 2]
+  toffoli c4,c3,e0
+  ry f,0.12050323363203347
+  cx e0,f
+  ry f,-0.12050323363203347
+  cx c2,e0
+  cx c2,f
+  ry f,0.12050323363203347
+  cx e0,f
+  cx c2,e0
+  cx c2,f
+  ry f,-0.12050323363203347
+  cx c2,f
+  toffoli c4,c3,e0
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 3.242156982421875, controlled by [0, 2, 3]
+  toffoli c4,c2,e0
+  ry f,0.013340902025220092
+  cx e0,f
+  ry f,-0.013340902025220092
+  cx c1,e0
+  cx c1,f
+  ry f,0.013340902025220092
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.013340902025220092
+  cx c1,f
+  toffoli c4,c2,e0
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 0.228790283203125, controlled by [1, 2, 3]
+  toffoli c3,c2,e0
+  ry f,0.0009414315127502615
+  cx e0,f
+  ry f,-0.0009414315127502615
+  cx c1,e0
+  cx c1,f
+  ry f,0.0009414315127502615
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.0009414315127502615
+  cx c1,f
+  toffoli c3,c2,e0
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 11.524749755859375, controlled by [0, 1, 3]
+  toffoli c4,c3,e0
+  ry f,0.04742230502461611
+  cx e0,f
+  ry f,-0.04742230502461611
+  cx c1,e0
+  cx c1,f
+  ry f,0.04742230502461611
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.04742230502461611
+  cx c1,f
+  toffoli c4,c3,e0
+  
+  ### Rotations controlled by 4 qubit(s)
+  
+  # Rotation c*theta with c = 0.00822964594098988 and theta = 14.90020751953125, controlled by [0, 1, 2, 3]
+  toffoli c4,c3,e0
+  toffoli c2,e0,e1
+  ry f,0.06131171616650862
+  cx e1,f
+  ry f,-0.06131171616650862
+  cx c1,e1
+  cx c1,f
+  ry f,0.06131171616650862
+  cx e1,f
+  cx c1,e1
+  cx c1,f
+  ry f,-0.06131171616650862
+  cx c1,f
+  toffoli c2,e0,e1
+  toffoli c4,c3,e0
+  
+  ##### Performs Ry(c*(x^k)) for c=0.0034548126216418775 and k=9
+  
+  ### Rotations controlled by 1 qubit(s)
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 3.814697265625e-06, controlled by [2]
+  ry f,6.589532130512004e-09
+  cx c2,f
+  ry f,-1.3179064261024008e-08
+  cx c2,f
+  ry f,6.589532130512004e-09
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 1.0, controlled by [0]
+  ry f,0.0017274063108209388
+  cx c4,f
+  ry f,-0.0034548126216418775
+  cx c4,f
+  ry f,0.0017274063108209388
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 7.450580596923828e-09, controlled by [3]
+  ry f,1.2870179942406258e-11
+  cx c1,f
+  ry f,-2.5740359884812516e-11
+  cx c1,f
+  ry f,1.2870179942406258e-11
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 0.001953125, controlled by [1]
+  ry f,3.373840450822146e-06
+  cx c3,f
+  ry f,-6.747680901644292e-06
+  cx c3,f
+  ry f,3.373840450822146e-06
+  
+  ### Rotations controlled by 2 qubit(s)
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 37.44140625, controlled by [0, 1]
+  ry f,0.06467652144226053
+  cx c3,f
+  ry f,-0.06467652144226053
+  cx c4,c3
+  cx c4,f
+  ry f,0.06467652144226053
+  cx c3,f
+  cx c4,c3
+  cx c4,f
+  ry f,-0.06467652144226053
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 0.07312774658203125, controlled by [1, 2]
+  ry f,0.0001263213309419151
+  cx c2,f
+  ry f,-0.0001263213309419151
+  cx c3,c2
+  cx c3,f
+  ry f,0.0001263213309419151
+  cx c2,f
+  cx c3,c2
+  cx c3,f
+  ry f,-0.0001263213309419151
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 0.012598782777786255, controlled by [1, 3]
+  ry f,2.1763216879010134e-05
+  cx c1,f
+  ry f,-2.1763216879010134e-05
+  cx c3,c1
+  cx c3,f
+  ry f,2.1763216879010134e-05
+  cx c1,f
+  cx c3,c1
+  cx c3,f
+  ry f,-2.1763216879010134e-05
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 0.00014282763004302979, controlled by [2, 3]
+  ry f,2.4672134949592794e-07
+  cx c1,f
+  ry f,-2.4672134949592794e-07
+  cx c2,c1
+  cx c2,f
+  ry f,2.4672134949592794e-07
+  cx c1,f
+  cx c2,c1
+  cx c2,f
+  ry f,-2.4672134949592794e-07
+  cx c2,f
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 1.8865075707435608, controlled by [0, 3]
+  ry f,0.0032587650831139054
+  cx c1,f
+  ry f,-0.0032587650831139054
+  cx c4,c1
+  cx c4,f
+  ry f,0.0032587650831139054
+  cx c1,f
+  cx c4,c1
+  cx c4,f
+  ry f,-0.0032587650831139054
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 6.4505767822265625, controlled by [0, 2]
+  ry f,0.011142767042053189
+  cx c2,f
+  ry f,-0.011142767042053189
+  cx c4,c2
+  cx c4,f
+  ry f,0.011142767042053189
+  cx c2,f
+  cx c4,c2
+  cx c4,f
+  ry f,-0.011142767042053189
+  cx c4,f
+  
+  ### Rotations controlled by 3 qubit(s)
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 108.9697265625, controlled by [0, 1, 2]
+  toffoli c4,c3,e0
+  ry f,0.18823499335249458
+  cx e0,f
+  ry f,-0.18823499335249458
+  cx c2,e0
+  cx c2,f
+  ry f,0.18823499335249458
+  cx e0,f
+  cx c2,e0
+  cx c2,f
+  ry f,-0.18823499335249458
+  cx c2,f
+  toffoli c4,c3,e0
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 8.23084831237793, controlled by [0, 2, 3]
+  toffoli c4,c2,e0
+  ry f,0.01421801931821151
+  cx e0,f
+  ry f,-0.01421801931821151
+  cx c1,e0
+  cx c1,f
+  ry f,0.01421801931821151
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.01421801931821151
+  cx c1,f
+  toffoli c4,c2,e0
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 0.2128314971923828, controlled by [1, 2, 3]
+  toffoli c3,c2,e0
+  ry f,0.000367646471391591
+  cx e0,f
+  ry f,-0.000367646471391591
+  cx c1,e0
+  cx c1,f
+  ry f,0.000367646471391591
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.000367646471391591
+  cx c1,f
+  toffoli c3,c2,e0
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 38.66721153259277, controlled by [0, 1, 3]
+  toffoli c4,c3,e0
+  ry f,0.06679398522324895
+  cx e0,f
+  ry f,-0.06679398522324895
+  cx c1,e0
+  cx c1,f
+  ry f,0.06679398522324895
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.06679398522324895
+  cx c1,f
+  toffoli c4,c3,e0
+  
+  ### Rotations controlled by 4 qubit(s)
+  
+  # Rotation c*theta with c = 0.0034548126216418775 and theta = 83.47841262817383, controlled by [0, 1, 2, 3]
+  toffoli c4,c3,e0
+  toffoli c2,e0,e1
+  ry f,0.14420113679122182
+  cx e1,f
+  ry f,-0.14420113679122182
+  cx c1,e1
+  cx c1,f
+  ry f,0.14420113679122182
+  cx e1,f
+  cx c1,e1
+  cx c1,f
+  ry f,-0.14420113679122182
+  cx c1,f
+  toffoli c2,e0,e1
+  toffoli c4,c3,e0
+  
+  ##### Performs Ry(c*(x^k)) for c=0.0015692661035767927 and k=11
+  
+  ### Rotations controlled by 1 qubit(s)
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 2.384185791015625e-07, controlled by [2]
+  ry f,1.8707109732351216e-10
+  cx c2,f
+  ry f,-3.741421946470243e-10
+  cx c2,f
+  ry f,1.8707109732351216e-10
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 1.0, controlled by [0]
+  ry f,0.0007846330517883963
+  cx c4,f
+  ry f,-0.0015692661035767927
+  cx c4,f
+  ry f,0.0007846330517883963
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 1.1641532182693481e-10, controlled by [3]
+  ry f,9.134330923999617e-14
+  cx c1,f
+  ry f,-1.8268661847999234e-13
+  cx c1,f
+  ry f,9.134330923999617e-14
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 0.00048828125, controlled by [1]
+  ry f,3.831216073185529e-07
+  cx c3,f
+  ry f,-7.662432146371058e-07
+  cx c3,f
+  ry f,3.831216073185529e-07
+  
+  ### Rotations controlled by 2 qubit(s)
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 85.4970703125, controlled by [0, 1]
+  ry f,0.06708382719826397
+  cx c3,f
+  ry f,-0.06708382719826397
+  cx c4,c3
+  cx c4,f
+  ry f,0.06708382719826397
+  cx c3,f
+  cx c4,c3
+  cx c4,f
+  ry f,-0.06708382719826397
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 0.04174661636352539, controlled by [1, 2]
+  ry f,3.275577499915233e-05
+  cx c2,f
+  ry f,-3.275577499915233e-05
+  cx c3,c2
+  cx c3,f
+  ry f,3.275577499915233e-05
+  cx c2,f
+  cx c3,c2
+  cx c3,f
+  ry f,-3.275577499915233e-05
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 0.00519606051966548, controlled by [1, 3]
+  ry f,4.077000822822326e-06
+  cx c1,f
+  ry f,-4.077000822822326e-06
+  cx c3,c1
+  cx c3,f
+  ry f,4.077000822822326e-06
+  cx c1,f
+  cx c3,c1
+  cx c3,f
+  ry f,-4.077000822822326e-06
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 2.0384090021252632e-05, controlled by [2, 3]
+  ry f,1.599403076130485e-08
+  cx c1,f
+  ry f,-1.599403076130485e-08
+  cx c2,c1
+  cx c2,f
+  ry f,1.599403076130485e-08
+  cx c1,f
+  cx c2,c1
+  cx c2,f
+  ry f,-1.599403076130485e-08
+  cx c2,f
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 2.653236153535545, controlled by [0, 3]
+  ry f,0.0020818167802639006
+  cx c1,f
+  ry f,-0.0020818167802639006
+  cx c4,c1
+  cx c4,f
+  ry f,0.0020818167802639006
+  cx c1,f
+  cx c4,c1
+  cx c4,f
+  ry f,-0.0020818167802639006
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 10.641531944274902, controlled by [0, 2]
+  ry f,0.008349697685140123
+  cx c2,f
+  ry f,-0.008349697685140123
+  cx c4,c2
+  cx c4,f
+  ry f,0.008349697685140123
+  cx c2,f
+  cx c4,c2
+  cx c4,f
+  ry f,-0.008349697685140123
+  cx c4,f
+  
+  ### Rotations controlled by 3 qubit(s)
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 374.25059509277344, controlled by [0, 1, 2]
+  toffoli c4,c3,e0
+  ry f,0.29364938656126627
+  cx e0,f
+  ry f,-0.29364938656126627
+  cx c2,e0
+  cx c2,f
+  ry f,0.29364938656126627
+  cx e0,f
+  cx c2,e0
+  cx c2,f
+  ry f,-0.29364938656126627
+  cx c2,f
+  toffoli c4,c3,e0
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 18.91986123472452, controlled by [0, 2, 3]
+  toffoli c4,c2,e0
+  ry f,0.014845148460014878
+  cx e0,f
+  ry f,-0.014845148460014878
+  cx c1,e0
+  cx c1,f
+  ry f,0.014845148460014878
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.014845148460014878
+  cx c1,f
+  toffoli c4,c2,e0
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 0.18273954838514328, controlled by [1, 2, 3]
+  toffoli c3,c2,e0
+  ry f,0.0001433834895318683
+  cx e0,f
+  ry f,-0.0001433834895318683
+  cx c1,e0
+  cx c1,f
+  ry f,0.0001433834895318683
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.0001433834895318683
+  cx c1,f
+  toffoli c3,c2,e0
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 119.47893822938204, controlled by [0, 1, 3]
+  toffoli c4,c3,e0
+  ry f,0.09374712392735733
+  cx e0,f
+  ry f,-0.09374712392735733
+  cx c1,e0
+  cx c1,f
+  ry f,0.09374712392735733
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.09374712392735733
+  cx c1,f
+  toffoli c4,c3,e0
+  
+  ### Rotations controlled by 4 qubit(s)
+  
+  # Rotation c*theta with c = 0.0015692661035767927 and theta = 394.29268799722195, controlled by [0, 1, 2, 3]
+  toffoli c4,c3,e0
+  toffoli c2,e0,e1
+  ry f,0.30937507508111023
+  cx e1,f
+  ry f,-0.30937507508111023
+  cx c1,e1
+  cx c1,f
+  ry f,0.30937507508111023
+  cx e1,f
+  cx c1,e1
+  cx c1,f
+  ry f,-0.30937507508111023
+  cx c1,f
+  toffoli c2,e0,e1
+  toffoli c4,c3,e0
+  
+  ##### Performs Ry(c*(x^k)) for c=0.0007508222406744251 and k=13
+  
+  ### Rotations controlled by 1 qubit(s)
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 1.4901161193847656e-08, controlled by [2]
+  ry f,5.594061618107744e-12
+  cx c2,f
+  ry f,-1.1188123236215489e-11
+  cx c2,f
+  ry f,5.594061618107744e-12
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 1.0, controlled by [0]
+  ry f,0.00037541112033721255
+  cx c4,f
+  ry f,-0.0007508222406744251
+  cx c4,f
+  ry f,0.00037541112033721255
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 1.8189894035458565e-12, controlled by [3]
+  ry f,6.82868849866668e-16
+  cx c1,f
+  ry f,-1.365737699733336e-15
+  cx c1,f
+  ry f,6.82868849866668e-16
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 0.0001220703125, controlled by [1]
+  ry f,4.582655277553864e-08
+  cx c3,f
+  ry f,-9.165310555107728e-08
+  cx c3,f
+  ry f,4.582655277553864e-08
+  
+  ### Rotations controlled by 2 qubit(s)
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 193.619384765625, controlled by [0, 1]
+  ry f,0.0726868701538651
+  cx c3,f
+  ry f,-0.0726868701538651
+  cx c4,c3
+  cx c4,f
+  ry f,0.0726868701538651
+  cx c3,f
+  cx c4,c3
+  cx c4,f
+  ry f,-0.0726868701538651
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 0.023635178804397583, controlled by [1, 2]
+  ry f,8.872908954329236e-06
+  cx c2,f
+  ry f,-8.872908954329236e-06
+  cx c3,c2
+  cx c3,f
+  ry f,8.872908954329236e-06
+  cx c2,f
+  cx c3,c2
+  cx c3,f
+  ry f,-8.872908954329236e-06
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 0.0020983757349313237, controlled by [1, 3]
+  ry f,7.8775358553899e-07
+  cx c1,f
+  ry f,-7.8775358553899e-07
+  cx c3,c1
+  cx c3,f
+  ry f,7.8775358553899e-07
+  cx c1,f
+  cx c3,c1
+  cx c3,f
+  ry f,-7.8775358553899e-07
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 2.8851536626461893e-06, controlled by [2, 3]
+  ry f,1.083118768839018e-09
+  cx c1,f
+  ry f,-1.083118768839018e-09
+  cx c2,c1
+  cx c2,f
+  ry f,1.083118768839018e-09
+  cx c1,f
+  cx c2,c1
+  cx c2,f
+  ry f,-1.083118768839018e-09
+  cx c2,f
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 3.623627006963943, controlled by [0, 3]
+  ry f,0.0013603498743685143
+  cx c1,f
+  ry f,-0.0013603498743685143
+  cx c4,c1
+  cx c4,f
+  ry f,0.0013603498743685143
+  cx c1,f
+  cx c4,c1
+  cx c4,f
+  ry f,-0.0013603498743685143
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 17.189894020557404, controlled by [0, 2]
+  ry f,0.006453277372735406
+  cx c2,f
+  ry f,-0.006453277372735406
+  cx c4,c2
+  cx c4,f
+  ry f,0.006453277372735406
+  cx c2,f
+  cx c4,c2
+  cx c4,f
+  ry f,-0.006453277372735406
+  cx c4,f
+  
+  ### Rotations controlled by 3 qubit(s)
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 1231.9257259368896, controlled by [0, 1, 2]
+  toffoli c4,c3,e0
+  ry f,0.4624786169462016
+  cx e0,f
+  ry f,-0.4624786169462016
+  cx c2,e0
+  cx c2,f
+  ry f,0.4624786169462016
+  cx e0,f
+  cx c2,e0
+  cx c2,f
+  ry f,-0.4624786169462016
+  cx c2,f
+  toffoli c4,c3,e0
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 40.982923643896356, controlled by [0, 2, 3]
+  toffoli c4,c2,e0
+  ry f,0.015385445279849568
+  cx e0,f
+  ry f,-0.015385445279849568
+  cx c1,e0
+  cx c1,f
+  ry f,0.015385445279849568
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.015385445279849568
+  cx c1,f
+  toffoli c4,c2,e0
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 0.15038155834190547, controlled by [1, 2, 3]
+  toffoli c3,c2,e0
+  ry f,5.645490929519063e-05
+  cx e0,f
+  ry f,-5.645490929519063e-05
+  cx c1,e0
+  cx c1,f
+  ry f,5.645490929519063e-05
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-5.645490929519063e-05
+  cx c1,f
+  toffoli c3,c2,e0
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 352.6813772704918, controlled by [0, 1, 3]
+  toffoli c4,c3,e0
+  ry f,0.13240051096318645
+  cx e0,f
+  ry f,-0.13240051096318645
+  cx c1,e0
+  cx c1,f
+  ry f,0.13240051096318645
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.13240051096318645
+  cx c1,f
+  toffoli c4,c3,e0
+  
+  ### Rotations controlled by 4 qubit(s)
+  
+  # Rotation c*theta with c = 0.0007508222406744251 and theta = 1698.9090338512324, controlled by [0, 1, 2, 3]
+  toffoli c4,c3,e0
+  toffoli c2,e0,e1
+  ry f,0.6377893437491026
+  cx e1,f
+  ry f,-0.6377893437491026
+  cx c1,e1
+  cx c1,f
+  ry f,0.6377893437491026
+  cx e1,f
+  cx c1,e1
+  cx c1,f
+  ry f,-0.6377893437491026
+  cx c1,f
+  toffoli c2,e0,e1
+  toffoli c4,c3,e0
+  
+  ##### Performs Ry(c*(x^k)) for c=0.00037272137648164806 and k=15
+  
+  ### Rotations controlled by 1 qubit(s)
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 9.313225746154785e-10, controlled by [2]
+  ry f,1.7356191597955677e-13
+  cx c2,f
+  ry f,-3.4712383195911353e-13
+  cx c2,f
+  ry f,1.7356191597955677e-13
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 1.0, controlled by [0]
+  ry f,0.00018636068824082403
+  cx c4,f
+  ry f,-0.00037272137648164806
+  cx c4,f
+  ry f,0.00018636068824082403
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 2.842170943040401e-14, controlled by [3]
+  ry f,5.2966893304308095e-18
+  cx c1,f
+  ry f,-1.0593378660861619e-17
+  cx c1,f
+  ry f,5.2966893304308095e-18
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 3.0517578125e-05, controlled by [1]
+  ry f,5.687276862818116e-09
+  cx c3,f
+  ry f,-1.1374553725636232e-08
+  cx c3,f
+  ry f,5.687276862818116e-09
+  
+  ### Rotations controlled by 2 qubit(s)
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 264.68316650390625, controlled by [0, 1]
+  ry f,0.04932653707542859
+  cx c3,f
+  ry f,-0.04932653707542859
+  cx c4,c3
+  cx c4,f
+  ry f,0.04932653707542859
+  cx c3,f
+  cx c4,c3
+  cx c4,f
+  ry f,-0.04932653707542859
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 0.008077489212155342, controlled by [1, 2]
+  ry f,1.505326448835101e-06
+  cx c2,f
+  ry f,-1.505326448835101e-06
+  cx c3,c2
+  cx c3,f
+  ry f,1.505326448835101e-06
+  cx c2,f
+  cx c3,c2
+  cx c3,f
+  ry f,-1.505326448835101e-06
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 0.0001811905661952551, controlled by [1, 3]
+  ry f,3.376679861889232e-08
+  cx c1,f
+  ry f,-3.376679861889232e-08
+  cx c3,c1
+  cx c3,f
+  ry f,3.376679861889232e-08
+  cx c1,f
+  cx c3,c1
+  cx c3,f
+  ry f,-3.376679861889232e-08
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 2.4650540808579535e-07, controlled by [2, 3]
+  ry f,4.593891750595401e-11
+  cx c1,f
+  ry f,-4.593891750595401e-11
+  cx c2,c1
+  cx c2,f
+  ry f,4.593891750595401e-11
+  cx c1,f
+  cx c2,c1
+  cx c2,f
+  ry f,-4.593891750595401e-11
+  cx c2,f
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 2.166231035682131, controlled by [0, 3]
+  ry f,0.0004037003066983549
+  cx c1,f
+  ry f,-0.0004037003066983549
+  cx c4,c1
+  cx c4,f
+  ry f,0.0004037003066983549
+  cx c1,f
+  cx c4,c1
+  cx c4,f
+  ry f,-0.0004037003066983549
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 5.937252473086119, controlled by [0, 2]
+  ry f,0.0011064704571438636
+  cx c2,f
+  ry f,-0.0011064704571438636
+  cx c4,c2
+  cx c4,f
+  ry f,0.0011064704571438636
+  cx c2,f
+  cx c4,c2
+  cx c4,f
+  ry f,-0.0011064704571438636
+  cx c4,f
+  
+  ### Rotations controlled by 3 qubit(s)
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 3956.1822758316994, controlled by [0, 1, 2]
+  toffoli c4,c3,e0
+  ry f,0.737276851730145
+  cx e0,f
+  ry f,-0.737276851730145
+  cx c2,e0
+  cx c2,f
+  ry f,0.737276851730145
+  cx e0,f
+  cx c2,e0
+  cx c2,f
+  ry f,-0.737276851730145
+  cx c2,f
+  toffoli c4,c3,e0
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 85.45104592183452, controlled by [0, 2, 3]
+  toffoli c4,c2,e0
+  ry f,0.015924715728891342
+  cx e0,f
+  ry f,-0.015924715728891342
+  cx c1,e0
+  cx c1,f
+  ry f,0.015924715728891342
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.015924715728891342
+  cx c1,f
+  toffoli c4,c2,e0
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 0.12073310167943418, controlled by [1, 2, 3]
+  toffoli c3,c2,e0
+  ry f,2.2499903922428742e-05
+  cx e0,f
+  ry f,-2.2499903922428742e-05
+  cx c1,e0
+  cx c1,f
+  ry f,2.2499903922428742e-05
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-2.2499903922428742e-05
+  cx c1,f
+  toffoli c3,c2,e0
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 1012.0440730265236, controlled by [0, 1, 3]
+  toffoli c4,c3,e0
+  ry f,0.1886052299792697
+  cx e0,f
+  ry f,-0.1886052299792697
+  cx c1,e0
+  cx c1,f
+  ry f,0.1886052299792697
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.1886052299792697
+  cx c1,f
+  toffoli c4,c3,e0
+  
+  ### Rotations controlled by 4 qubit(s)
+  
+  # Rotation c*theta with c = 0.00037272137648164806 and theta = 6921.713237936729, controlled by [0, 1, 2, 3]
+  toffoli c4,c3,e0
+  toffoli c2,e0,e1
+  ry f,1.2899352428275113
+  cx e1,f
+  ry f,-1.2899352428275113
+  cx c1,e1
+  cx c1,f
+  ry f,1.2899352428275113
+  cx e1,f
+  cx c1,e1
+  cx c1,f
+  ry f,-1.2899352428275113
+  cx c1,f
+  toffoli c2,e0,e1
+  toffoli c4,c3,e0
+  
+  ##### Performs Ry(c*(x^k)) for c=0.00019018562063034358 and k=17
+  
+  ### Rotations controlled by 1 qubit(s)
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 5.820766091346741e-11, controlled by [2]
+  ry f,5.535130058134195e-15
+  cx c2,f
+  ry f,-1.107026011626839e-14
+  cx c2,f
+  ry f,5.535130058134195e-15
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 1.0, controlled by [0]
+  ry f,9.509281031517179e-05
+  cx c4,f
+  ry f,-0.00019018562063034358
+  cx c4,f
+  ry f,9.509281031517179e-05
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 4.440892098500626e-16, controlled by [3]
+  ry f,4.2229690995286524e-20
+  cx c1,f
+  ry f,-8.445938199057305e-20
+  cx c1,f
+  ry f,4.2229690995286524e-20
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 7.62939453125e-06, controlled by [1]
+  ry f,7.255005669797652e-10
+  cx c3,f
+  ry f,-1.4510011339595305e-09
+  cx c3,f
+  ry f,7.255005669797652e-10
+  
+  ### Rotations controlled by 2 qubit(s)
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 6768.765151977539, controlled by [0, 1]
+  ry f,0.6436609006649451
+  cx c3,f
+  ry f,-0.6436609006649451
+  cx c4,c3
+  cx c4,f
+  ry f,0.6436609006649451
+  cx c3,f
+  cx c4,c3
+  cx c4,f
+  ry f,-0.6436609006649451
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 0.05164157983381301, controlled by [1, 2]
+  ry f,4.9107429555125815e-06
+  cx c2,f
+  ry f,-4.9107429555125815e-06
+  cx c3,c2
+  cx c3,f
+  ry f,4.9107429555125815e-06
+  cx c2,f
+  cx c3,c2
+  cx c3,f
+  ry f,-4.9107429555125815e-06
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 0.00154040593483451, controlled by [1, 3]
+  ry f,1.4648152936958293e-07
+  cx c1,f
+  ry f,-1.4648152936958293e-07
+  cx c3,c1
+  cx c3,f
+  ry f,1.4648152936958293e-07
+  cx c1,f
+  cx c3,c1
+  cx c3,f
+  ry f,-1.4648152936958293e-07
+  cx c3,f
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 3.939939867692033e-07, controlled by [2, 3]
+  ry f,3.746599544916215e-11
+  cx c1,f
+  ry f,-3.746599544916215e-11
+  cx c2,c1
+  cx c2,f
+  ry f,3.746599544916215e-11
+  cx c1,f
+  cx c2,c1
+  cx c2,f
+  ry f,-3.746599544916215e-11
+  cx c2,f
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 11.897852823522332, controlled by [0, 3]
+  ry f,0.00113140026170504
+  cx c1,f
+  ry f,-0.00113140026170504
+  cx c4,c1
+  cx c4,f
+  ry f,0.00113140026170504
+  cx c1,f
+  cx c4,c1
+  cx c4,f
+  ry f,-0.00113140026170504
+  cx c4,f
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 201.9040866906289, controlled by [0, 2]
+  ry f,0.019199627017529974
+  cx c2,f
+  ry f,-0.019199627017529974
+  cx c4,c2
+  cx c4,f
+  ry f,0.019199627017529974
+  cx c2,f
+  cx c4,c2
+  cx c4,f
+  ry f,-0.019199627017529974
+  cx c4,f
+  
+  ### Rotations controlled by 3 qubit(s)
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 13537.134441059083, controlled by [0, 1, 2]
+  toffoli c4,c3,e0
+  ry f,1.2872841576146103
+  cx e0,f
+  ry f,-1.2872841576146103
+  cx c2,e0
+  cx c2,f
+  ry f,1.2872841576146103
+  cx e0,f
+  cx c2,e0
+  cx c2,f
+  ry f,-1.2872841576146103
+  cx c2,f
+  toffoli c4,c3,e0
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 155.54946850839605, controlled by [0, 2, 3]
+  toffoli c4,c2,e0
+  ry f,0.014791636103494692
+  cx e0,f
+  ry f,-0.014791636103494692
+  cx c1,e0
+  cx c1,f
+  ry f,0.014791636103494692
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.014791636103494692
+  cx c1,f
+  toffoli c4,c2,e0
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 0.10328013947341219, controlled by [1, 2, 3]
+  toffoli c3,c2,e0
+  ry f,9.821198712269671e-06
+  cx e0,f
+  ry f,-9.821198712269671e-06
+  cx c1,e0
+  cx c1,f
+  ry f,9.821198712269671e-06
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-9.821198712269671e-06
+  cx c1,f
+  toffoli c3,c2,e0
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 2854.6630634657704, controlled by [0, 1, 3]
+  toffoli c4,c3,e0
+  ry f,0.2714579332078777
+  cx e0,f
+  ry f,-0.2714579332078777
+  cx c1,e0
+  cx c1,f
+  ry f,0.2714579332078777
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.2714579332078777
+  cx c1,f
+  toffoli c4,c3,e0
+  
+  ### Rotations controlled by 4 qubit(s)
+  
+  # Rotation c*theta with c = 0.00019018562063034358 and theta = 25262.5283152176, controlled by [0, 1, 2, 3]
+  toffoli c4,c3,e0
+  toffoli c2,e0,e1
+  ry f,2.4022848131606436
+  cx e1,f
+  ry f,-2.4022848131606436
+  cx c1,e1
+  cx c1,f
+  ry f,2.4022848131606436
+  cx e1,f
+  cx c1,e1
+  cx c1,f
+  ry f,-2.4022848131606436
+  cx c1,f
+  toffoli c2,e0,e1
+  toffoli c4,c3,e0
+  
+  ##### Performs Ry(c*(x^k)) for c=9.91354945717793e-05 and k=19
+  
+  ### Rotations controlled by 1 qubit(s)
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 3.637978807091713e-12, controlled by [2]
+  ry f,1.8032641414134432e-16
+  cx c2,f
+  ry f,-3.6065282828268865e-16
+  cx c2,f
+  ry f,1.8032641414134432e-16
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 1.0, controlled by [0]
+  ry f,4.956774728588965e-05
+  cx c4,f
+  ry f,-9.91354945717793e-05
+  cx c4,f
+  ry f,4.956774728588965e-05
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 6.938893903907228e-18, controlled by [3]
+  ry f,3.4394533947247376e-22
+  cx c1,f
+  ry f,-6.878906789449475e-22
+  cx c1,f
+  ry f,3.4394533947247376e-22
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 1.9073486328125e-06, controlled by [1]
+  ry f,9.454297501733713e-11
+  cx c3,f
+  ry f,-1.8908595003467427e-10
+  cx c3,f
+  ry f,9.454297501733713e-11
+  
+  ### Rotations controlled by 2 qubit(s)
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 1810092.6205329895, controlled by [0, 1]
+  ry f,89.72221357863297
+  cx c3,f
+  ry f,-89.72221357863297
+  cx c4,c3
+  cx c4,f
+  ry f,89.72221357863297
+  cx c3,f
+  cx c4,c3
+  cx c4,f
+  ry f,-89.72221357863297
+  cx c4,f
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 3.452477685037593, controlled by [1, 2]
+  ry f,0.00017113154140211673
+  cx c2,f
+  ry f,-0.00017113154140211673
+  cx c3,c2
+  cx c3,f
+  ry f,0.00017113154140211673
+  cx c2,f
+  cx c3,c2
+  cx c3,f
+  ry f,-0.00017113154140211673
+  cx c3,f
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 0.03215989769413105, controlled by [1, 3]
+  ry f,1.5940936816427533e-06
+  cx c1,f
+  ry f,-1.5940936816427533e-06
+  cx c3,c1
+  cx c3,f
+  ry f,1.5940936816427533e-06
+  cx c1,f
+  cx c3,c1
+  cx c3,f
+  ry f,-1.5940936816427533e-06
+  cx c3,f
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 6.585078592372118e-06, controlled by [2, 3]
+  ry f,3.264075115244231e-10
+  cx c1,f
+  ry f,-3.264075115244231e-10
+  cx c2,c1
+  cx c2,f
+  ry f,3.264075115244231e-10
+  cx c1,f
+  cx c2,c1
+  cx c2,f
+  ry f,-3.264075115244231e-10
+  cx c2,f
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 147.85109547562024, controlled by [0, 3]
+  ry f,0.007328645736477487
+  cx c1,f
+  ry f,-0.007328645736477487
+  cx c4,c1
+  cx c4,f
+  ry f,0.007328645736477487
+  cx c1,f
+  cx c4,c1
+  cx c4,f
+  ry f,-0.007328645736477487
+  cx c4,f
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 16861.04844226058, controlled by [0, 2]
+  ry f,0.8357641881611159
+  cx c2,f
+  ry f,-0.8357641881611159
+  cx c4,c2
+  cx c4,f
+  ry f,0.8357641881611159
+  cx c2,f
+  cx c4,c2
+  cx c4,f
+  ry f,-0.8357641881611159
+  cx c4,f
+  
+  ### Rotations controlled by 3 qubit(s)
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 885537.0450127579, controlled by [0, 1, 2]
+  toffoli c4,c3,e0
+  ry f,43.89407645948587
+  cx e0,f
+  ry f,-43.89407645948587
+  cx c2,e0
+  cx c2,f
+  ry f,43.89407645948587
+  cx e0,f
+  cx c2,e0
+  cx c2,f
+  ry f,-43.89407645948587
+  cx c2,f
+  toffoli c4,c3,e0
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 6059.137521211883, controlled by [0, 2, 3]
+  toffoli c4,c2,e0
+  ry f,0.30033779742188244
+  cx e0,f
+  ry f,-0.30033779742188244
+  cx c1,e0
+  cx c1,f
+  ry f,0.30033779742188244
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-0.30033779742188244
+  cx c1,f
+  toffoli c4,c2,e0
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 1.689027872109905, controlled by [1, 2, 3]
+  toffoli c3,c2,e0
+  ry f,8.372130672356772e-05
+  cx e0,f
+  ry f,-8.372130672356772e-05
+  cx c1,e0
+  cx c1,f
+  ry f,8.372130672356772e-05
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-8.372130672356772e-05
+  cx c1,f
+  toffoli c3,c2,e0
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 248847.47238567768, controlled by [0, 1, 3]
+  toffoli c4,c3,e0
+  ry f,12.334808623945674
+  cx e0,f
+  ry f,-12.334808623945674
+  cx c1,e0
+  cx c1,f
+  ry f,12.334808623945674
+  cx e0,f
+  cx c1,e0
+  cx c1,f
+  ry f,-12.334808623945674
+  cx c1,f
+  toffoli c4,c3,e0
+  
+  ### Rotations controlled by 4 qubit(s)
+  
+  # Rotation c*theta with c = 9.91354945717793e-05 and theta = 829227.6573584364, controlled by [0, 1, 2, 3]
+  toffoli c4,c3,e0
+  toffoli c2,e0,e1
+  ry f,41.10294696241327
+  cx e1,f
+  ry f,-41.10294696241327
+  cx c1,e1
+  cx c1,f
+  ry f,41.10294696241327
+  cx e1,f
+  cx c1,e1
+  cx c1,f
+  ry f,-41.10294696241327
   cx c1,f
   toffoli c2,e0,e1
   toffoli c4,c3,e0
