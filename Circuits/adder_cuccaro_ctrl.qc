@@ -14,8 +14,11 @@ qubits 11
   map q8,b3
   map q9,a3
   map q10,z
-  x a0
-  x b2
+  x ctrl
+  x a1
+  x a3
+  x b0
+  x b1
   display
 
 .cadd

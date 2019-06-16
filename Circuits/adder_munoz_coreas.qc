@@ -15,11 +15,10 @@ qubits 11
   map q9,z
   map q10,d
   x ctrl
-  x a0
-  x a2
+  x a1
   x a3
   x b0
-  x b2
+  x b1
   display
 
 .add

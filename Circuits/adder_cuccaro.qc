@@ -1,6 +1,6 @@
 #function: Cuccaro Quantum Adder
 
-qubits 12
+qubits 10
 
 .init
   map q0,c
@@ -12,11 +12,11 @@ qubits 12
   map q6,a2
   map q7,b3
   map q8,a3
-  map q9,b4
-  map q10,a4
-  map q11,z
+  map q9,z
   x a1
+  x a3
   x b0
+  x b1
   display
 
 .add
@@ -32,13 +32,7 @@ qubits 12
   cx a3,b3
   cx a3,a2
   toffoli a2,b3,a3
-  cx a4,b4
-  cx a4,a3
-  toffoli a3,b4,a4
-  cx a4,z
-  toffoli a3,b4,a4
-  cx a4,a3
-  cx a3,b4
+  cx a3,z
   toffoli a2,b3,a3
   cx a3,a2
   cx a2,b3

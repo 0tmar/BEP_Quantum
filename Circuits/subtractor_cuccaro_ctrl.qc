@@ -14,15 +14,18 @@ qubits 11
   map q8,b3
   map q9,a3
   map q10,z
-  x a0
-  x b2
+  x ctrl
+  x a1
+  x a3
+  x b0
+  x b1
   display
 
 .csub
-  x b0
-  x b1
-  x b2
-  x b3
+  x a0
+  x a1
+  x a2
+  x a3
   toffoli ctrl,a0,b0
   cx a0,c
   toffoli c,b0,a0
@@ -48,10 +51,14 @@ qubits 11
   toffoli c,b0,a0
   cx a0,c
   toffoli ctrl,c,b0
-  x b0
-  x b1
-  x b2
-  x b3
+  x a0
+  x a1
+  x a2
+  x a3
+  cx ctrl,b0
+  cx ctrl,b1
+  cx ctrl,b2
+  cx ctrl,b3
 
 .result
   measure

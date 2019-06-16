@@ -216,7 +216,7 @@ class cSUB(Qsubroutine):
 
         if subtype == "a-b":
             initcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qna)
-            endcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qna) + COMPLEMENT_gates_controlled(n=n, qubitnames=qna, qubitnamectrl=qnctrl)
+            endcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qna) + COMPLEMENT_gates_controlled(n=n, qubitnames=qnb, qubitnamectrl=qnctrl)
         elif subtype == "b-a":
             initcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qnb)
             endcomplementgates = COMPLEMENT_gates(n=n, qubitnames=qnb)

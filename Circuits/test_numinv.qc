@@ -1,56 +1,312 @@
 #function: Cao Number Inversion Estimator
 
-qubits 14
+qubits 17
 
 .init
   map q0,a0
   map q1,a1
   map q2,a2
   map q3,a3
-  map q4,b0
-  map q5,b1
-  map q6,b2
-  map q7,b3
-  map q8,b4
-  map q9,b5
-  map q10,b6
-  map q11,b7
-  map q12,c
-  map q13,d
+  map q4,a4
+  map q5,b0
+  map q6,b1
+  map q7,b2
+  map q8,b3
+  map q9,b4
+  map q10,b5
+  map q11,b6
+  map q12,b7
+  map q13,b8
+  map q14,b9
+  map q15,c
+  map q16,d
   x a1
-  x a2
+  x a3
+  x a4
   display
 
 .powerinvert
-  cx a0,b3
+  cx a0,b4
   cx a0,c
   x c
-  toffoli a1,c,b2
+  toffoli a1,c,b3
+  x c
+  cx b3,c
+  x c
+  toffoli a2,c,b2
   x c
   cx b2,c
   x c
-  toffoli a2,c,b1
+  toffoli a3,c,b1
   x c
   cx b1,c
   x c
-  toffoli a3,c,b0
+  toffoli a4,c,b0
   x c
   cx b0,c
   x a0
   x a1
   x a2
   x a3
-  toffoli a0,a1,b4
-  toffoli a2,b4,b5
-  toffoli a3,b5,c
-  toffoli a2,b4,b5
-  toffoli a0,a1,b4
+  x a4
+  toffoli a0,a1,b5
+  toffoli a2,b5,b6
+  toffoli a3,b6,b7
+  toffoli a4,b7,c
+  toffoli a3,b6,b7
+  toffoli a2,b5,b6
+  toffoli a0,a1,b5
+  x a4
   x a3
   x a2
   x a1
   x a0
   x c
   display
+
+.cnot
+  cx b4,c
+
+.qft
+  h b4
+  cr b5,b4
+  cr b6,b4
+  cr b7,b4
+  cr b8,b4
+  cr b9,b4
+  h b5
+  cr b6,b5
+  cr b7,b5
+  cr b8,b5
+  cr b9,b5
+  h b6
+  cr b7,b6
+  cr b8,b6
+  cr b9,b6
+  h b7
+  cr b8,b7
+  cr b9,b7
+  h b8
+  cr b9,b8
+  h b9
+
+.csub
+  # cSUB on b4,...,b9 by a0,...,a4 controlled by c
+  toffoli c,a0,d
+  cz d,b5
+  swap d,b5
+  cr b5,b4
+  cz b5,b4
+  swap d,b5
+  toffoli c,a0,d
+  toffoli c,a1,d
+  cz d,b6
+  swap d,b6
+  cr b6,b5
+  cz b6,b5
+  cr b6,b4
+  swap b6,b5
+  cr b5,b4
+  swap b6,b5
+  cz b6,b4
+  swap d,b6
+  toffoli c,a1,d
+  toffoli c,a2,d
+  cz d,b7
+  swap d,b7
+  cr b7,b6
+  cz b7,b6
+  cr b7,b5
+  swap b7,b6
+  cr b6,b5
+  swap b7,b6
+  cz b7,b5
+  cr b7,b4
+  swap b7,b6
+  cr b6,b4
+  swap b7,b6
+  swap b7,b5
+  cr b5,b4
+  swap b7,b5
+  cz b7,b4
+  swap d,b7
+  toffoli c,a2,d
+  toffoli c,a3,d
+  cz d,b8
+  swap d,b8
+  cr b8,b7
+  cz b8,b7
+  cr b8,b6
+  swap b8,b7
+  cr b7,b6
+  swap b8,b7
+  cz b8,b6
+  cr b8,b5
+  swap b8,b7
+  cr b7,b5
+  swap b8,b7
+  swap b8,b6
+  cr b6,b5
+  swap b8,b6
+  cz b8,b5
+  cr b8,b4
+  swap b8,b7
+  cr b7,b4
+  swap b8,b7
+  swap b8,b6
+  cr b6,b4
+  swap b8,b6
+  swap b8,b5
+  cr b5,b4
+  swap b8,b5
+  cz b8,b4
+  swap d,b8
+  toffoli c,a3,d
+  toffoli c,a4,d
+  cz d,b9
+  swap d,b9
+  cr b9,b8
+  cz b9,b8
+  cr b9,b7
+  swap b9,b8
+  cr b8,b7
+  swap b9,b8
+  cz b9,b7
+  cr b9,b6
+  swap b9,b8
+  cr b8,b6
+  swap b9,b8
+  swap b9,b7
+  cr b7,b6
+  swap b9,b7
+  cz b9,b6
+  cr b9,b5
+  swap b9,b8
+  cr b8,b5
+  swap b9,b8
+  swap b9,b7
+  cr b7,b5
+  swap b9,b7
+  swap b9,b6
+  cr b6,b5
+  swap b9,b6
+  cz b9,b5
+  cr b9,b4
+  swap b9,b8
+  cr b8,b4
+  swap b9,b8
+  swap b9,b7
+  cr b7,b4
+  swap b9,b7
+  swap b9,b6
+  cr b6,b4
+  swap b9,b6
+  swap b9,b5
+  cr b5,b4
+  swap b9,b5
+  cz b9,b4
+  swap d,b9
+  toffoli c,a4,d
+
+.iqft
+  h b9
+  cr b9,b8
+  cz b9,b8
+  h b8
+  cr b9,b7
+  swap b9,b8
+  cr b8,b7
+  swap b9,b8
+  cz b9,b7
+  cr b8,b7
+  cz b8,b7
+  h b7
+  cr b9,b6
+  swap b9,b8
+  cr b8,b6
+  swap b9,b8
+  swap b9,b7
+  cr b7,b6
+  swap b9,b7
+  cz b9,b6
+  cr b8,b6
+  swap b8,b7
+  cr b7,b6
+  swap b8,b7
+  cz b8,b6
+  cr b7,b6
+  cz b7,b6
+  h b6
+  cr b9,b5
+  swap b9,b8
+  cr b8,b5
+  swap b9,b8
+  swap b9,b7
+  cr b7,b5
+  swap b9,b7
+  swap b9,b6
+  cr b6,b5
+  swap b9,b6
+  cz b9,b5
+  cr b8,b5
+  swap b8,b7
+  cr b7,b5
+  swap b8,b7
+  swap b8,b6
+  cr b6,b5
+  swap b8,b6
+  cz b8,b5
+  cr b7,b5
+  swap b7,b6
+  cr b6,b5
+  swap b7,b6
+  cz b7,b5
+  cr b6,b5
+  cz b6,b5
+  h b5
+  cr b9,b4
+  swap b9,b8
+  cr b8,b4
+  swap b9,b8
+  swap b9,b7
+  cr b7,b4
+  swap b9,b7
+  swap b9,b6
+  cr b6,b4
+  swap b9,b6
+  swap b9,b5
+  cr b5,b4
+  swap b9,b5
+  cz b9,b4
+  cr b8,b4
+  swap b8,b7
+  cr b7,b4
+  swap b8,b7
+  swap b8,b6
+  cr b6,b4
+  swap b8,b6
+  swap b8,b5
+  cr b5,b4
+  swap b8,b5
+  cz b8,b4
+  cr b7,b4
+  swap b7,b6
+  cr b6,b4
+  swap b7,b6
+  swap b7,b5
+  cr b5,b4
+  swap b7,b5
+  cz b7,b4
+  cr b6,b4
+  swap b6,b5
+  cr b5,b4
+  swap b6,b5
+  cz b6,b4
+  cr b5,b4
+  cz b5,b4
+  h b4
+  display
+  prepz c
 
 .cnot
   cx b3,c
@@ -73,15 +329,15 @@ qubits 14
   h b7
 
 .csub
-  # cSUB on b3,...,b7 by a0,...,a3 controlled by c
-  toffoli c,a0,d
+  # cSUB on b3,...,b7 by a1,...,a4 controlled by c
+  toffoli c,a1,d
   cz d,b4
   swap d,b4
   cr b4,b3
   cz b4,b3
   swap d,b4
-  toffoli c,a0,d
   toffoli c,a1,d
+  toffoli c,a2,d
   cz d,b5
   swap d,b5
   cr b5,b4
@@ -92,8 +348,8 @@ qubits 14
   swap b5,b4
   cz b5,b3
   swap d,b5
-  toffoli c,a1,d
   toffoli c,a2,d
+  toffoli c,a3,d
   cz d,b6
   swap d,b6
   cr b6,b5
@@ -112,8 +368,8 @@ qubits 14
   swap b6,b4
   cz b6,b3
   swap d,b6
-  toffoli c,a2,d
   toffoli c,a3,d
+  toffoli c,a4,d
   cz d,b7
   swap d,b7
   cr b7,b6
@@ -143,7 +399,7 @@ qubits 14
   swap b7,b4
   cz b7,b3
   swap d,b7
-  toffoli c,a3,d
+  toffoli c,a4,d
 
 .iqft
   h b7
@@ -220,15 +476,15 @@ qubits 14
   h b5
 
 .csub
-  # cSUB on b2,...,b5 by a1,...,a3 controlled by c
-  toffoli c,a1,d
+  # cSUB on b2,...,b5 by a2,...,a4 controlled by c
+  toffoli c,a2,d
   cz d,b3
   swap d,b3
   cr b3,b2
   cz b3,b2
   swap d,b3
-  toffoli c,a1,d
   toffoli c,a2,d
+  toffoli c,a3,d
   cz d,b4
   swap d,b4
   cr b4,b3
@@ -239,8 +495,8 @@ qubits 14
   swap b4,b3
   cz b4,b2
   swap d,b4
-  toffoli c,a2,d
   toffoli c,a3,d
+  toffoli c,a4,d
   cz d,b5
   swap d,b5
   cr b5,b4
@@ -259,7 +515,7 @@ qubits 14
   swap b5,b3
   cz b5,b2
   swap d,b5
-  toffoli c,a3,d
+  toffoli c,a4,d
 
 .iqft
   h b5
@@ -305,15 +561,15 @@ qubits 14
   h b3
 
 .csub
-  # cSUB on b1,...,b3 by a2,...,a3 controlled by c
-  toffoli c,a2,d
+  # cSUB on b1,...,b3 by a3,...,a4 controlled by c
+  toffoli c,a3,d
   cz d,b2
   swap d,b2
   cr b2,b1
   cz b2,b1
   swap d,b2
-  toffoli c,a2,d
   toffoli c,a3,d
+  toffoli c,a4,d
   cz d,b3
   swap d,b3
   cr b3,b2
@@ -324,7 +580,7 @@ qubits 14
   swap b3,b2
   cz b3,b1
   swap d,b3
-  toffoli c,a3,d
+  toffoli c,a4,d
 
 .iqft
   h b3
@@ -351,14 +607,14 @@ qubits 14
   h b1
 
 .csub
-  # cSUB on b0,...,b1 by a3,...,a3 controlled by c
-  toffoli c,a3,d
+  # cSUB on b0,...,b1 by a4,...,a4 controlled by c
+  toffoli c,a4,d
   cz d,b1
   swap d,b1
   cr b1,b0
   cz b1,b0
   swap d,b1
-  toffoli c,a3,d
+  toffoli c,a4,d
 
 .iqft
   h b1

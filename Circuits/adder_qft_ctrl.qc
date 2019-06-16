@@ -1,6 +1,6 @@
 #function: Controlled QFT Quantum Adder
 
-qubits 11
+qubits 10
 
 .init
   map q0,c
@@ -13,10 +13,10 @@ qubits 11
   map q7,a1
   map q8,a2
   map q9,a3
-  map q10,a4
   x c
   x a0
-  x b0
+  x a2
+  x b2
   x b3
   display
 
@@ -25,71 +25,44 @@ qubits 11
   cr a1,a0
   cr a2,a0
   cr a3,a0
-  cr a4,a0
   h a1
   cr a2,a1
   cr a3,a1
-  cr a4,a1
   h a2
   cr a3,a2
-  cr a4,a2
   h a3
-  cr a4,a3
-  h a4
 
 .cadd
   toffoli c,b0,d
+  cz d,a0
+  toffoli c,b0,d
+  toffoli c,b1,d
   cz d,a1
   swap d,a1
   cr a1,a0
   swap d,a1
-  toffoli c,b0,d
   toffoli c,b1,d
+  toffoli c,b2,d
   cz d,a2
   swap d,a2
   cr a2,a1
   cr a2,a0
   swap d,a2
-  toffoli c,b1,d
   toffoli c,b2,d
+  toffoli c,b3,d
   cz d,a3
   swap d,a3
   cr a3,a2
   cr a3,a1
   cr a3,a0
   swap d,a3
-  toffoli c,b2,d
-  toffoli c,b3,d
-  cz d,a4
-  swap d,a4
-  cr a4,a3
-  cr a4,a2
-  cr a4,a1
-  cr a4,a0
-  swap d,a4
   toffoli c,b3,d
 
 .iqft
-  h a4
-  cr a4,a3
-  cz a4,a3
   h a3
-  cr a4,a2
-  swap a4,a3
-  cr a3,a2
-  swap a4,a3
-  cz a4,a2
   cr a3,a2
   cz a3,a2
   h a2
-  cr a4,a1
-  swap a4,a3
-  cr a3,a1
-  swap a4,a3
-  swap a4,a2
-  cr a2,a1
-  swap a4,a2
-  cz a4,a1
   cr a3,a1
   swap a3,a2
   cr a2,a1
@@ -98,17 +71,6 @@ qubits 11
   cr a2,a1
   cz a2,a1
   h a1
-  cr a4,a0
-  swap a4,a3
-  cr a3,a0
-  swap a4,a3
-  swap a4,a2
-  cr a2,a0
-  swap a4,a2
-  swap a4,a1
-  cr a1,a0
-  swap a4,a1
-  cz a4,a0
   cr a3,a0
   swap a3,a2
   cr a2,a0

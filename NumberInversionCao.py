@@ -1,115 +1,213 @@
 from cQASM import *
-from cQASMCompoundGates import ncx
-from AdderQFT import cSUB
-from QFT import QFT, iQFT
-from MultiplierQFT import MUL, MULSUB
+from cQASMCompoundGates import *
+from QFT import QFT, iQFT, REVERSE
+from math import pi
 
 
-def invert_power(n, qubitnamesa=None, qubitnamesb=None, qubitnamec=None, qubitnamesd=None):
-    """a: contains original number;
-       b: will contain inverted power;
-       c: contains ancilla qubit"""
-
-    qna = buildnames(n=n, qubitnames=qubitnamesa, defaultname="a")
-    qnb = buildnames(n=n, qubitnames=qubitnamesb, defaultname="b")
-    qnc = buildnames(n=1, qubitnames=qubitnamec, defaultname="c")
-    qnd = buildnames(n=n-2, qubitnames=qubitnamesd, defaultname="d")
-
-    gates = []
-
-    gates += [Qgate('cx', qna[0], qnb[n-1])]
-    gates += [Qgate('cx', qna[0], qnc[0])]
-    for i in range(n-1):
-        gates += [Qgate('x', qnc[0])]
-        gates += [Qgate('toffoli', qna[i+1], qnc[0], qnb[n-(i+2)])]
-        gates += [Qgate('x', qnc[0])]
-        gates += [Qgate('cx', qnb[n-(i+2)], qnc[0])]
-    gates += ncx(qna=qna, qnb=qnc, qnc=qnd, invert=True, add_comment=False)
-    gates += [Qgate('x', qnc[0])]
-    gates += [Qgate('display')]
-
-    return Qsubroutine(name='powerinvert', gates=gates)
+# def cRy(qubitnamea, qubitnameb, n, r):
+#     """"outputs controlled-Ry(2^(n)*pi/2^(r-1)) on qubit b, with qubit a as control"""
+#
+#     qna = qubitnamea
+#     qnb = qubitnameb
+#
+#     theta = pi*2**(n-r+1)
+#
+#     gates = []
+#     gates += [Qgate('#', " performs Ry(2^({})*pi/2^({}-1)) = Ry(pi/{}) on {}, controlled by {}"
+#                          .format(n, r, 2**(r-n-1), qnb, qna))]
+#     gates += [Qgate('ry', qnb, theta/4)]
+#     gates += [Qgate('cx', qna, qnb)]
+#     gates += [Qgate('ry', qnb, -theta/2)]
+#     gates += [Qgate('cx', qna, qnb)]
+#     gates += [Qgate('ry', qnb, theta/4)]
+#
+#     cRysubroutine = Qsubroutine(name="cRy", gates=gates)
+#
+#     return cRysubroutine
 
 
-def MULSUB_QFT_No_Parity(n, qubitnamesa=None, qubitnamesb=None, qubitnamec=None, qubitnamed=None):
-    """a: eigenvalue, which will not be touched (size n);
-       b: inverted power x0, which will be transformed to the first estimate x1 (size 2*n);
-       c: control whether the subtraction is performed (size 1);
-       d: ancilla qubit (size 1);
-       (a, b, c, d) -> (a, b*(2-ab), c, d)"""
+def eigenvalue_inversion(qnl, qnm, qnc, sign=1, remove_global_shift=True):
+    """outputs the circuit part designed to invert the eigenvalues"""
 
-    qna = buildnames(n=n, qubitnames=qubitnamesa, defaultname="a")
-    qnb = buildnames(n=2*n, qubitnames=qubitnamesb, defaultname="b")
-    qnc = buildnames(n=1, qubitnames=qubitnamec, defaultname="c")
-    qnd = buildnames(n=1, qubitnames=qubitnamed, defaultname="d")
+    def crzz(qnm, sign=1, remove_global_shift=remove_global_shift):
+        gates = []
+        grgates = []
+        gates += [Qgate('#', ' Performs cRzz({}*pi/2^(m-i)) on L, controlled by the i-th qubit of M, for all i in M'.format(sign*2))]
+        if remove_global_shift:
+            theta = sign*2*pi/(2**len(qnm))
+            grgates += [Qgate('h', qnm[0])]
+            grgates += [Qgate('rz', qnm[0], theta)]
+            grgates += [Qgate('h', qnm[0])]
+        if sign == 1:
+            gates += grgates
+        for i in range(len(qnm)):
+            # applies a cRzz(2*pi/2^(m-i)) to the last L qubit, controlled by the i-th M qubit
+            # [= Rz(2*pi/2^(m-i)) on the i-th M qubit, up to global phase]
+            gates += [Qgate('rz', qnm[i], sign*2*pi/(2**(len(qnm)-i)))]
+        if sign == -1:
+            gates += grgates
+        gates += [Qgate('display')]
+        subroutine = Qsubroutine(name='cRzz', gates=gates)
+        return subroutine
 
-    subroutines = []
+    def exp_iH0t2m(qnl, qnm, qnc, t, sign=1):
+        """outputs the gates to perform cc-exp(i*H0*t/2^m), which is ccRz(t/2^i) on the i-th qubit of M (for all i)"""
+        # Watch out: qnl and qnc should be a specific qubit, while qnm should be all qubits of M!
 
-    for i in range(n):
-        cnotsubroutine = Qsubroutine(name='cnot', gates=[Qgate('cx', qnb[n-1-i], qnc[0])])
-        qftsubroutine = QFT(n=n+1-i, qubitnames=qnb[(n - 1 - i):(2 * n - 2 * i)])
-        subsubroutine = cSUB(na=n+1-i, nb=n-i, qubitnamesa=qnb[(n-1-i):(2*n-2*i)], qubitnamesb=qna[i:], qubitnamec=qnc,
-                             qubitnamed=qnd)
-        subsubroutine.gates.insert(0, Qgate('#', ' cSUB on {},...,{} by {},...,{} controlled by {}'.format(qnb[n-1-i], qnb[2*n-2*i-1], qna[i], qna[-1], qnc[0])))
-        iqftsubroutine = iQFT(n=n+1-i, qubitnames=qnb[(n - 1 - i):(2 * n - 2 * i)])
-        iqftsubroutine.gates.append(Qgate('display'))
-        iqftsubroutine.gates.append(Qgate('prepz', qnc[0]))
-        subroutines += [cnotsubroutine, qftsubroutine, subsubroutine, iqftsubroutine]
-    # subroutines += [Qsubroutine(name='x', gates=[Qgate('x', qnc[0])])]
+        gates = []
+        gates += [Qgate()]
+        gates += [Qgate('#', '## Performs exp(i*H0*t/2^m) with t = {}, on M, controlled by {} and {}'.format(sign*t, qnl, qnc))]
+        for i in range(len(qnm)):
+            gates += ccRz(qna=qnl, qnb=qnc, qnc=qnm[i], theta=sign*t/(2**(i+1)))
+        return gates
+
+    def G(qnl, qnm, qnc, l, kl, t, sign=1):
+        """outputs the gates to perform cc-G(l - kl), which is
+        exp_iH0t2m(qnl[kl], qnm, qnc[kc], t=t0/2**(u+v-m)) for all kc in C (with u=c-kc and v=l-kl)"""
+        # Watch out: qnl should be a specific qubit, while qnm and qnc should be all qubits of M and C!
+
+        v = l - kl
+        m = len(qnm)
+        c = len(qnc)
+
+        gates = []
+        gates += [Qgate()]
+        gates += [Qgate('#', '#### Performs G(l - kl) with l = {} and kl = {}'.format(l, kl))]
+        for kc in range(len(qnc)):
+            u = c - kc
+            gates += exp_iH0t2m(qnl=qnl, qnm=qnm, qnc=qnc[kc], t=sign*t/(2**(u + v - m)))
+        return gates
+
+    def exp_iH0t0(qnl, qnm, qnc, sign=1):
+        """outputs the gates to perform exp(i*H0*t0), which is (qnl[kl], qnm, qnc, l, kl, t0) for all kl in L
+        with t0=2*pi"""
+
+        t0 = sign*2*pi
+        l = len(qnl)
+
+        gates = []
+        gates += [Qgate()]
+        gates += [Qgate('#', '###### Performs exp(i*H0*t0) with t0 = {}*pi'.format(sign*2))]
+        for kl in range(len(qnc)):
+            gates += G(qnl[kl], qnm, qnc, l, kl, t0)
+        return gates
+
+    crzzsubroutine = crzz(qnm=qnm, sign=sign, remove_global_shift=remove_global_shift)
+
+    expiH0t0gates = exp_iH0t0(qnl=qnl, qnm=qnm, qnc=qnc, sign=sign)
+    expiH0t0subroutine = Qsubroutine(name='exp_iH0t0', gates=expiH0t0gates)
+
+    if sign == 1:
+        subroutines = [crzzsubroutine, expiH0t0subroutine]
+    elif sign == -1:
+        subroutines = [expiH0t0subroutine, crzzsubroutine]
+    else:
+        raise ValueError('Variable "sign" must be either +1 or -1')
 
     return subroutines
 
 
-class NUMINVcircuit(Qfunction):
+class EigenvalueInversion_Circuit(Qfunction):
 
-    def __init__(self, inp="0", order=1):
+    def __init__(self, n=4, x=2, remove_global_shift=False, test_undo=False, save_value=False):
+        # n: size of C
+        # x: which qubit of C should be flipped
 
-        if not isinstance(inp, str):
-            raise TypeError("input must be of type string")
-        if order > 1:
-            raise ValueError("order must be either 0 or 1 at this point")
-
-        name = "Cao Number Inversion Estimator"
-        n = len(inp)
-        if abs(int(n)) is not n:
-            raise ValueError("n must be integer")
-        qna = buildnames(n=n, qubitnames="a")
-        qnb = buildnames(n=2*n, qubitnames="b")
-        qnc = buildnames(n=1, qubitnames="c")
-        if order is 0:
-            qubits = 3*n + 1
-            qnd = []
-            qn = qna + qnb + qnc
-        elif order is 1:
-            qubits = 3*n + 2
-            qnd = buildnames(n=1, qubitnames="d")
-            qn = qna + qnb + qnc + qnd
+        qnl = buildnames(n, qubitnames="l")
+        qnm = buildnames(n + 4, qubitnames="m")
+        qnc = buildnames(n, qubitnames="c")
+        if save_value:
+            qnd = buildnames(n, qubitnames="d")
+            qn = qnl + qnm + qnc + qnd
         else:
-            raise ValueError("order must be either 0 or 1")
+            qnd = []
+            qn = qnl + qnm + qnc
+        qndef = buildnames(n=len(qn))
 
         initgates = []
-        for i in range(qubits):
-            initgates += [Qgate("map", "q"+str(i), qn[i])]
-        for i in range(n):
-            if inp[i] == "1":
-                initgates += [Qgate("x", qna[i])]
+        for i in range(len(qn)):
+            initgates += [Qgate('map', qndef[i], qn[i])]
+        for i in range(len(qnl)):
+            initgates += [Qgate('h', qnl[i])]
+        for i in range(len(qnm)):
+            initgates += [Qgate('h', qnm[i])]
+        initgates += [Qgate('x', qnc[x])]
         initgates += [Qgate("display")]
-
         initsubroutine = Qsubroutine(name="init", gates=initgates)
 
-        subroutines = []
-        subroutines += [initsubroutine]
+        eigenvalueinversionsubroutine = eigenvalue_inversion(
+            qnl=qnl,
+            qnm=qnm,
+            qnc=qnc,
+            sign=1,
+            remove_global_shift=remove_global_shift)
 
-        powinvsubroutine = invert_power(n=n, qubitnamesa=qna, qubitnamesb=qnb[:n], qubitnamec=qnc, qubitnamesd=qnb[n:(2*n-2)])
-        subroutines += [powinvsubroutine]
+        measuregates = [Qgate('display'), Qgate('measure')]
+        measuresubroutine = Qsubroutine(name='measure', gates=measuregates)
 
-        if order >= 1:
-            mulsubsubroutines = MULSUB_QFT_No_Parity(n=n, qubitnamesa=qna, qubitnamesb=qnb, qubitnamec=qnc, qubitnamed=qnd)
-            subroutines += mulsubsubroutines
+        if test_undo or save_value:
+            uneigenvalueinversionsubroutine = eigenvalue_inversion(
+                qnl=qnl,
+                qnm=qnm,
+                qnc=qnc,
+                sign=-1,
+                remove_global_shift=remove_global_shift)
+            uninitgates = []
+            for i in range(len(qnl)):
+                uninitgates += [Qgate('h', qnl[i])]
+            for i in range(len(qnm)):
+                uninitgates += [Qgate('h', qnm[i])]
+            uninitsubroutine = Qsubroutine(name="uninit", gates=uninitgates)
 
-        resultgates = [Qgate("measure"), Qgate("display")]
-        resultsubroutine = Qsubroutine(name="result", gates=resultgates)
+            if save_value:
+                savegates = []
+                savegates += [Qgate('#', ' saves the found inverted eigenvalue(s) to the D register')]
+                for i in range(len(qnd)):
+                    savegates += [Qgate('cx', qnl[i], qnd[i])]
+                savesubroutine = Qsubroutine(name='save', gates=savegates)
 
-        subroutines += [resultsubroutine]
+                subroutines = \
+                    [initsubroutine] + \
+                    eigenvalueinversionsubroutine + \
+                    [savesubroutine] + \
+                    uneigenvalueinversionsubroutine + \
+                    [uninitsubroutine] + \
+                    [measuresubroutine]
+            else:
+                subroutines = \
+                    [initsubroutine] + \
+                    eigenvalueinversionsubroutine + \
+                    uneigenvalueinversionsubroutine + \
+                    [uninitsubroutine] + \
+                    [measuresubroutine]
+        else:
+            subroutines = \
+                [initsubroutine] + \
+                eigenvalueinversionsubroutine + \
+                [measuresubroutine]
 
-        super().__init__(name=name, qubits=qubits, subroutines=subroutines)
+        super().__init__(name='Eigenvalue inversion test', qubits=len(qn), subroutines=subroutines)
+
+
+if __name__ == "__main__":
+    circ = EigenvalueInversion_Circuit(n=4, x=2)
+    print(circ)
+
+    print('\n\n\n\n\n')
+
+    test_ccrz = Qfunction(
+        name='ccRz test',
+        qubits=3,
+        subroutines=
+            Qsubroutine(
+                name='test',
+                gates=
+                    [Qgate(), Qgate('#', ' init'), Qgate('x', 'q0'), Qgate('x', 'q1'), Qgate('display')] +
+                    ccRz(
+                        qna='q0',
+                        qnb='q1',
+                        qnc='q2',
+                        theta=4.0,
+                        different_comment_names=['a', 'b', 'c']) +
+                    [Qgate(), Qgate('#', ' meas'), Qgate('measure'), Qgate('display')]))
+    print(test_ccrz)

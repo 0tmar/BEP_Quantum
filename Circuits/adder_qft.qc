@@ -1,22 +1,19 @@
 #function: QFT Quantum Adder
 
-qubits 10
+qubits 8
 
 .init
   map q0,b0
   map q1,b1
   map q2,b2
   map q3,b3
-  map q4,b4
-  map q5,a0
-  map q6,a1
-  map q7,a2
-  map q8,a3
-  map q9,a4
+  map q4,a0
+  map q5,a1
+  map q6,a2
+  map q7,a3
   x a0
   x a2
-  x a4
-  x b1
+  x b2
   x b3
   display
 
@@ -25,17 +22,12 @@ qubits 10
   cr a1,a0
   cr a2,a0
   cr a3,a0
-  cr a4,a0
   h a1
   cr a2,a1
   cr a3,a1
-  cr a4,a1
   h a2
   cr a3,a2
-  cr a4,a2
   h a3
-  cr a4,a3
-  h a4
 
 .add
   cz b0,a0
@@ -54,35 +46,12 @@ qubits 10
   cr a3,a1
   cr a3,a0
   swap b3,a3
-  cz b4,a4
-  swap b4,a4
-  cr a4,a3
-  cr a4,a2
-  cr a4,a1
-  cr a4,a0
-  swap b4,a4
 
 .iqft
-  h a4
-  cr a4,a3
-  cz a4,a3
   h a3
-  cr a4,a2
-  swap a4,a3
-  cr a3,a2
-  swap a4,a3
-  cz a4,a2
   cr a3,a2
   cz a3,a2
   h a2
-  cr a4,a1
-  swap a4,a3
-  cr a3,a1
-  swap a4,a3
-  swap a4,a2
-  cr a2,a1
-  swap a4,a2
-  cz a4,a1
   cr a3,a1
   swap a3,a2
   cr a2,a1
@@ -91,17 +60,6 @@ qubits 10
   cr a2,a1
   cz a2,a1
   h a1
-  cr a4,a0
-  swap a4,a3
-  cr a3,a0
-  swap a4,a3
-  swap a4,a2
-  cr a2,a0
-  swap a4,a2
-  swap a4,a1
-  cr a1,a0
-  swap a4,a1
-  cz a4,a0
   cr a3,a0
   swap a3,a2
   cr a2,a0

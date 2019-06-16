@@ -5,8 +5,8 @@ import AdderCuccaro
 import AdderMunozCoreas
 import MultiplierQFT
 import Cao2012Experiment
-import NumberInversionNewtonRaphson
 import NumberInversionCao
+import NumberInversionNewtonRaphson
 import DivisionThapliyal
 import AncillaRotation
 import CompleteQLSA
@@ -165,26 +165,26 @@ if __name__ == "__main__":
     run_division_thapliyal =        False
     run_division_thapliyal_matrix = False
     run_ry_c_x_to_the_k =           False
-    run_ancilla_rotation =          False
+    run_ancilla_rotation =          True
     run_expa =                      False
     run_Cao2012 =                   False
-    run_HLL_test =                  False
-    run_numinv_test =               False
-    run_complete_qlsa =             True
+    run_numinv_cao =                False
+    run_numinv_newton =             False
+    run_complete_qlsa =             False
     run_test =                      False
 
     # Binary number inputs used in many of the arithmetic circuits
-    inp_a = "100000"
-    inp_b = "0010"
+    inp_a = "01011"
+    inp_b = "0101"
 
     # Extra options for some of the circuits
-    inp_ctrl = "1"      # For the controlled adders, what the value of the control qubit is; '1' or '0'
-    subtype = 'a-b'     # For the subtracters, which subtraction mode is used; 'a-b' or 'b-a'
-    do_overflow = True  # For the adders, whether an overflow qubit is used; True or False
-    do_ctrl = True      # For the M-C adder, whether controlled version is used; True or False
-    c = 1.1             # The c used in the Ry(c*(x^k)) gate and ancilla rotation subroutine
-    k = 7               # The k used in the Ry(c*(x^k)) gate
-    m = 5               # Determines the maximum order 1+2m in the arcsin approximation in the ancilla rotation
+    inp_ctrl = "1"       # For the controlled adders, what the value of the control qubit is; '1' or '0'
+    subtype = 'a-b'      # For the subtracters, which subtraction mode is used; 'a-b' or 'b-a'
+    do_overflow = True   # For the adders, whether an overflow qubit is used; True or False
+    do_ctrl = True       # For the M-C adder, whether controlled version is used; True or False
+    c = 1.1              # The c used in the Ry(c*(x^k)) gate and ancilla rotation subroutine
+    k = 7                # The k used in the Ry(c*(x^k)) gate
+    m = 4                # Determines the maximum order 1+2m in the arcsin approximation in the ancilla rotation
 
     # Useful lengths for lining out numbers and determining the amount of qubits.
     na = len(inp_a)
@@ -197,8 +197,8 @@ if __name__ == "__main__":
         '''Runs the Quantum Fourier Transform back and forth to test whether it behaves as expected'''
 
         # Offsets for testing whether it still works with them
-        offset_pre = 1
-        offset_post = 2
+        offset_pre = 0
+        offset_post = 0
 
         # Writing the circuit to a file
         f = open(path + "qftiqft.qc", "w")
@@ -496,16 +496,22 @@ if __name__ == "__main__":
         p1 = A_lst[1][1, 2]                     # The probability to find the |0> state
         x = int(inp_a, 2)/(2.**(len(inp_a)-1))  # The input value for register c
         y = c*x                                 # The desired value for p1
+        arcsin_taylor_factors = np.array([AncillaRotation.arcsin_taylor_factor(k) for k in np.arange(m+1)])
+        powers = np.arange(1, 2*(m+1), 2)
+        arcsin_cx_approx = np.sum(arcsin_taylor_factors*((c*x)**powers))
+        p1_expectation = np.sin(arcsin_cx_approx)
 
         # Showing the results
         print(
-            "\n\nAncilla rotation:\n\ninput c       = {}\ninput x       = {}\ninput m       = {}\n\noutput sin(r) = {}\n\ntest c*x      = {}\nrel error     = {}{}".format(
+            "\n\nAncilla rotation:\n\ninput c               = {}\ninput x               = {}\ninput m               = {}\n\noutput sin(r)         = {}\n\nexpectation sin(r)    = {}\ntest c*x              = {}\n\nrel expectation error = {}\nrel output error      = {}{}".format(
                 c,
                 x,
                 m,
                 p1,
+                p1_expectation,
                 y,
-                abs(y-p1)/y,
+                abs((p1-p1_expectation)/p1),
+                abs((y-p1)/y),
                 "\n\nWARNING: THE DESIRED PROBABILITY IS LARGER THAN 1, MEANING THAT THE DESIRED OUTPUT CAN NEVER MATCH!"*(y > 1)))
 
     if run_expa:
@@ -611,12 +617,12 @@ if __name__ == "__main__":
         print("\nP(|1>) = {}".format(
             outp_prob_x))
 
-    if run_HLL_test:
-        '''Runs the Cao number inversion algorithm (the files should be renamed)'''
+    if run_numinv_cao:
+        '''Runs the Cao number inversion algorithm'''
 
         # Writing the circuit to a file
         f = open(path + "test_hll.qc", "w")
-        f.write(str(NumberInversionNewtonRaphson.EigenvalueInversion_Circuit(
+        f.write(str(NumberInversionCao.EigenvalueInversion_Circuit(
             n=3,
             x=1,
             remove_global_shift=True,
@@ -629,16 +635,39 @@ if __name__ == "__main__":
         A = A_lst[-1]
         print(A[:, 0:4])
 
-    if run_numinv_test:
+    if run_numinv_newton:
         '''Performs the number inversion based on Newton-Raphson iteration'''
 
         # Writing the circuit to a file
         f = open(path + "test_numinv.qc", "w")
-        f.write(str(NumberInversionCao.NUMINVcircuit(inp=inp_a, order=1)))
+        f.write(str(NumberInversionNewtonRaphson.NUMINVcircuit(inp=inp_a, order=1)))
         f.close()
 
         # Running the circuit in the QX simulator and retrieving the results
-        raw_HLL = runQX('test_numinv', 3*na+1, show_output=True, return_raw=True)
+        res_numinv_newton_raphson, raw_numinv_newton_raphson = runQX('test_numinv', 3*na+2, show_output=True, return_res=True, return_raw=True)
+        A_lst = find_output_matrices(outp_raw=raw_numinv_newton_raphson, do_sort=False)
+        outp_x0_bin = int(A_lst[1][0, 1])
+        outp_x0_str = str(outp_x0_bin)
+        outp_x0_str = (3*na+2 - len(outp_x0_str))*"0" + outp_x0_str
+        x0_str = outp_x0_str[na:3*na-1]
+        x0 = int(x0_str, 2)/2**(2*na - 2)
+        x1_str = res_numinv_newton_raphson[na+1:3*na]
+        x1 = int(x1_str, 2)/2**(2*na - 2)
+        a = int(inp_a, 2)
+        x0_th = 2**(-math.floor(math.log2(a)))
+        x0_th_int = int(x0_th*2**(2*na - 2))
+        x1_th = 2*x0_th - a*(x0_th**2)
+        x1_th_int = int(x1_th*2**(2*na - 2))
+        a_inv = 1/a
+        a_inv_int = int(2**(2*na - 2)/a)
+
+        print("\n\nInversion Newton-Raphson:\n\ninput a      = {} = {}\n\noutput x0    = {} = {}\noutput x1    = {} = {}\n\nexpected x0  = {} = {}\nexpected x1  = {} = {}\n\noutput ideal = {} = {}".format(
+            (na-1) * " " + inp_a, a,
+            x0_str, x0,
+            x1_str, x1,
+            f'{x0_th_int:0{2*na-1}b}', x0_th,
+            f'{x1_th_int:0{2*na-1}b}', x1_th,
+            f'{a_inv_int:0{2*na-1}b}', a_inv))
 
     if run_complete_qlsa:
         '''Runs a complete QLSA using the Cao matrix'''
