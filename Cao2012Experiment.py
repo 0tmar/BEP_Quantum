@@ -1,5 +1,5 @@
 from cQASM import *
-from cQASM_Compound_Gates import *
+from cQASMCompoundGates import *
 from QFT import QFT, iQFT, REVERSE
 from math import pi
 

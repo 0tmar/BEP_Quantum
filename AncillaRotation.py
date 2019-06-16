@@ -3,7 +3,7 @@ import math
 import numpy as np
 from scipy.special import poch  # The Pochhammer symbol (x)_n = Gamma(x+n)/Gamma(x) = x*(x+1)*...*(x+n-1)
 from cQASM import *
-from cQASM_Compound_Gates import cRy, ccRy
+from cQASMCompoundGates import cRy, ccRy
 
 
 def x_to_the_k_rot_combinations_and_angles(n, k):

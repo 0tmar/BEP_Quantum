@@ -1,9 +1,9 @@
 import math
 from cQASM import *
 from QFT import *
-from Cao2012_Experiment import *
+from Cao2012Experiment import *
 from DivisionThapliyal import *
-from Ancilla_Rotation import *
+from AncillaRotation import *
 
 
 class CompleteQlsaWithCaoMatrix(Qfunction):

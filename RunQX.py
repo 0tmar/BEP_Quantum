@@ -4,11 +4,11 @@ import AdderQFT
 import AdderCuccaro
 import AdderMunozCoreas
 import MultiplierQFT
-import Cao2012_Experiment
-import HLL_Linear_Solver
-import Number_Inversion
+import Cao2012Experiment
+import NumberInversionNewtonRaphson
+import NumberInversionCao
 import DivisionThapliyal
-import Ancilla_Rotation
+import AncillaRotation
 import CompleteQLSA
 import os
 import subprocess
@@ -459,7 +459,7 @@ if __name__ == "__main__":
 
         # Writing the circuit to a file
         f = open(path + "test_r_y_cx_to_the_k.qc", "w")
-        f.write(str(Ancilla_Rotation.Ry_c_x_to_the_k_circuit(inp=inp_a, c=c, k=k)))
+        f.write(str(AncillaRotation.Ry_c_x_to_the_k_circuit(inp=inp_a, c=c, k=k)))
         f.close()
 
         # Running the circuit in the QX simulator and retrieving the results
@@ -487,7 +487,7 @@ if __name__ == "__main__":
 
         # Writing the circuit to a file
         f = open(path + "test_ancilla_rotation.qc", "w")
-        f.write(str(Ancilla_Rotation.AncillaRotationCircuit(inp=inp_a, c=c, m=m)))
+        f.write(str(AncillaRotation.AncillaRotationCircuit(inp=inp_a, c=c, m=m)))
         f.close()
 
         # Running the circuit in the QX simulator and retrieving the results
@@ -513,7 +513,7 @@ if __name__ == "__main__":
 
         # Writing the circuit to a file
         f = open(path + "test_expa.qc", "w")
-        f.write(str(Cao2012_Experiment.test_expa(m=0, n=0, dorotation=True, noglobalrotation=True)))
+        f.write(str(Cao2012Experiment.test_expa(m=0, n=0, dorotation=True, noglobalrotation=True)))
         f.close()
 
         # Running the circuit in the QX simulator and retrieving the results
@@ -531,7 +531,7 @@ if __name__ == "__main__":
 
         # Writing the circuit to a file
         f = open(path + "Cao2012.qc", "w")
-        f.write(str(Cao2012_Experiment.Cao2012Experiment(r=r, m=m, n=n)))
+        f.write(str(Cao2012Experiment.Cao2012Experiment(r=r, m=m, n=n)))
         f.close()
 
         # Running the circuit in the QX simulator and retrieving the results
@@ -616,7 +616,7 @@ if __name__ == "__main__":
 
         # Writing the circuit to a file
         f = open(path + "test_hll.qc", "w")
-        f.write(str(HLL_Linear_Solver.EigenvalueInversion_Circuit(
+        f.write(str(NumberInversionNewtonRaphson.EigenvalueInversion_Circuit(
             n=3,
             x=1,
             remove_global_shift=True,
@@ -634,7 +634,7 @@ if __name__ == "__main__":
 
         # Writing the circuit to a file
         f = open(path + "test_numinv.qc", "w")
-        f.write(str(Number_Inversion.NUMINVcircuit(inp=inp_a, order=1)))
+        f.write(str(NumberInversionCao.NUMINVcircuit(inp=inp_a, order=1)))
         f.close()
 
         # Running the circuit in the QX simulator and retrieving the results

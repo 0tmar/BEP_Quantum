@@ -1,5 +1,5 @@
 from cQASM import *
-from cQASM_Compound_Gates import ncx
+from cQASMCompoundGates import ncx
 from AdderQFT import cSUB
 from QFT import QFT, iQFT
 from MultiplierQFT import MUL, MULSUB
