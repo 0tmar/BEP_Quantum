@@ -29,16 +29,16 @@ qubits 4
   x q0
   h q1
   h q2
-  x q1
-  x q2
+  #x q1
+  #x q2
   cz q1,q2
-  x q2
-  x q1
+  #x q2
+  #x q1
   x q3
   display
 
 .expA
-  # performs exp(sign*i*A*t0*2^(n)/16) = exp(2*pi*i*A/16) on q1 and q2, controlled by q0
+  # performs exp(sign*i*A*t0*2^(n)/16) = exp(2*pi*i*A/2) on q1 and q2, controlled by q0
   
   # ccZ(a,b,c)
   tdag q1
@@ -57,82 +57,38 @@ qubits 4
   t q2
   cx q0,q2
   
-  # cRx(a,c,-0.196)
-  rx q2,-0.049
+  # cRx(a,c,-1.568)
+  rx q2,-0.392
   cz q0,q2
-  rx q2,0.098
+  rx q2,0.784
   cz q0,q2
-  rx q2,-0.049
+  rx q2,-0.392
   
-  # cVdag(a,c)
-  t q0
-  x q0
-  tdag q0
-  x q0
-  h q2
-  tdag q2
-  tdag q2
-  cx q0,q2
-  h q2
-  t q2
-  cx q0,q2
-  t q2
-  h q2
-  s q2
-  x q2
-  cz q0,q2
-  t q0
-  t q2
-  cx q0,q2
-  tdag q2
-  cx q0,q2
-  t q0
-  x q0
-  tdag q0
-  x q0
-  h q2
-  tdag q2
-  tdag q2
-  cx q0,q2
-  h q2
-  t q2
-  cx q0,q2
-  t q2
-  h q2
-  s q2
-  x q2
+  # Rz(a,3.0)
+  rz q0,3.0
   
-  # Rz(a,0.375)
-  rz q0,0.375
-  
-  # cRx(a,b,-0.982)
-  rx q1,-0.2455
+  # cRx(a,b,-7.856)
+  rx q1,-1.964
   cz q0,q1
-  rx q1,0.491
+  rx q1,3.928
   cz q0,q1
-  rx q1,-0.2455
+  rx q1,-1.964
   
-  # Rz(a,1.883)
-  rz q0,1.883
+  # Rz(a,15.064)
+  rz q0,15.064
   
   # Toffoli(a,b,c)
   toffoli q0,q1,q2
   
-  # cRx(a,b,-0.589)
-  rx q1,-0.14725
+  # cRx(a,b,-4.712)
+  rx q1,-1.178
   cz q0,q1
-  rx q1,0.2945
+  rx q1,2.356
   cz q0,q1
-  rx q1,-0.14725
+  rx q1,-1.178
   
   # Toffoli(a,b,c)
   toffoli q0,q1,q2
-  
-  # cZ(a,c)
-  cz q0,q2
-  
-  # cX(a,b)
-  cx q0,q1
   
   # ccZ(a,b,c)
   tdag q1
@@ -151,22 +107,16 @@ qubits 4
   t q2
   cx q0,q2
   
-  # cX(a,b)
-  cx q0,q1
-  
-  # Rz(d,2.258)
-  rz q3,2.258
+  # Rz(d,18.064)
+  rz q3,18.064
   
   display
 
 .expA
-  # performs exp(sign*i*A*t0*2^(n)/16) = exp(-2*pi*i*A/16) on q1 and q2, controlled by q0
+  # performs exp(sign*i*A*t0*2^(n)/16) = exp(-2*pi*i*A/2) on q1 and q2, controlled by q0
   
-  # Rz(d,-2.258)
-  rz q3,-2.258
-  
-  # cX(a,b)
-  cx q0,q1
+  # Rz(d,-18.064)
+  rz q3,-18.064
   
   # ccZ(a,b,c)
   tdag q1
@@ -185,81 +135,38 @@ qubits 4
   t q2
   cx q0,q2
   
-  # cX(a,b)
-  cx q0,q1
+  # Toffoli(a,b,c)
+  toffoli q0,q1,q2
   
-  # cZ(a,c)
-  cz q0,q2
+  # cRx(a,b,4.712)
+  rx q1,1.178
+  cz q0,q1
+  rx q1,-2.356
+  cz q0,q1
+  rx q1,1.178
   
   # Toffoli(a,b,c)
   toffoli q0,q1,q2
   
-  # cRx(a,b,0.589)
-  rx q1,0.14725
+  # Rz(a,-15.064)
+  rz q0,-15.064
+  
+  # cRx(a,b,7.856)
+  rx q1,1.964
   cz q0,q1
-  rx q1,-0.2945
+  rx q1,-3.928
   cz q0,q1
-  rx q1,0.14725
+  rx q1,1.964
   
-  # Toffoli(a,b,c)
-  toffoli q0,q1,q2
+  # Rz(a,-3.0)
+  rz q0,-3.0
   
-  # Rz(a,-1.883)
-  rz q0,-1.883
-  
-  # cRx(a,b,0.982)
-  rx q1,0.2455
-  cz q0,q1
-  rx q1,-0.491
-  cz q0,q1
-  rx q1,0.2455
-  
-  # Rz(a,-0.375)
-  rz q0,-0.375
-  
-  # cV(a,c)
-  t q0
-  x q0
-  tdag q0
-  x q0
-  h q2
-  tdag q2
-  tdag q2
-  cx q0,q2
-  h q2
-  t q2
-  cx q0,q2
-  t q2
-  h q2
-  s q2
-  x q2
-  t q0
-  t q2
-  cx q0,q2
-  tdag q2
-  cx q0,q2
-  t q0
-  x q0
-  tdag q0
-  x q0
-  h q2
-  tdag q2
-  tdag q2
-  cx q0,q2
-  h q2
-  t q2
-  cx q0,q2
-  t q2
-  h q2
-  s q2
-  x q2
-  
-  # cRx(a,c,0.196)
-  rx q2,0.049
+  # cRx(a,c,1.568)
+  rx q2,0.392
   cz q0,q2
-  rx q2,-0.098
+  rx q2,-0.784
   cz q0,q2
-  rx q2,0.049
+  rx q2,0.392
   
   # ccZ(a,b,c)
   tdag q1

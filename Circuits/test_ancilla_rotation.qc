@@ -17,8 +17,8 @@ qubits 9
   x c4
   display
 
-.ry_c_x_to_the_k
-  ##### Performs Ry(c*(x^k)) for c=1.1 and k=1
+.ry_c_x_to_the_p
+  ##### Performs Ry(c*(x^p)) for c=1.1 and p=1
   
   ### Rotations controlled by 1 qubit(s)
   
@@ -58,8 +58,8 @@ qubits 9
   ry r,0.034375
   
 
-.ry_c_x_to_the_k
-  ##### Performs Ry(c*(x^k)) for c=0.22183333333333338 and k=3
+.ry_c_x_to_the_p
+  ##### Performs Ry(c*(x^p)) for c=0.22183333333333338 and p=3
   
   ### Rotations controlled by 1 qubit(s)
   
@@ -383,8 +383,8 @@ qubits 9
   toffoli c0,c2,a0
   
 
-.ry_c_x_to_the_k
-  ##### Performs Ry(c*(x^k)) for c=0.12078825000000004 and k=5
+.ry_c_x_to_the_p
+  ##### Performs Ry(c*(x^p)) for c=0.12078825000000004 and p=5
   
   ### Rotations controlled by 1 qubit(s)
   
@@ -816,8 +816,8 @@ qubits 9
   toffoli c0,c1,a0
   
 
-.ry_c_x_to_the_k
-  ##### Performs Ry(c*(x^k)) for c=0.08699629910714292 and k=7
+.ry_c_x_to_the_p
+  ##### Performs Ry(c*(x^p)) for c=0.08699629910714292 and p=7
   
   ### Rotations controlled by 1 qubit(s)
   
@@ -1249,8 +1249,8 @@ qubits 9
   toffoli c0,c1,a0
   
 
-.ry_c_x_to_the_k
-  ##### Performs Ry(c*(x^k)) for c=0.07163903575086811 and k=9
+.ry_c_x_to_the_p
+  ##### Performs Ry(c*(x^p)) for c=0.07163903575086811 and p=9
   
   ### Rotations controlled by 1 qubit(s)
   

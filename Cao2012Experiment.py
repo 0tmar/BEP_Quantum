@@ -4,18 +4,31 @@ from QFT import QFT, iQFT, REVERSE
 from math import pi
 
 
-def expA(qubitnamea, qubitnameb, qubitnamec, qubitnamed=None, sign=1, n=0, noglobalrotation=False):
+def expA(qubitnamea, qubitnameb, qubitnamec, qubitnamed=None, sign=1, n=0, noglobalrotation=False, highres=True):
     """outputs exp(sign*i*A*t0*2^n/16) = exp(sign*2*pi*i*A*2^(n-4))"""
 
     qna = qubitnamea
     qnb = qubitnameb
     qnc = qubitnamec
 
+    if highres:
+        r_020 = 0.196
+        r_038 = 0.375
+        r_098 = 0.982
+        r_188 = 1.883
+        r_059 = 0.589
+    else:
+        r_020 = 0.20
+        r_038 = 0.38
+        r_098 = 0.98
+        r_188 = 1.88
+        r_059 = 0.59
+
     # ccZ(a,b,c)
     ccz_a_b_c_gates = ccZ(qna=qna, qnb=qnb, qnc=qnc, different_comment_names=['a', 'b', 'c'])
 
     # cRx(a,c,-sign*(2**n)*0.196)
-    crx_a_c_020_gates = cRx(qna=qna, qnb=qnc, theta=-sign*(2**n)*0.196, different_comment_names=['a', 'c'])
+    crx_a_c_020_gates = cRx(qna=qna, qnb=qnc, theta=-sign*(2**n)*r_020, different_comment_names=['a', 'c'])
 
     # cVdag(a,c)
     cvdag_a_c_gates = cVdag(qna=qna, qnb=qnc, different_comment_names=['a', 'c'])
@@ -32,17 +45,17 @@ def expA(qubitnamea, qubitnameb, qubitnamec, qubitnamed=None, sign=1, n=0, noglo
     # Rz(a,sign*(2**n)*0.375)
     rz_a_038_gates = []
     rz_a_038_gates += [Qgate()]
-    rz_a_038_gates += [Qgate('#', ' Rz(a,{})'.format(sign * (2 ** n) * 0.375))]
-    rz_a_038_gates += [Qgate('rz', qna, sign * (2 ** n) * 0.375)]
+    rz_a_038_gates += [Qgate('#', ' Rz(a,{})'.format(sign * (2 ** n) * r_038))]
+    rz_a_038_gates += [Qgate('rz', qna, sign * (2 ** n) * r_038)]
 
     # cRx(a,b,-sign*(2**n)*0.982)
-    crx_a_b_098_gates = cRx(qna=qna, qnb=qnb, theta=-sign*(2**n)*0.982, different_comment_names=['a', 'b'])
+    crx_a_b_098_gates = cRx(qna=qna, qnb=qnb, theta=-sign*(2**n)*r_098, different_comment_names=['a', 'b'])
 
     # Rz(a,sign*(2**n)*1.883)
     rz_a_188_gates = []
     rz_a_188_gates += [Qgate()]
-    rz_a_188_gates += [Qgate('#', ' Rz(a,{})'.format(sign * (2 ** n) * 1.883))]
-    rz_a_188_gates += [Qgate('rz', qna, sign * (2 ** n) * 1.883)]
+    rz_a_188_gates += [Qgate('#', ' Rz(a,{})'.format(sign * (2 ** n) * r_188))]
+    rz_a_188_gates += [Qgate('rz', qna, sign * (2 ** n) * r_188)]
 
     # Toffoli(a,b,c)
     toffoli_a_b_c_gates = []
@@ -51,7 +64,7 @@ def expA(qubitnamea, qubitnameb, qubitnamec, qubitnamed=None, sign=1, n=0, noglo
     toffoli_a_b_c_gates += [Qgate('toffoli', qna, qnb, qnc)]
 
     # cRx(a,b,-sign*(2**n)*0.589)
-    crx_a_b_059_gates = cRx(qna=qna, qnb=qnb, theta=-sign*(2**n)*0.589, different_comment_names=['a', 'b'])
+    crx_a_b_059_gates = cRx(qna=qna, qnb=qnb, theta=-sign*(2**n)*r_059, different_comment_names=['a', 'b'])
 
     # # cZ(a,c)
     # cz_a_c_gates = []
@@ -460,7 +473,7 @@ class Cao2012Experiment(Qfunction):
 
 class test_expa(Qfunction):
 
-    def __init__(self, m=0, n=0, dorotation=True, noglobalrotation=False):
+    def __init__(self, m=0, n=0, dorotation=True, noglobalrotation=False, highres=True):
 
         name = "exp(2*pi*i*A/16) test\n" \
                "# \n" \
@@ -523,14 +536,14 @@ class test_expa(Qfunction):
         initsubroutine = Qsubroutine(name="init", gates=initgates)
 
         if noglobalrotation:
-            expasubroutine = expA(qubitnamea=qn[0], qubitnameb=qn[1], qubitnamec=qn[2], qubitnamed=qn[3], sign=1, n=n, noglobalrotation=True)
+            expasubroutine = expA(qubitnamea=qn[0], qubitnameb=qn[1], qubitnamec=qn[2], qubitnamed=qn[3], sign=1, n=n, noglobalrotation=noglobalrotation, highres=highres)
         else:
             expasubroutine = expA(qubitnamea=qn[0], qubitnameb=qn[1], qubitnamec=qn[2], sign=1, n=n)
         expasubroutine.gates.append(Qgate())
         expasubroutine.gates.append(Qgate("display"))
 
         if noglobalrotation:
-            unexpasubroutine = expA(qubitnamea=qn[0], qubitnameb=qn[1], qubitnamec=qn[2], qubitnamed=qn[3], sign=-1, n=n, noglobalrotation=True)
+            unexpasubroutine = expA(qubitnamea=qn[0], qubitnameb=qn[1], qubitnamec=qn[2], qubitnamed=qn[3], sign=-1, n=n, noglobalrotation=noglobalrotation, highres=highres)
         else:
             unexpasubroutine = expA(qubitnamea=qn[0], qubitnameb=qn[1], qubitnamec=qn[2], sign=-1, n=n)
 

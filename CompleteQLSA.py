@@ -8,7 +8,7 @@ from AncillaRotation import *
 
 class CompleteQlsaWithCaoMatrix(Qfunction):
 
-    def __init__(self, n_eig_inv, m_anc_rot, r_anc_rot, input_eigenvector=None, input_n_state=None):
+    def __init__(self, n_eig_inv, k_anc_rot, r_anc_rot, input_eigenvector=None, input_n_state=None):
 
         n_vec_b = 2   # Number of qubits used for saving vector b
         n_lambda = 4  # Number of qubits used to store the eigenvalues
@@ -17,14 +17,14 @@ class CompleteQlsaWithCaoMatrix(Qfunction):
             raise ValueError("Value for n_eig_inv must be equal to or greater than n_lambda = 4.")
 
         # 2 qubits for storing |b>, 4 qubits for storing the eigenvalues, (4+ n_eig_inv + 2) for inverting them,
-        # and (1 + max(0, min(n_eig_inv+1, 1+2*m_anc_rot) - 2)) qubits for the ancilla rotation.
-        qubits = n_vec_b + n_lambda + (n_lambda + n_eig_inv + 3) + (1 + max(0, min(n_eig_inv, 1+2*m_anc_rot) - 2))
+        # and (1 + max(0, min(n_eig_inv+1, 1+2*k_anc_rot) - 2)) qubits for the ancilla rotation.
+        qubits = n_vec_b + n_lambda + (n_lambda + n_eig_inv + 3) + (1 + max(0, min(n_eig_inv, 1 + 2 * k_anc_rot) - 2))
 
         qna = buildnames(n=n_vec_b, qubitnames="a")                # qubits storing vector |b>
         qnb = buildnames(n=n_lambda+1, qubitnames="b")             # qubits storing the eigenvalues
         qnc = buildnames(n=n_eig_inv+1, qubitnames="c")            # qubits storing the inverted eigenvalues
         qnd = buildnames(n=n_lambda+1, qubitnames="d")             # ancilla qubits for inverting the eigenvalues
-        qne = buildnames(n=max(0, min(n_eig_inv, 1+2*m_anc_rot) - 2), qubitnames="e")  # ancilla qubits for the ancilla rotation
+        qne = buildnames(n=max(0, min(n_eig_inv, 1 + 2 * k_anc_rot) - 2), qubitnames="e")  # ancilla qubits for the ancilla rotation
         qnf = buildnames(n=1, qubitnames="f")                      # ancilla qubit which is being rotated
 
         qn = qnf + qne + qnd + qnc + qnb + qna
@@ -97,9 +97,9 @@ class CompleteQlsaWithCaoMatrix(Qfunction):
             sign=1)
 
         ancrotsubroutine = AncillaRotation(
-            n=n_eig_inv,  # In general this should be n_eig_inv+1, but it is not necessary due to
+            n=n_eig_inv,  # In general this should be n_eig_inv+1, but it is not necessary due to the guaranteed zero
             c=math.pi/(2**(r_anc_rot-1)),
-            m=m_anc_rot,
+            k=k_anc_rot,
             qubitnamesc=ancrotgates,
             qubitnamer=qnf,
             qubitnamesa=qne)

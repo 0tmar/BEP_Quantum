@@ -164,10 +164,10 @@ if __name__ == "__main__":
     run_mul_qft =                   False
     run_division_thapliyal =        False
     run_division_thapliyal_matrix = False
-    run_ry_c_x_to_the_k =           False
-    run_ancilla_rotation =          True
+    run_ry_c_x_to_the_p =           False
+    run_ancilla_rotation =          False
     run_expa =                      False
-    run_Cao2012 =                   False
+    run_Cao2012 =                   True
     run_numinv_cao =                False
     run_numinv_newton =             False
     run_complete_qlsa =             False
@@ -182,9 +182,9 @@ if __name__ == "__main__":
     subtype = 'a-b'      # For the subtracters, which subtraction mode is used; 'a-b' or 'b-a'
     do_overflow = True   # For the adders, whether an overflow qubit is used; True or False
     do_ctrl = True       # For the M-C adder, whether controlled version is used; True or False
-    c = 1.1              # The c used in the Ry(c*(x^k)) gate and ancilla rotation subroutine
-    k = 7                # The k used in the Ry(c*(x^k)) gate
-    m = 4                # Determines the maximum order 1+2m in the arcsin approximation in the ancilla rotation
+    c = 1.1              # The c used in the Ry(c*(x^p)) gate and ancilla rotation subroutine
+    p = 7                # The p used in the Ry(c*(x^p)) gate
+    k = 4                # Determines the maximum order 1+2k in the arcsin approximation in the ancilla rotation
 
     # Useful lengths for lining out numbers and determining the amount of qubits.
     na = len(inp_a)
@@ -454,29 +454,29 @@ if __name__ == "__main__":
                     print(f"n={i:>{n}}, d={j:>{n}}:   q={outp_q:>{n}}, r={outp_r:>{n}}")
                     # '>' right aligns, 'n' is the number of characters occupied
 
-    if run_ry_c_x_to_the_k:
-        '''Runs the Ry(c*(x^(k)))'''
+    if run_ry_c_x_to_the_p:
+        '''Runs the Ry(c*(x^(p)))'''
 
         # Writing the circuit to a file
-        f = open(path + "test_r_y_cx_to_the_k.qc", "w")
-        f.write(str(AncillaRotation.Ry_c_x_to_the_k_circuit(inp=inp_a, c=c, k=k)))
+        f = open(path + "test_r_y_cx_to_the_p.qc", "w")
+        f.write(str(AncillaRotation.Ry_c_x_to_the_p_circuit(inp=inp_a, c=c, p=p)))
         f.close()
 
         # Running the circuit in the QX simulator and retrieving the results
-        raw_Ry_c_x_to_the_k = runQX('test_r_y_cx_to_the_k', n + max(0, k-2) + 1, show_output=True, return_raw=True)
-        A_lst = find_output_matrices(outp_raw=raw_Ry_c_x_to_the_k, do_sort=False)
-        p1 = A_lst[1][1, 2]                     # The probability to find the |0> state
-        r = math.asin(p1)                       # The rotation that has been applied (only correct up to r=pi/2)
+        raw_Ry_c_x_to_the_p = runQX('test_r_y_cx_to_the_p', n + max(0, p - 2) + 1, show_output=True, return_raw=True)
+        A_lst = find_output_matrices(outp_raw=raw_Ry_c_x_to_the_p, do_sort=False)
+        prob1 = A_lst[1][1, 2]                  # The probability to find the |0> state
+        r = math.asin(prob1)                    # The rotation that has been applied (only correct up to r=pi/2)
         x = int(inp_a, 2)/(2.**(len(inp_a)-1))  # The input value for the c register
-        y = c * (x ** k)                        # The value that r should be
+        y = c * (x ** p)                        # The value that r should be
 
         # Showing the results
         print(
-            "\n\nRy(c*x^k) rotation:\n\ninput c       = {}\ninput x       = {}\ninput k       = {}\n\noutput sin(r) = {}\noutput r      = {}\n\ntest c*(x^k)  = {}\nrel error     = {}{}".format(
+            "\n\nRy(c*x^p) rotation:\n\ninput c       = {}\ninput x       = {}\ninput p       = {}\n\noutput sin(r) = {}\noutput r      = {}\n\ntest c*(x^p)  = {}\nrel error     = {}{}".format(
                 c,
                 x,
-                k,
-                p1,
+                p,
+                prob1,
                 r,
                 y,
                 abs(1 - abs(r/y)),
@@ -487,17 +487,17 @@ if __name__ == "__main__":
 
         # Writing the circuit to a file
         f = open(path + "test_ancilla_rotation.qc", "w")
-        f.write(str(AncillaRotation.AncillaRotationCircuit(inp=inp_a, c=c, m=m)))
+        f.write(str(AncillaRotation.AncillaRotationCircuit(inp=inp_a, c=c, k=k)))
         f.close()
 
         # Running the circuit in the QX simulator and retrieving the results
-        raw_ancilla_rotation = runQX('test_ancilla_rotation', n + max(0, 2*min(n, m)-1) + 1, show_output=True, return_raw=True)
+        raw_ancilla_rotation = runQX('test_ancilla_rotation', n + max(0, 2 * min(n, k) - 1) + 1, show_output=True, return_raw=True)
         A_lst = find_output_matrices(outp_raw=raw_ancilla_rotation, do_sort=False)
-        p1 = A_lst[1][1, 2]                     # The probability to find the |0> state
+        prob1 = A_lst[1][1, 2]                  # The probability to find the |0> state
         x = int(inp_a, 2)/(2.**(len(inp_a)-1))  # The input value for register c
-        y = c*x                                 # The desired value for p1
-        arcsin_taylor_factors = np.array([AncillaRotation.arcsin_taylor_factor(k) for k in np.arange(m+1)])
-        powers = np.arange(1, 2*(m+1), 2)
+        y = c*x                                 # The desired value for prob1
+        arcsin_taylor_factors = np.array([AncillaRotation.arcsin_taylor_factor(p) for p in np.arange(k + 1)])
+        powers = np.arange(1, 2 * (k + 1), 2)
         arcsin_cx_approx = np.sum(arcsin_taylor_factors*((c*x)**powers))
         p1_expectation = np.sin(arcsin_cx_approx)
 
@@ -506,30 +506,60 @@ if __name__ == "__main__":
             "\n\nAncilla rotation:\n\ninput c               = {}\ninput x               = {}\ninput m               = {}\n\noutput sin(r)         = {}\n\nexpectation sin(r)    = {}\ntest c*x              = {}\n\nrel expectation error = {}\nrel output error      = {}{}".format(
                 c,
                 x,
-                m,
-                p1,
+                k,
+                prob1,
                 p1_expectation,
                 y,
-                abs((p1-p1_expectation)/p1),
-                abs((y-p1)/y),
+                abs((prob1 - p1_expectation) / prob1),
+                abs((y - prob1) / y),
                 "\n\nWARNING: THE DESIRED PROBABILITY IS LARGER THAN 1, MEANING THAT THE DESIRED OUTPUT CAN NEVER MATCH!"*(y > 1)))
 
     if run_expa:
         '''Performs the exp(i*A*t) gate with A defined as in the Cao2012 paper'''
 
-        # Writing the circuit to a file
-        f = open(path + "test_expa.qc", "w")
-        f.write(str(Cao2012Experiment.test_expa(m=0, n=0, dorotation=True, noglobalrotation=True)))
-        f.close()
+        high_res = True
+        m = 3
+        n = 0
+        for m in range(4):
+            for n in range(4):
 
-        # Running the circuit in the QX simulator and retrieving the results
-        res_expa = runQX('test_expa', 4, show_output=True)
+                # Writing the circuit to a file
+                f = open(path + "test_expa.qc", "w")
+                f.write(str(Cao2012Experiment.test_expa(m=m, n=n, dorotation=True, noglobalrotation=True, highres=high_res)))
+                f.close()
+
+                # Running the circuit in the QX simulator and retrieving the results
+                raw_expa = runQX('test_expa', 4, return_res=False, return_raw=True, show_output=False)
+
+                A_lst = find_output_matrices(outp_raw=raw_expa, do_sort=True)
+                A = A_lst[-3]
+                vec = np.array([[(-1.)**(m==0)], [(-1.)**(m==1)], [(-1.)**(m==2)], [(-1.)**(m==3)]])
+
+                outp_vec = np.sum(A[:, 2:4]*vec*np.array([1., 1.j]), 1)
+                outp_mean = np.mean(outp_vec, 0)
+                outp_delta = outp_vec - outp_mean
+                oupt_delta_max = np.max(np.abs(outp_delta))
+                rot = np.angle(outp_mean, deg=True)
+                rot_exp = 22.5*2**(n+m) % 360
+                rot_exp = rot_exp if rot_exp <= 180 else rot_exp-360
+                rot_abs_err = abs(abs(rot)-abs(rot_exp))
+                rot_rel_err = abs(rot_abs_err/rot)
+
+                print("\n\nTest exp(i*A*t_0*2^n)*v_m for Cao matrix:\n\ninput n        = {}\ninput m        = {}\ninput ctrl     = {}\n\noutput delta   = {}\noutput r (deg) = {}\n\nexpected r     = {}\n\nabs error      = {}\nrel error      = {}".format(
+                    n,
+                    m,
+                    1,
+                    oupt_delta_max,
+                    rot,
+                    rot_exp,
+                    rot_abs_err,
+                    rot_rel_err))
 
     if run_Cao2012:
         '''Runs the proprietary HHL circuit from Cao2012'''
 
         r = 5     # 2^-r factor in ancilla rotation: higher r is higher precision, but lower chance of |1>. Default r=5
-        m = None  # inputs mth eigenvector of A instead of the multi state (m=0..3 or None) (either m or n must be None)
+        k = None  # inputs mth eigenvector of A instead of the multi state (m=0..3 or None) (either m or n must be None)
         n = None  # inputs the n state iso the multi state (n=0: 00, n=1: 01, n=2: 10, n=3: 11)
 
         do_plot = True
@@ -537,7 +567,7 @@ if __name__ == "__main__":
 
         # Writing the circuit to a file
         f = open(path + "Cao2012.qc", "w")
-        f.write(str(Cao2012Experiment.Cao2012Experiment(r=r, m=m, n=n)))
+        f.write(str(Cao2012Experiment.Cao2012Experiment(r=r, m=k, n=n)))
         f.close()
 
         # Running the circuit in the QX simulator and retrieving the results
@@ -606,12 +636,12 @@ if __name__ == "__main__":
         np.set_printoptions(precision=5)    # Number of decimals
         np.set_printoptions(suppress=True)  # Whether to suppress scientific notation
         print("\n\nCao2012 Experiment:\n\ninput r        = {}\n\noutput x       = {}\noutput x ideal = {}\n\noutput x rel   = {}\n\nabs error      = {}\nrel error      = {}".format(
-            r,
-            outp_x,
-            outp_x_ideal,
-            -outp_x/outp_x[0],
-            abs(outp_x-outp_x_ideal),
-            1 - outp_x/outp_x_ideal))
+                r,
+                outp_x,
+                outp_x_ideal,
+                -outp_x/outp_x[0],
+                abs(outp_x-outp_x_ideal),
+                1 - outp_x/outp_x_ideal))
 
         np.set_printoptions(suppress=True)  # Whether to suppress scientific notation
         print("\nP(|1>) = {}".format(
@@ -685,7 +715,7 @@ if __name__ == "__main__":
         f = open(path + "complete_qlsa_cao_matrix.qc", "w")
         f.write(str(CompleteQLSA.CompleteQlsaWithCaoMatrix(
             n_eig_inv=n_eig_inv,
-            m_anc_rot=m_anc_rot,
+            k_anc_rot=m_anc_rot,
             r_anc_rot=r_anc_rot-2,
             input_eigenvector=input_eigenvector,
             input_n_state=input_n_state)))
